@@ -1,0 +1,3934 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<!-- pinecrest-student master · codewithbrett.com/pinecrest-student/ -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>6th Grade CS · Pine Crest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Anton&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PINE CREST CS — MODULE 06
+     6th Grade // Functions in Python + Turtle
+     Built by Brett. Don't tell the kids the easter eggs.
+     ============================================================ */
+
+  :root {
+    --bg: #07080d;
+    --bg-2: #0c0e16;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-hover: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-bright: rgba(255, 255, 255, 0.18);
+    --text: #f4f4f7;
+    --muted: #7d7f8d;
+    --dim: #4a4c58;
+
+    --cyan: #00ffe0;
+    --pink: #ff2e93;
+    --lime: #d4ff3a;
+    --violet: #9b5cff;
+    --amber: #ffb800;
+
+    --glow-cyan: 0 0 24px rgba(0, 255, 224, 0.45);
+    --glow-pink: 0 0 24px rgba(255, 46, 147, 0.45);
+
+    --easing: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: hidden;
+  }
+
+  body {
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(155, 92, 255, 0.12), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(0, 255, 224, 0.10), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(255, 46, 147, 0.05), transparent 70%);
+  }
+
+  /* Scanline texture overlay — Y2K seasoning */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 255, 255, 0.012) 3px,
+      transparent 4px
+    );
+    mix-blend-mode: overlay;
+  }
+
+  /* Grain */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ============== Custom cursor ============== */
+  .cursor-outer, .cursor-inner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 10001;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    mix-blend-mode: difference;
+  }
+  .cursor-outer {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    transition: transform 0.18s var(--easing), width 0.2s var(--easing), height 0.2s var(--easing), border-color 0.2s;
+  }
+  .cursor-inner {
+    width: 6px;
+    height: 6px;
+    background: var(--cyan);
+    transition: transform 0.06s linear, background 0.2s;
+  }
+  .cursor-outer.hover {
+    width: 56px;
+    height: 56px;
+    border-color: var(--cyan);
+  }
+  .cursor-outer.click {
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+
+  /* ============== Mouse spotlight ============== */
+  .spotlight {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(
+      600px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(0, 255, 224, 0.07),
+      transparent 40%
+    );
+    transition: background 0.3s;
+  }
+
+  /* ============== Boot screen ============== */
+  .boot {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    transition: opacity 0.6s ease, visibility 0.6s;
+  }
+  .boot.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    display: none;
+  }
+  .boot-inner {
+    width: 480px;
+    max-width: 90vw;
+  }
+  .boot-line {
+    opacity: 0;
+    margin: 4px 0;
+    animation: bootLine 0.4s forwards;
+  }
+  .boot-line.ok::after { content: " [OK]"; color: var(--lime); }
+  .boot-line.run::after { content: " [...]"; color: var(--amber); }
+  @keyframes bootLine {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .boot-bar {
+    margin-top: 16px;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .boot-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    animation: bootBar 2.5s ease forwards;
+    box-shadow: 0 0 20px var(--cyan);
+  }
+  @keyframes bootBar {
+    to { width: 100%; }
+  }
+  .boot-facts {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--muted);
+    min-height: 2.6em;
+  }
+  .boot-facts-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+  #bootFactText { color: var(--lime); }
+
+  /* ============== Status bar ============== */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(7, 8, 13, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-left, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--text);
+    user-select: none;
+    cursor: pointer;
+  }
+  .logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 0 14px rgba(0, 255, 224, 0.25);
+  }
+  .egg-hint { color: var(--lime); font-size: 11px; }
+  .egg-demo { display: flex; gap: 6px; flex-wrap: wrap; }
+  .egg-demo button {
+    padding: 5px 9px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.35);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .egg-demo button:hover { border-color: var(--cyan); color: var(--cyan); }
+  .status-date {
+    color: var(--lime);
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .egg-stamps {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .egg-stamp {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px dashed var(--dim);
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--dim);
+    opacity: 0.45;
+    transition: all 0.25s var(--easing);
+  }
+  .egg-stamp.got {
+    opacity: 1;
+    border-style: solid;
+    border-color: var(--lime);
+    color: var(--lime);
+    background: rgba(212, 255, 58, 0.12);
+    box-shadow: 0 0 12px rgba(212, 255, 58, 0.35);
+  }
+  .egg-clue {
+    position: fixed;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    z-index: 10003;
+    max-width: 520px;
+    width: 90%;
+    padding: 16px 20px;
+    background: rgba(7, 8, 13, 0.96);
+    border: 1px solid var(--cyan);
+    border-radius: 14px;
+    box-shadow: 0 0 32px rgba(0, 255, 224, 0.25);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--text);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.25s var(--easing), visibility 0.2s;
+  }
+  .egg-clue.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+  .egg-clue-title {
+    color: var(--pink);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .egg-clue-body {
+    color: var(--cyan);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .repo-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--cyan);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .repo-link:hover {
+    border-color: var(--cyan);
+    transform: translateX(4px);
+  }
+  .slot {
+    min-height: 72px;
+    border: 2px dashed rgba(255,255,255,0.1);
+    border-radius: 12px;
+    background: rgba(0,0,0,0.22);
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 12px var(--lime);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .divider { color: var(--dim); }
+  .status-item { color: var(--muted); }
+  .status-item.bright { color: var(--text); }
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pink);
+    margin-right: 6px;
+    animation: pulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--pink);
+  }
+
+  /* ============== Layout ============== */
+  html { min-width: 1280px; }
+  body { min-width: 1280px; }
+
+  main.bento {
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 36px 48px 56px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    gap: 22px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card {
+    background: var(--surface);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s var(--easing);
+  }
+  .card:hover {
+    border-color: var(--border-bright);
+    background: var(--surface-hover);
+  }
+  /* corner accent on hover */
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at top right, rgba(0, 255, 224, 0.18), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .card:hover::before { opacity: 1; }
+
+  /* Card chrome */
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .step {
+    display: inline-grid;
+    place-items: center;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: rgba(0, 255, 224, 0.1);
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid rgba(0, 255, 224, 0.25);
+  }
+  .card-title {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .card-meta {
+    margin-left: auto;
+    color: var(--dim);
+  }
+
+  /* ============== Hero ============== */
+  .hero {
+    grid-column: span 12;
+    padding: 48px;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      radial-gradient(ellipse at top right, rgba(255, 46, 147, 0.08), transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(0, 255, 224, 0.08), transparent 60%),
+      var(--surface);
+  }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-meta .tag {
+    padding: 4px 10px;
+    border: 1px solid rgba(212, 255, 58, 0.3);
+    border-radius: 100px;
+    color: var(--lime);
+    background: rgba(212, 255, 58, 0.05);
+  }
+  .hero h1 {
+    font-family: 'Anton', 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    font-size: clamp(72px, 9vw, 140px);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    margin: 22px 0 18px;
+    text-transform: uppercase;
+  }
+  .hero h1 .row {
+    display: block;
+    overflow: hidden;
+  }
+  .hero h1 .row span {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: heroReveal 1s var(--easing) forwards;
+  }
+  .hero h1 .row:nth-child(2) span { animation-delay: 0.08s; }
+  .hero h1 .row:nth-child(3) span { animation-delay: 0.16s; }
+  @keyframes heroReveal {
+    to { transform: translateY(0); }
+  }
+  .hero h1 .accent {
+    background: linear-gradient(110deg, var(--cyan), var(--pink) 50%, var(--lime));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s ease infinite, heroReveal 1s var(--easing) forwards;
+  }
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .hero-sub {
+    max-width: 640px;
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .stat .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .stat .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .stat .value.lime { color: var(--lime); }
+  .stat .value.pink { color: var(--pink); }
+  .stat .value.cyan { color: var(--cyan); }
+
+  .start-class { min-height: auto; padding: 32px 36px; }
+  .start-grid {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 28px;
+    align-items: start;
+  }
+  .start-greeting {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+    border-left: 3px solid var(--lime);
+    padding-left: 16px;
+    margin-bottom: 20px;
+  }
+  .start-greeting strong { color: var(--text); font-weight: 500; }
+  .board-panel {
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .board-panel h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 12px;
+  }
+  .board-list {
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .board-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text);
+  }
+  .board-list li:last-child { border-bottom: none; }
+  .board-list li::before { content: "→ "; color: var(--cyan); }
+  .board-list a { color: var(--cyan); text-decoration: none; }
+  .board-list a:hover { text-decoration: underline; }
+  .start-timer-box .timer-ring { width: 180px; height: 180px; }
+  .start-timer-box .timer-num { font-size: 48px; }
+  .start-timer-box .timer-lbl {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+  }
+  @media (max-width: 900px) {
+    .start-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============== Entry ticket ============== */
+  .entry { grid-column: span 7; grid-row: span 3; }
+  .q {
+    margin-bottom: 22px;
+  }
+  .q:last-child { margin-bottom: 0; }
+  .q-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .q-label .num { color: var(--cyan); margin-right: 8px; }
+  .q-text {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .input,
+  .textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    padding: 10px 14px;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    cursor: pointer;
+  }
+  .textarea {
+    resize: none;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+  .input:focus,
+  .textarea:focus {
+    border-color: var(--cyan);
+    background: rgba(0, 255, 224, 0.04);
+  }
+  .input::placeholder,
+  .textarea::placeholder {
+    color: var(--dim);
+  }
+
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  .choice {
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    user-select: none;
+  }
+  .choice:hover {
+    border-color: var(--border-bright);
+    color: var(--text);
+  }
+  .choice.selected {
+    border-color: var(--cyan);
+    background: rgba(0, 255, 224, 0.08);
+    color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+
+  /* Comfort slider */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 16px var(--cyan);
+    cursor: pointer;
+  }
+  .slider::-moz-range-thumb {
+    width: 20px; height: 20px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 16px var(--cyan);
+    border: none;
+    cursor: pointer;
+  }
+  .slider-val {
+    min-width: 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    text-align: right;
+  }
+
+  /* ============== Q of the day ============== */
+  .qotd { grid-column: span 5; grid-row: span 3; display: flex; flex-direction: column; }
+  .qotd-big {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--text);
+    margin: 12px 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .qotd-big em {
+    font-style: normal;
+    background: linear-gradient(110deg, var(--pink), var(--lime));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .syntax {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--pink);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .syntax .kw { color: var(--cyan); }
+  .syntax .blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 1px dashed var(--pink);
+    color: var(--pink);
+    text-align: center;
+  }
+  .qotd .textarea { flex: 1; min-height: 100px; }
+
+  /* ============== Timer ============== */
+  .timer-card {
+    grid-column: span 4; grid-row: span 3;
+    display: flex; flex-direction: column;
+  }
+  .timer-wrap {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    position: relative;
+    margin: 8px 0;
+  }
+  .timer-ring {
+    width: 220px;
+    height: 220px;
+    transform: rotate(-90deg);
+  }
+  .timer-ring circle {
+    fill: none;
+    stroke-width: 4;
+  }
+  .timer-track { stroke: rgba(255,255,255,0.06); }
+  .timer-progress {
+    stroke: url(#timerGrad);
+    stroke-linecap: round;
+    stroke-dasharray: 628.3;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 6px var(--cyan));
+    transition: stroke-dashoffset 1s linear;
+  }
+  .timer-text {
+    position: absolute;
+    text-align: center;
+    pointer-events: none;
+  }
+  .timer-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .timer-lbl {
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .timer-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover {
+    border-color: var(--border-bright);
+    background: var(--surface-hover);
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--cyan), #00b4ff);
+    color: #001218;
+    border: none;
+    font-weight: 700;
+  }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .btn.pink {
+    background: linear-gradient(135deg, var(--pink), var(--violet));
+    color: #fff;
+    border: none;
+    font-weight: 700;
+  }
+
+  /* ============== Lesson content placeholder ============== */
+  .lesson { grid-column: span 8; grid-row: span 3; }
+  .lesson-body {
+    margin-top: 8px;
+  }
+  .lesson-body h2 {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .lesson-body p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    max-width: 600px;
+  }
+  .codeblock {
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    position: relative;
+  }
+  .codeblock::before {
+    content: "";
+    position: absolute;
+    top: 12px; left: 14px;
+    width: 50px; height: 10px;
+    background-image:
+      radial-gradient(circle at 5px 5px, #ff5f56 4px, transparent 5px),
+      radial-gradient(circle at 25px 5px, #ffbd2e 4px, transparent 5px),
+      radial-gradient(circle at 45px 5px, #27c93f 4px, transparent 5px);
+    opacity: 0.7;
+  }
+  .codeblock pre {
+    margin-top: 14px;
+    color: #d8d8e0;
+  }
+  .codeblock .c-key { color: var(--pink); }
+  .codeblock .c-fn { color: var(--cyan); }
+  .codeblock .c-str { color: var(--lime); }
+  .codeblock .c-num { color: var(--amber); }
+  .codeblock .c-com { color: var(--dim); font-style: italic; }
+
+  /* ============== Code submit ============== */
+  .submit { grid-column: span 7; grid-row: span 3; display: flex; flex-direction: column; }
+  .editor {
+    flex: 1;
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+    transition: border-color 0.2s;
+  }
+  .editor:focus-within { border-color: var(--cyan); }
+  .editor-head {
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .editor-head .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .editor-head .dot.r { background: #ff5f56; }
+  .editor-head .dot.y { background: #ffbd2e; }
+  .editor-head .dot.g { background: #27c93f; }
+  .editor-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #d8d8e0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 16px 20px;
+    resize: none;
+    cursor: pointer;
+  }
+  .editor-textarea::placeholder {
+    color: var(--dim);
+  }
+  .submit-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  /* ============== Bonus / Turtle ============== */
+  .bonus { grid-column: span 5; grid-row: span 4; display: flex; flex-direction: column; gap: 12px; }
+  .py-lab {
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .py-lab-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--lime);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .py-metrics {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.75;
+    color: #c8c8d4;
+  }
+  .py-metrics .k { color: var(--cyan); }
+  .py-metrics .v { color: var(--lime); }
+  .py-metrics .s { color: var(--dim); font-style: italic; }
+  .py-teach-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 4px 0 8px;
+  }
+  .py-snippet {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--violet);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .py-snippet:last-child { margin-bottom: 0; }
+  .py-snippet .label {
+    display: block;
+    color: var(--pink);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .py-snippet .kw { color: var(--pink); }
+  .py-snippet .fn { color: var(--cyan); }
+  .py-snippet .str { color: var(--lime); }
+  .py-snippet .com { color: var(--dim); font-style: italic; }
+  .bonus-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(155, 92, 255, 0.1);
+    border: 1px solid rgba(155, 92, 255, 0.3);
+    color: var(--violet);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+  .turtle-canvas-wrap {
+    flex: 1;
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+  }
+  #turtleCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .turtle-overlay {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--violet);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .turtle-overlay::before {
+    content: "● ";
+    color: var(--lime);
+    animation: pulse 1.5s infinite;
+  }
+  .turtle-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 6px 10px;
+    background: rgba(155, 92, 255, 0.08);
+    border: 1px solid rgba(155, 92, 255, 0.25);
+    border-radius: 8px;
+    color: var(--violet);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover {
+    background: rgba(155, 92, 255, 0.18);
+    color: #fff;
+  }
+
+  /* ============== Exit ticket ============== */
+  .exit { grid-column: span 9; grid-row: span 2; }
+  .rating-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .star {
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--dim);
+    transition: color 0.15s, transform 0.15s;
+    user-select: none;
+  }
+  .star:hover { transform: scale(1.15); }
+  .star.on { color: var(--amber); text-shadow: 0 0 12px rgba(255, 184, 0, 0.6); }
+  .exit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* ============== Resources ============== */
+  .resources { grid-column: span 3; grid-row: span 2; }
+  .link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .link:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateX(4px);
+  }
+  .link-arrow {
+    margin-left: auto;
+    color: var(--dim);
+    transition: transform 0.2s;
+  }
+  .link:hover .link-arrow {
+    transform: translateX(2px);
+    color: var(--cyan);
+  }
+
+  /* ============== Footer ============== */
+  footer {
+    max-width: 1340px;
+    margin: 32px auto 60px;
+    padding: 0 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 2;
+    position: relative;
+  }
+  footer .hint {
+    cursor: pointer;
+  }
+  footer .hint:hover { color: var(--muted); }
+
+  /* ============== Easter egg overlays ============== */
+  /* Matrix rain */
+  .matrix-rain {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s;
+  }
+  .matrix-rain.on { opacity: 1; }
+
+  /* Hacker mode */
+  body.hacker-mode {
+    --cyan: #00ff00;
+    --pink: #00ff00;
+    --lime: #00ff00;
+    --text: #00ff00;
+    --muted: #008f00;
+  }
+  body.hacker-mode .hero h1 .accent {
+    background: var(--cyan) !important;
+    -webkit-background-clip: text !important;
+    color: transparent !important;
+  }
+
+  /* Panther mode */
+  body.panther-mode {
+    --cyan: #ffd700;
+    --pink: #9b5cff;
+    --lime: #ffd700;
+    --text: #fff8e7;
+  }
+  body.panther-mode {
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(255, 215, 0, 0.2), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(155, 92, 255, 0.18), transparent 55%);
+  }
+  body.panther-mode::before {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 215, 0, 0.04) 3px,
+      transparent 4px
+    );
+  }
+  body.panther-mode .card { border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 24px rgba(255, 215, 0, 0.1); }
+  body.hacker-mode .card { border-color: rgba(0, 255, 102, 0.3); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: rgba(7, 8, 13, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--cyan);
+    border-radius: 100px;
+    padding: 14px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    z-index: 10002;
+    box-shadow: 0 0 32px rgba(0, 255, 224, 0.4);
+    transition: transform 0.5s var(--easing);
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast .eg-tag {
+    color: var(--pink);
+    margin-right: 8px;
+  }
+
+
+  /* ============== Welcome (part 1) ============== */
+  .welcome-part {
+    grid-column: span 12;
+    padding: 40px 44px 36px;
+    background:
+      radial-gradient(ellipse 70% 80% at 0% 0%, rgba(0, 255, 224, 0.1), transparent 55%),
+      radial-gradient(ellipse 50% 60% at 100% 100%, rgba(255, 46, 147, 0.08), transparent 50%),
+      var(--surface);
+  }
+  .welcome-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 40px;
+    align-items: start;
+  }
+  .welcome-title {
+    font-family: 'Anton', 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 3.2vw, 52px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 32px;
+    max-width: 920px;
+  }
+
+  .start-class-cta {
+    margin-bottom: 28px;
+    padding: 24px 28px 28px;
+    background: rgba(0, 0, 0, 0.32);
+    border: 1px solid var(--border-bright);
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(0, 255, 224, 0.08);
+  }
+  .start-class-cta-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 8px;
+  }
+  .start-class-cta-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .start-class-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .cta-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 88px;
+    padding: 20px 24px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: transform 0.2s var(--easing), box-shadow 0.2s, filter 0.2s;
+  }
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.06);
+  }
+  .cta-btn .cta-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .cta-entry {
+    background: linear-gradient(145deg, #00ffe0, #00b4ff);
+    color: #001218;
+    box-shadow: 0 8px 32px rgba(0, 255, 224, 0.35);
+  }
+  .cta-entry:hover { box-shadow: 0 12px 40px rgba(0, 255, 224, 0.5); }
+  .cta-qotd {
+    background: linear-gradient(145deg, #ff2e93, #9b5cff);
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(255, 46, 147, 0.35);
+  }
+  .cta-qotd:hover { box-shadow: 0 12px 40px rgba(255, 46, 147, 0.45); }
+
+  .welcome-title .accent {
+    background: linear-gradient(110deg, var(--cyan), var(--lime));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .welcome-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .welcome-steps li {
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 200px;
+    transition: border-color 0.25s, transform 0.25s var(--easing);
+  }
+  .welcome-steps li:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+  .welcome-steps .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green-deep, #001218);
+    background: linear-gradient(135deg, var(--lime), var(--cyan));
+    color: #001218;
+  }
+  .welcome-steps strong {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .welcome-steps p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .welcome-steps .link-go {
+    margin: 0;
+    margin-top: auto;
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  .welcome-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .welcome-aside .timer-wrap { margin: 0; }
+  .welcome-aside .timer-ring { width: 200px; height: 200px; }
+  .welcome-aside .timer-num { font-size: 52px; }
+  .welcome-aside .timer-lbl { color: var(--lime); }
+  .welcome-aside .timer-controls { width: 100%; }
+  .welcome-eggs {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .welcome-eggs .value { color: var(--pink); font-size: 16px; display: block; margin-top: 4px; }
+  .section-python {
+    grid-column: span 12;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 4px 4px;
+    margin-top: 4px;
+  }
+  .section-python-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+  }
+
+  .func-example {
+    grid-column: span 12 !important;
+    padding: 32px 40px 36px !important;
+  }
+  .func-example-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 3vw, 36px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .func-example .ide-window {
+    min-height: 0;
+    max-width: 720px;
+  }
+  .func-example .ide-body {
+    font-size: 15px;
+    padding: 18px 16px 22px 0;
+  }
+  .func-example-note {
+    margin-top: 16px;
+    max-width: 720px;
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .func-example-note strong { color: var(--lime); font-weight: 600; }
+
+  .func-subsection {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .func-subsection:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+  .func-callout {
+    max-width: 720px;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border-left: 4px solid var(--amber);
+    background: rgba(255, 184, 0, 0.1);
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .func-callout em { color: var(--amber); font-style: italic; }
+  .func-lead {
+    max-width: 720px;
+    margin-bottom: 18px;
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .func-lead strong { color: var(--cyan); }
+  .func-example-subtitle { margin-top: 8px; margin-bottom: 14px; font-size: clamp(22px, 2.5vw, 28px); }
+
+  .section-python-label {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    text-shadow: 0 0 24px rgba(0, 255, 224, 0.35);
+  }
+
+
+  .welcome-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .welcome-part {
+    grid-column: span 12 !important;
+    padding: 48px 56px 44px !important;
+    text-align: center;
+  }
+  .welcome-part .welcome-title {
+    font-size: clamp(48px, 5vw, 80px) !important;
+    margin: 0 auto 36px !important;
+    max-width: 1000px;
+    text-align: center;
+  }
+  .welcome-part .start-class-cta {
+    margin: 0 auto 36px;
+    max-width: 720px;
+    width: 100%;
+  }
+  .welcome-part .start-class-cta-head { display: none; }
+  .welcome-timer-block {
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .welcome-timer-controls { max-width: 280px; }
+  .welcome-layout, .welcome-steps, .welcome-aside, .welcome-eggs { display: none !important; }
+
+  .predict { grid-column: span 12 !important; grid-row: span 6 !important; padding: 32px 40px 40px !important; min-height: 75vh; }
+  .predict-stage { display: flex; flex-direction: column; gap: 20px; min-height: 62vh; }
+  .predict-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .predict-counter { font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.08em; color: var(--lime); text-transform: uppercase; }
+  .predict-nav-btn { min-width: 140px; font-size: 13px; }
+  .predict-nav-btn:disabled { opacity: 0.35; }
+  .predict-dots { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .predict-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--border-bright); background: transparent; cursor: pointer; padding: 0; }
+  .predict-dot.active { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px var(--cyan); transform: scale(1.2); }
+  .predict-dot.done { background: var(--lime); border-color: var(--lime); }
+  .predict-viewport { flex: 1; display: flex; flex-direction: column; }
+  .predict-slide { flex: 1; display: flex; flex-direction: column; gap: 18px; animation: cardIn 0.35s var(--easing); }
+  .predict-slide-title { font-family: 'Anton', sans-serif; font-size: 32px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cyan); text-align: center; }
+  .predict-q { font-size: 20px; font-weight: 600; text-align: center; }
+  .predict-choices { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .predict-choices span { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; padding: 12px 28px; border-radius: 12px; border: 2px solid var(--border-bright); background: rgba(0,0,0,0.35); color: var(--lime); }
+  .ide-window { flex: 1; min-height: 380px; border-radius: 14px; border: 1px solid var(--border-bright); overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.45); display: flex; flex-direction: column; }
+  .ide-titlebar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #1a1d26; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .ide-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .ide-dot.r { background: #ff5f56; }
+  .ide-dot.y { background: #ffbd2e; }
+  .ide-dot.g { background: #27c93f; }
+  .ide-fname { margin-left: 8px; color: var(--text); }
+  .ide-body { flex: 1; overflow: auto; padding: 20px 16px 24px 0; background: #0d1117; font-family: 'JetBrains Mono', monospace; font-size: 16px; line-height: 1.65; }
+  .ide-line { display: flex; gap: 16px; min-height: 1.65em; }
+  .ide-ln { flex-shrink: 0; width: 28px; text-align: right; color: #484f58; user-select: none; }
+  .ide-txt { flex: 1; white-space: pre; }
+  .hl-com { color: #8b949e; font-style: italic; }
+  .hl-com strong { color: #c9d1d9; font-style: italic; font-weight: 700; }
+  .hl-kw { color: #ff7b72; font-weight: 600; }
+  .hl-fn { color: #d2a8ff; }
+  .hl-name { color: #79c0ff; }
+  .hl-str { color: #a5d6ff; }
+  .hl-num { color: #ffa657; }
+  .predict-actions { display: flex; flex-direction: column; gap: 14px; align-items: center; padding-top: 8px; }
+  .predict-actions .reveal-btn { max-width: 420px; width: 100%; padding: 16px 24px; font-size: 14px; }
+  .predict-actions .answer-panel { width: 100%; max-width: 640px; text-align: center; }
+  .predict-actions .answer-panel strong { font-size: 28px; }
+  .bonus.turtle-only { grid-column: span 12 !important; }
+  .bonus.turtle-only .turtle-canvas-wrap { min-height: 220px; }
+  .site-footer { margin-top: 0; padding: 0; border-top: 1px solid var(--border); background: rgba(7,8,13,0.95); }
+  .session-footer { max-width: 1680px; margin: 0 auto; padding: 28px 48px 24px; border-bottom: 1px solid var(--border); }
+  .session-footer-head { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); margin-bottom: 12px; }
+  .session-footer .py-metrics { font-size: 13px; line-height: 1.7; background: #03040a; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin: 0; }
+  .footer-thanks {
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 28px 48px 8px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .footer-thanks p {
+    font-size: 1.15rem;
+    color: var(--text);
+    margin: 0 0 8px;
+    line-height: 1.5;
+  }
+  .footer-sign {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--lime);
+    letter-spacing: 0.04em;
+  }
+  .footer-sign .not-robot { color: var(--muted); font-style: italic; }
+  @media (max-width: 700px) {
+    .footer-thanks, .footer-bar, .session-footer { padding-left: 20px; padding-right: 20px; }
+    .status-bar { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+    .func-example { padding: 24px 18px !important; }
+    .welcome-part { padding: 32px 20px 28px !important; }
+  }
+  .footer-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; max-width: 1680px; margin: 0 auto; padding: 16px 48px 24px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dim); }
+
+  /* ============== Predict the output ============== */
+  .predict { grid-column: span 9; grid-row: span 5; }
+  .predict-intro {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .predict-intro em {
+    font-style: normal;
+    color: var(--lime);
+    font-weight: 600;
+  }
+  .predict-scroll {
+    max-height: min(72vh, 640px);
+    overflow-y: auto;
+    padding: 4px 8px 8px 0;
+    scroll-behavior: smooth;
+  }
+  .predict-scroll::-webkit-scrollbar { width: 8px; }
+  .predict-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  .predict-card {
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px 18px;
+    margin-bottom: 14px;
+    animation: cardIn 0.5s var(--easing) backwards;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .predict-card h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 10px;
+  }
+  .predict-q {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .predict-q .choices {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .predict-q .choices span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .predict-card .code-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.55;
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #d8d8e0;
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow: auto;
+    margin-bottom: 12px;
+  }
+  .reveal-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--lime);
+    background: rgba(212, 255, 58, 0.06);
+    color: var(--lime);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .reveal-btn:hover { background: rgba(212, 255, 58, 0.14); }
+  .reveal-btn.done {
+    border-color: var(--dim);
+    color: var(--muted);
+    background: transparent;
+  }
+  .answer-panel {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 255, 58, 0.35);
+    background: rgba(212, 255, 58, 0.08);
+  }
+  .answer-panel.show { display: block; }
+  .answer-panel strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--lime);
+  }
+  .answer-panel .teach-note {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .welcome-brett {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    margin: 16px 0 20px;
+    background: rgba(0, 255, 224, 0.06);
+    border: 1px solid rgba(0, 255, 224, 0.2);
+    border-radius: 14px;
+    font-size: 17px;
+    color: var(--muted);
+  }
+  .welcome-brett .wave { font-size: 2rem; line-height: 1; }
+  .welcome-brett strong { color: var(--text); }
+  .link-go {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--lime), var(--cyan));
+    color: #001218;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.2s var(--easing), filter 0.2s;
+  }
+  .link-go:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+    .choice, .btn, .chip, .input, .textarea, .slider, .reveal-btn, .link-go, .cta-btn, .logo { cursor: pointer; }
+  }
+
+
+  .predict-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-bright);
+    border-radius: 14px;
+  }
+  .predict-nav-center { text-align: center; flex: 1; max-width: 480px; }
+  .predict-arrow {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    border: 2px solid var(--cyan);
+    background: rgba(0, 255, 224, 0.1);
+    color: var(--cyan);
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+    flex-shrink: 0;
+  }
+  .predict-arrow:hover:not(:disabled) {
+    background: rgba(0, 255, 224, 0.22);
+    transform: scale(1.06);
+    box-shadow: 0 0 20px rgba(0, 255, 224, 0.35);
+  }
+  .predict-arrow:disabled { opacity: 0.25; cursor: not-allowed; border-color: var(--dim); color: var(--dim); }
+  .predict-snippet-nav {
+    margin: 4px 0 14px;
+  }
+  .predict-snippet-nav .predict-next-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+  }
+  .predict-snippet-nav .predict-arrow.next-snippet {
+    min-width: 160px;
+    border-color: var(--lime);
+    color: var(--lime);
+  }
+  .predict-snippet-nav .predict-arrow.next-snippet:hover:not(:disabled) {
+    background: rgba(212, 255, 58, 0.12);
+    box-shadow: 0 0 20px rgba(212, 255, 58, 0.25);
+  }
+  .predict-workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    min-height: 420px;
+    align-items: stretch;
+  }
+  .predict-code-col { min-width: 0; }
+  .predict-trace-col {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    min-height: 420px;
+    overflow: hidden;
+  }
+  .predict-code-col .ide-window {
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    height: 100%;
+  }
+  .trace-footer {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.25);
+  }
+  .trace-footer .btn { flex: 1; min-width: 0; font-size: 12px; padding: 10px 8px; }
+  .trace-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink);
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .trace-panel {
+    flex: 1;
+    padding: 20px 18px;
+    overflow-y: auto;
+  }
+  .trace-hint { color: var(--muted); font-size: 15px; line-height: 1.5; }
+  .trace-step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--lime);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .trace-step-title { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .trace-step-body { font-size: 16px; line-height: 1.55; color: var(--muted); margin-bottom: 16px; }
+  .trace-vars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    background: #03040a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--lime);
+    white-space: pre-wrap;
+  }
+  .ide-line-active { background: rgba(0, 255, 224, 0.12); box-shadow: inset 3px 0 0 var(--cyan); }
+  .ide-line-dim { opacity: 0.35; }
+  .predict-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 720px;
+  }
+  .predict-action-row .btn { flex: 1; min-width: 140px; }
+  .trace-toggle-btn.active { border-color: var(--pink); color: var(--pink); background: rgba(255, 46, 147, 0.12); }
+  .predict-workspace .ide-window { min-height: 400px; }
+  .predict-slide .predict-workspace { margin-bottom: 8px; }
+
+
+
+  /* ============== Activity levels ============== */
+  .activity { grid-column: span 12 !important; }
+  .activity-intro {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 720px;
+    margin: 0 auto 22px;
+    text-align: center;
+  }
+  .activity-levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .activity-level {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 18px 20px;
+    background: rgba(0, 0, 0, 0.28);
+    transition: border-color 0.2s, transform 0.2s var(--easing);
+  }
+  .activity-level:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+  .activity-level.is-active {
+    border-color: var(--lime);
+    box-shadow: 0 0 24px rgba(212, 255, 58, 0.12);
+  }
+  .activity-level-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .activity-level h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 10px;
+  }
+  .activity-level p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .activity-placeholder {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--dim);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .turnin-name-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    max-width: 640px;
+    margin: 0 auto 20px;
+    align-items: end;
+  }
+  .turnin-field label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 8px;
+  }
+  .turnin-field input,
+  .turnin-field select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-bright);
+    background: rgba(0, 0, 0, 0.35);
+    color: var(--text);
+  }
+  .turnin-field input:focus,
+  .turnin-field select:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+  .turnin-uploads {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 640px) {
+    .turnin-uploads { grid-template-columns: 1fr; }
+    .turnin-name-row { grid-template-columns: 1fr; }
+  }
+  .turnin-upload-box {
+    border: 2px dashed var(--border-bright);
+    border-radius: 14px;
+    padding: 22px 16px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .turnin-upload-box.has-file {
+    border-color: var(--lime);
+    border-style: solid;
+  }
+  .turnin-upload-box strong {
+    display: block;
+    color: var(--text);
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .turnin-upload-box span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .turnin-upload-box .file-name {
+    display: block;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    word-break: break-all;
+  }
+  .turnin-code-paste {
+    margin-bottom: 18px;
+  }
+  .turnin-code-paste textarea {
+    width: 100%;
+    min-height: 120px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #03040a;
+    color: #d8d8e0;
+    resize: vertical;
+  }
+  .turnin-code-paste textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+  .turnin-code-paste label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .turnin-submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .turnin-status {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+    min-height: 1.4em;
+    margin-bottom: 16px;
+  }
+  .turnin-status.ok { color: var(--lime); }
+  .turnin-status.err { color: var(--pink); }
+  .turnin-history-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin: 8px 0 12px;
+  }
+  .turnin-history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .turnin-history:empty::after {
+    content: "Your turn-ins will show up here after you submit.";
+    color: var(--dim);
+    font-size: 14px;
+    padding: 20px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+  .turnin-history-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.25);
+  }
+  .turnin-history-item .meta strong {
+    color: var(--text);
+    font-size: 15px;
+  }
+  .turnin-history-item .meta span {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .turnin-history-item .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .turnin-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--cyan);
+  }
+  .turnin-history-item button {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--pink);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+  .submit-assign { grid-column: span 12 !important; }
+  .submit-totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .submit-total-card {
+    min-width: 140px;
+    padding: 16px 22px;
+    border-radius: 12px;
+    border: 1px solid var(--border-bright);
+    background: rgba(0, 0, 0, 0.28);
+    text-align: center;
+  }
+  .submit-total-card .num {
+    font-family: 'Anton', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--cyan);
+    display: block;
+  }
+  .submit-total-card .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .submit-drop {
+    border: 2px dashed var(--border-bright);
+    border-radius: 16px;
+    padding: 36px 24px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .submit-drop.dragover {
+    border-color: var(--lime);
+    background: rgba(212, 255, 58, 0.08);
+  }
+  .submit-drop p { color: var(--muted); margin-top: 8px; font-size: 15px; }
+  .submit-drop strong { color: var(--text); display: block; font-size: 18px; margin-bottom: 4px; }
+  .submit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .submit-actions .btn { min-width: 160px; }
+  .submit-gallery-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin: 8px 0 14px;
+  }
+  .submit-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .submit-gallery:empty::after {
+    content: "Screenshots you upload will appear here.";
+    color: var(--dim);
+    font-size: 14px;
+    grid-column: 1 / -1;
+    padding: 24px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+  .gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #03040a;
+    aspect-ratio: 4/3;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gallery-item .gallery-meta {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gallery-item .gallery-del {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(0,0,0,0.7);
+    color: var(--pink);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .submit-py-list { margin-top: 8px; }
+  .submit-py-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(0,0,0,0.25);
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .submit-py-item a { color: var(--cyan); text-decoration: none; }
+  .submit-py-item a:hover { text-decoration: underline; }
+  .submit-py-item button {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--pink);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .exit-simple { grid-column: span 12 !important; text-align: center; padding: 36px 40px !important; }
+  .exit-simple .cta-btn.exit-cta {
+    display: inline-flex;
+    max-width: 520px;
+    width: 100%;
+    margin: 16px auto 0;
+    background: linear-gradient(145deg, #ffb800, #ff2e93);
+    color: #1a0a10;
+    box-shadow: 0 8px 32px rgba(255, 46, 147, 0.35);
+  }
+  .exit-simple p { color: var(--muted); font-size: 17px; max-width: 560px; margin: 0 auto; }
+
+  /* native cursor restored */
+  html, body { cursor: auto; }
+  .cursor-outer, .cursor-inner { display: none !important; }
+
+</style>
+</head>
+<body>
+
+<!-- ============== BOOT SCREEN ============== -->
+<div class="boot" id="boot">
+  <div class="boot-inner">
+    <div class="boot-line ok" style="animation-delay: 0s">> loading lesson</div>
+    <div class="boot-line ok" style="animation-delay: 0.3s">> pine crest school · florida</div>
+    <div class="boot-line ok" style="animation-delay: 0.8s">> warming up turtle.engine</div>
+    <div class="boot-line ok" style="animation-delay: 0.9s">> ready</div>
+    <div class="boot-bar"></div>
+    <p class="boot-facts">
+      <span class="boot-facts-label">python fun fact</span>
+      <span id="bootFactText">Python was named after Monty Python, not the snake.</span>
+    </p>
+    <div style="margin-top: 14px; color: var(--muted); font-size: 11px;">
+      // 6th GRADE COMPUTER SCIENCE · PINE CREST · FT LAUDERDALE
+    </div>
+  </div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor-outer"></div>
+<div class="cursor-inner"></div>
+
+<!-- Spotlight -->
+<div class="spotlight"></div>
+
+<!-- Matrix rain (hidden by default) -->
+<canvas class="matrix-rain" id="matrixRain"></canvas>
+
+<!-- ============== STATUS BAR ============== -->
+<header class="status-bar">
+  <div class="status-left">
+    <span class="status-item status-date" id="statusDate"></span>
+    <span class="logo" id="logo">
+      <img src="logo.png" alt="Pine Crest School" width="48" height="48">
+      <span class="egg-hint">3 easter eggs hidden</span>
+    </span>
+  </div>
+  <div class="status-right">
+    <span class="status-item"><span class="status-dot"></span>LIVE</span>
+    <span class="status-item bright" id="clock">--:-- -- ET</span>
+    <span class="status-item">Eastern Time</span>
+    <div class="egg-stamps" id="eggStamps" aria-label="Egg awards">
+      <span class="egg-stamp" data-egg="pinecrest" title="egg_01">01</span>
+      <span class="egg-stamp" data-egg="logo" title="egg_02">02</span>
+      <span class="egg-stamp" data-egg="panther" title="egg_03">03</span>
+    </div>
+    <span class="status-item bright" id="eggCount" style="color:var(--pink)">0 / 3</span>
+    <div class="egg-demo" id="eggDemo">
+      <button type="button" data-hint="pinecrest">egg_01.py</button>
+      <button type="button" data-hint="logo">egg_02.py</button>
+      <button type="button" data-hint="panther">egg_03.py</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============== BENTO GRID ============== -->
+<main class="bento">
+
+  <!-- PART 1 · WELCOME -->
+  <section class="card welcome-part">
+    <div class="welcome-centered">
+      <h1 class="welcome-title">Welcome to the class.<br>Welcome to <span class="accent">6th grade computer science</span>.</h1>
+
+      <div class="welcome-timer-block">
+        <div class="timer-wrap">
+          <svg class="timer-ring" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="timerGradWelcome" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00ffe0"/>
+                <stop offset="100%" stop-color="#ff2e93"/>
+              </linearGradient>
+            </defs>
+            <circle class="timer-track" cx="110" cy="110" r="100"/>
+            <circle class="timer-progress" id="startTimerProgress" cx="110" cy="110" r="100"/>
+          </svg>
+          <div class="timer-text">
+            <div class="timer-num" id="startTimerNum">5:00</div>
+            <div class="timer-lbl">entry ticket time</div>
+          </div>
+        </div>
+        <div class="timer-controls welcome-timer-controls">
+          <button type="button" class="btn primary" id="startTimerStart">▶ start</button>
+          <button type="button" class="btn" id="startTimerReset">↺ reset</button>
+        </div>
+      </div>
+
+      <div class="start-class-cta">
+        <p class="start-class-cta-title">Start of class — complete both forms.</p>
+        <div class="start-class-buttons">
+          <a class="cta-btn cta-entry" id="entryTicketCta" href="https://docs.google.com/forms/d/e/1FAIpQLSdFAdNls4D9FpMHc4OqJYBxg3op0IEqgKByZ2WRZDCiVflCXQ/viewform?usp=publish-editor" target="_blank" rel="noopener">
+            Entry ticket
+            <span class="cta-sub">open form →</span>
+          </a>
+          <a class="cta-btn cta-qotd" id="qotdCta" href="https://docs.google.com/forms/d/e/1FAIpQLSeurYf4LgpFRIJr0l_zvA9Wd30EXUsjJWXxhIakKbvxWtaI8g/viewform?usp=dialog" target="_blank" rel="noopener">
+            Question of the day
+            <span class="cta-sub">open form →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-python" aria-hidden="true">
+    <span class="section-python-line"></span>
+    <span class="section-python-label">Python</span>
+    <span class="section-python-line"></span>
+  </div>
+
+
+  <!-- PYTHON FUNCTIONS -->
+  <section class="card func-example" id="pythonFunctions">
+    <div class="card-head">
+      <span class="step">fn</span>
+      <span class="card-title">functions_in_python.py</span>
+      <span class="card-meta">parameters · positional · lists</span>
+    </div>
+
+    <div class="func-subsection">
+      <h2 class="func-example-title">Example</h2>
+      <div class="ide-window">
+        <div class="ide-titlebar">
+          <span class="ide-dot r"></span>
+          <span class="ide-dot y"></span>
+          <span class="ide-dot g"></span>
+          <span class="ide-fname">example.py</span>
+        </div>
+        <div class="ide-body">
+          <div class="ide-line"><span class="ide-ln">1</span><span class="ide-txt"><span class="hl-kw">def</span> <span class="hl-fn">my_function</span>(<span class="hl-name">name</span>): <span class="hl-com"># name is a <strong>parameter</strong></span></span></div>
+          <div class="ide-line"><span class="ide-ln">2</span><span class="ide-txt">  <span class="hl-kw">print</span>(<span class="hl-str">"Hello"</span>, <span class="hl-name">name</span>)</span></div>
+          <div class="ide-line"><span class="ide-ln">3</span><span class="ide-txt"></span></div>
+          <div class="ide-line"><span class="ide-ln">4</span><span class="ide-txt"><span class="hl-fn">my_function</span>(<span class="hl-str">"Emil"</span>) <span class="hl-com"># "Emil" is an <strong>argument</strong></span></span></div>
+        </div>
+      </div>
+      <p class="func-example-note"><strong>Parameter</strong> = the variable in the function definition (<code>name</code>). <strong>Argument</strong> = the actual value you pass when you call the function (<code>"Emil"</code>).</p>
+    </div>
+
+    <div class="func-subsection">
+      <p class="func-callout">The phrase <em>Keyword Arguments</em> is often shortened to <em>kwargs</em> in Python documentation.</p>
+      <h2 class="func-example-title">Positional Arguments</h2>
+      <p class="func-lead">When you call a function with arguments <strong>without using keywords</strong>, they are called <strong>positional arguments</strong>.</p>
+      <p class="func-lead">Positional arguments must be in the <strong>correct order</strong>:</p>
+      <h3 class="func-example-title func-example-subtitle">Example</h3>
+      <div class="ide-window">
+        <div class="ide-titlebar">
+          <span class="ide-dot r"></span>
+          <span class="ide-dot y"></span>
+          <span class="ide-dot g"></span>
+          <span class="ide-fname">positional_args.py</span>
+        </div>
+        <div class="ide-body">
+          <div class="ide-line"><span class="ide-ln">1</span><span class="ide-txt"><span class="hl-kw">def</span> <span class="hl-fn">my_function</span>(<span class="hl-name">animal</span>, <span class="hl-name">name</span>):</span></div>
+          <div class="ide-line"><span class="ide-ln">2</span><span class="ide-txt">  <span class="hl-kw">print</span>(<span class="hl-str">"I have a"</span>, <span class="hl-name">animal</span>)</span></div>
+          <div class="ide-line"><span class="ide-ln">3</span><span class="ide-txt">  <span class="hl-kw">print</span>(<span class="hl-str">"My"</span>, <span class="hl-name">animal</span> + <span class="hl-str">"'s name is"</span>, <span class="hl-name">name</span>)</span></div>
+          <div class="ide-line"><span class="ide-ln">4</span><span class="ide-txt"></span></div>
+          <div class="ide-line"><span class="ide-ln">5</span><span class="ide-txt"><span class="hl-fn">my_function</span>(<span class="hl-str">"dog"</span>, <span class="hl-str">"Buddy"</span>)</span></div>
+        </div>
+      </div>
+      <p class="func-example-note"><code>"dog"</code> goes to <code>animal</code> and <code>"Buddy"</code> goes to <code>name</code> because of the order — first value → first parameter, second value → second parameter.</p>
+    </div>
+    <div class="func-subsection">
+      <h2 class="func-example-title">Sending a List as an Argument</h2>
+      <p class="func-lead">You can pass a whole list into a function. The function can loop through each item:</p>
+      <h3 class="func-example-title func-example-subtitle">Example</h3>
+      <div class="ide-window">
+        <div class="ide-titlebar">
+          <span class="ide-dot r"></span>
+          <span class="ide-dot y"></span>
+          <span class="ide-dot g"></span>
+          <span class="ide-fname">list_argument.py</span>
+        </div>
+        <div class="ide-body">
+          <div class="ide-line"><span class="ide-ln">1</span><span class="ide-txt"><span class="hl-kw">def</span> <span class="hl-fn">my_function</span>(<span class="hl-name">fruits</span>):</span></div>
+          <div class="ide-line"><span class="ide-ln">2</span><span class="ide-txt">  <span class="hl-kw">for</span> <span class="hl-name">fruit</span> <span class="hl-kw">in</span> <span class="hl-name">fruits</span>:</span></div>
+          <div class="ide-line"><span class="ide-ln">3</span><span class="ide-txt">    <span class="hl-kw">print</span>(<span class="hl-name">fruit</span>)</span></div>
+          <div class="ide-line"><span class="ide-ln">4</span><span class="ide-txt"></span></div>
+          <div class="ide-line"><span class="ide-ln">5</span><span class="ide-txt"><span class="hl-name">my_fruits</span> = [<span class="hl-str">"apple"</span>, <span class="hl-str">"banana"</span>, <span class="hl-str">"cherry"</span>]</span></div>
+          <div class="ide-line"><span class="ide-ln">6</span><span class="ide-txt"><span class="hl-fn">my_function</span>(<span class="hl-name">my_fruits</span>)</span></div>
+        </div>
+      </div>
+      <p class="func-example-note">The list <code>my_fruits</code> is passed as one argument. Inside the function, the <code>for</code> loop prints each fruit on its own line.</p>
+    </div>
+
+
+  </section>
+
+
+  <!-- PREDICT THE OUTPUT -->
+  <section class="card predict" id="predict">
+    <div class="card-head">
+      <span class="step">01</span>
+      <span class="card-title">predict_the_output.py</span>
+      <span class="card-meta">9 snippets · click to reveal</span>
+    </div>
+    <p class="predict-intro">Ask: <em>Is it 6, 7, or 67?</em> Use <strong>Next snippet</strong> (right above the code). Trace on the right, then <strong>Show answer</strong>.</p>
+    <div class="predict-stage" id="predictStage">
+      <div class="predict-viewport" id="predictViewport"></div>
+    </div>
+  </section>
+
+  <section class="card bonus turtle-only">
+    <div class="card-head">
+      <span class="step">02</span>
+      <span class="card-title">turtle_sandbox.py</span>
+      <span class="card-meta">bonus</span>
+    </div>
+    <div class="turtle-canvas-wrap">
+      <div class="turtle-overlay">turtle_sandbox · live</div>
+      <canvas id="turtleCanvas"></canvas>
+    </div>
+    <div class="turtle-controls">
+      <button class="chip" data-pattern="hex">hexagon</button>
+      <button class="chip" data-pattern="star">star</button>
+      <button class="chip" data-pattern="spiral">spiral</button>
+      <button class="chip" data-pattern="flower">flower</button>
+      <button class="chip" data-pattern="koch">snowflake</button>
+      <button class="chip" data-pattern="clear">↺ clear</button>
+    </div>
+  </section>
+
+  <!-- CLASS ACTIVITY -->
+  <section class="card activity" id="activity">
+    <div class="card-head">
+      <span class="step">03</span>
+      <span class="card-title">class_activity.py</span>
+      <span class="card-meta">3 levels</span>
+    </div>
+    <p class="activity-intro">Work through each level. When you finish a level, turn in your screenshot and code below (right above the exit ticket).</p>
+    <div class="activity-levels">
+      <article class="activity-level" data-level="1" id="activityLevel1">
+        <div class="activity-level-badge">Level 1</div>
+        <h3>Level one</h3>
+        <p><strong>Placeholder:</strong> Follow the directions your teacher gives for Level 1. Trace the code, run it, and be ready to explain what happened.</p>
+        <div class="activity-placeholder"># level_1.py — instructions coming soon</div>
+      </article>
+      <article class="activity-level" data-level="2" id="activityLevel2">
+        <div class="activity-level-badge">Level 2</div>
+        <h3>Level two</h3>
+        <p><strong>Placeholder:</strong> Level 2 builds on Level 1. Change one part of the program and predict the output before you run it.</p>
+        <div class="activity-placeholder"># level_2.py — instructions coming soon</div>
+      </article>
+      <article class="activity-level" data-level="3" id="activityLevel3">
+        <div class="activity-level-badge">Level 3</div>
+        <h3>Level three</h3>
+        <p><strong>Placeholder:</strong> Level 3 is the challenge round. Combine what you learned in Levels 1 and 2.</p>
+        <div class="activity-placeholder"># level_3.py — instructions coming soon</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- TURN IN (above exit ticket) -->
+  <section class="card submit-assign" id="submitSection">
+    <div class="card-head">
+      <span class="step">04</span>
+      <span class="card-title">turn_in_work.py</span>
+      <span class="card-meta" id="submitMeta">saved for review</span>
+    </div>
+    <p style="color:var(--muted);margin-bottom:18px;text-align:center;max-width:720px;margin-left:auto;margin-right:auto;">
+      Enter your <strong style="color:var(--text)">name</strong>, pick your <strong style="color:var(--text)">level</strong>, then upload a <strong style="color:var(--text)">screenshot</strong> and your <strong style="color:var(--text)">code</strong> (.py file or paste below). Click <strong style="color:var(--text)">Turn in</strong> when ready.
+    </p>
+    <div class="turnin-name-row">
+      <div class="turnin-field">
+        <label for="turninName">Your name</label>
+        <input type="text" id="turninName" name="student_name" placeholder="First and last name" autocomplete="name" required>
+      </div>
+      <div class="turnin-field">
+        <label for="turninLevel">Level</label>
+        <select id="turninLevel" name="level" required>
+          <option value="1">Level 1</option>
+          <option value="2">Level 2</option>
+          <option value="3">Level 3</option>
+        </select>
+      </div>
+    </div>
+    <div class="turnin-uploads">
+      <label class="turnin-upload-box" id="turninScreenshotBox" for="turninScreenshot">
+        <strong>Screenshot</strong>
+        <span>PNG, JPG, or photo of your screen</span>
+        <span class="file-name" id="turninScreenshotName"></span>
+      </label>
+      <input type="file" id="turninScreenshot" accept="image/*,.png,.jpg,.jpeg,.gif,.webp" hidden>
+      <label class="turnin-upload-box" id="turninCodeBox" for="turninCodeFile">
+        <strong>Python file</strong>
+        <span>.py or .txt code file</span>
+        <span class="file-name" id="turninCodeFileName"></span>
+      </label>
+      <input type="file" id="turninCodeFile" accept=".py,.txt,text/plain,text/x-python" hidden>
+    </div>
+    <div class="turnin-code-paste">
+      <label for="turninCodePaste">Or paste your code here</label>
+      <textarea id="turninCodePaste" name="code_text" placeholder="# paste your Python code here…"></textarea>
+    </div>
+    <div class="turnin-submit-row">
+      <button type="button" class="btn primary" id="turninSubmitBtn">Turn in work</button>
+      <button type="button" class="btn" id="turninClearBtn">Clear form</button>
+    </div>
+    <p class="turnin-status" id="turninStatus" role="status" aria-live="polite"></p>
+    <div class="turnin-history-head">Your turn-ins on this device</div>
+    <div class="turnin-history" id="turninHistory" aria-live="polite"></div>
+  </section>
+
+  <!-- EXIT TICKET -->
+  <section class="card exit-simple">
+    <div class="card-head" style="justify-content:center;">
+      <span class="step">05</span>
+      <span class="card-title">exit_ticket</span>
+    </div>
+    <p>Complete the exit ticket before you leave.</p>
+    <a class="cta-btn exit-cta" id="exitTicketCta" href="https://docs.google.com/forms/d/e/1FAIpQLSepYNmF73owfykjuI3c701VE0Lcb28LRP6TkcHhrVRTCNmlpg/viewform?usp=publish-editor" target="_blank" rel="noopener">
+      Open exit ticket
+      <span class="cta-sub">google form →</span>
+    </a>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="card resources">
+    <div class="card-head">
+      <span class="step">06</span>
+      <span class="card-title">resources.md</span>
+    </div>
+    <ul class="link-list">
+      <li><a class="link" href="https://docs.python.org/3/library/turtle.html" target="_blank" rel="noopener">turtle docs <span class="link-arrow">→</span></a></li>
+      <li><a class="link" href="https://trinket.io/python" target="_blank" rel="noopener">trinket.io sandbox <span class="link-arrow">→</span></a></li>
+      <li><a class="link" href="https://replit.com/languages/python3" target="_blank" rel="noopener">replit python <span class="link-arrow">→</span></a></li>
+      <li><a class="link" href="https://codewithbrett.com/" target="_blank" rel="noopener">codewithbrett.com <span class="link-arrow">→</span></a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <section class="footer-thanks" aria-label="Thank you">
+    <p>Thank you for having me today.</p>
+    <p class="footer-sign">— Brett <span class="not-robot">(not a robot)</span></p>
+  </section>
+  <section class="session-footer">
+    <div class="session-footer-head">session_data.py · live</div>
+    <pre class="py-metrics" id="pyMetrics"># session starting…</pre>
+  </section>
+  <div class="footer-bar">
+    <span>// PINE CREST · PYTHON LESSON</span>
+    <span class="hint" id="footHint">// psst — 3 easter eggs hidden. find them.</span>
+  </div>
+</footer>
+
+<!-- toast -->
+<div class="toast" id="toast"><span id="toastText"></span></div>
+
+<div class="egg-clue" id="eggClue" role="status" aria-live="polite">
+  <div class="egg-clue-title" id="eggClueTitle"></div>
+  <div class="egg-clue-body" id="eggClueBody"></div>
+</div>
+
+<script>
+/* =================================================================
+   PCS_CS · interactive layer
+   ================================================================= */
+
+/* ---------- 0. Console message (the curious dev-tools kid) ---------- */
+console.log(
+  '%c PINE CREST · PYTHON LESSON ',
+  'background: linear-gradient(90deg, #00ffe0, #ff2e93); color: #000; padding: 6px 14px; border-radius: 4px; font-weight: bold; font-size: 14px;'
+);
+console.log('%cnice. you opened the dev tools. that\'s already pretty hacker.', 'color: #00ffe0; font-family: monospace; font-size: 12px;');
+console.log('%cwant to find the easter eggs? here are three clues:', 'color: #8b8b95; font-family: monospace;');
+console.log('%c  1. type "pinecrest" anywhere on the page\n  2. click the school logo 7 times\n  3. type "panther" anywhere on the page', 'color: #d4ff3a; font-family: monospace;');
+
+/* ---------- 1. Boot fade ---------- */
+const BOOT_FACTS = [
+  'Python was named after Monty Python, not the snake.',
+  'In Python, indentation is part of the syntax — no curly braces needed.',
+  'The built-in turtle module is perfect for drawing with code.',
+  'print("hello") is often the first line new Python coders run.',
+  'Lists in Python can hold mixed types: [1, "hi", True].'
+];
+const bootFactEl = document.getElementById('bootFactText');
+if (bootFactEl) {
+  bootFactEl.textContent = BOOT_FACTS[Math.floor(Math.random() * BOOT_FACTS.length)];
+}
+function hideBoot() {
+  setTimeout(() => {
+    const boot = document.getElementById('boot');
+    if (boot) boot.classList.add('done');
+  }, 2600);
+}
+if (document.readyState === 'complete') hideBoot();
+else window.addEventListener('load', hideBoot);
+
+/* ---------- 2. Live clock (US Eastern, 12-hour) ---------- */
+const clockEl = document.getElementById('clock');
+const ET = 'America/New_York';
+
+function tick() {
+  const now = new Date();
+  clockEl.textContent = new Intl.DateTimeFormat('en-US', {
+    timeZone: ET,
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }).format(now) + ' ET';
+}
+
+function paintDate() {
+  document.getElementById('statusDate').textContent = new Intl.DateTimeFormat('en-US', {
+    timeZone: ET,
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(new Date());
+}
+
+tick();
+paintDate();
+setInterval(tick, 1000);
+
+
+/* ---------- Class links (update Doc/Form IDs here) ---------- */
+const CLASS_LINKS = {
+  entryTicket: 'https://docs.google.com/forms/d/e/1FAIpQLSdFAdNls4D9FpMHc4OqJYBxg3op0IEqgKByZ2WRZDCiVflCXQ/viewform?usp=publish-editor',
+  questionOfDay: 'https://docs.google.com/forms/d/e/1FAIpQLSeurYf4LgpFRIJr0l_zvA9Wd30EXUsjJWXxhIakKbvxWtaI8g/viewform?usp=dialog',
+  exitTicket: 'https://docs.google.com/forms/d/e/1FAIpQLSepYNmF73owfykjuI3c701VE0Lcb28LRP6TkcHhrVRTCNmlpg/viewform?usp=publish-editor'
+};
+(function applyClassLinks() {
+  const entry = document.getElementById('entryTicketLink');
+  const qotd = document.getElementById('qotdLink');
+  const entryCta = document.getElementById('entryTicketCta');
+  const qotdCta = document.getElementById('qotdCta');
+  if (entry && CLASS_LINKS.entryTicket) entry.href = CLASS_LINKS.entryTicket;
+  if (qotd && CLASS_LINKS.questionOfDay) qotd.href = CLASS_LINKS.questionOfDay;
+  if (entryCta && CLASS_LINKS.entryTicket) entryCta.href = CLASS_LINKS.entryTicket;
+  if (qotdCta && CLASS_LINKS.questionOfDay) qotdCta.href = CLASS_LINKS.questionOfDay;
+  const exitCta = document.getElementById('exitTicketCta');
+  if (exitCta && CLASS_LINKS.exitTicket) exitCta.href = CLASS_LINKS.exitTicket;
+})();
+
+
+
+/* ---------- Activity turn-in (IndexedDB + optional Formspree) ---------- */
+const ACTIVITY_SUBMIT = {
+  // Paste your Formspree form id so submissions go to your dashboard for review.
+  // Example: 'abcxyz' → posts to https://formspree.io/f/abcxyz
+  formspreeId: ''
+};
+
+(function initActivityTurnIn() {
+  const DB_NAME = 'pinecrest_activity_turnins_v1';
+  const STORE = 'turnins';
+  const NAME_KEY = 'pinecrest_student_name';
+
+  const nameInput = document.getElementById('turninName');
+  const levelSelect = document.getElementById('turninLevel');
+  const screenshotInput = document.getElementById('turninScreenshot');
+  const codeFileInput = document.getElementById('turninCodeFile');
+  const codePaste = document.getElementById('turninCodePaste');
+  const screenshotBox = document.getElementById('turninScreenshotBox');
+  const codeBox = document.getElementById('turninCodeBox');
+  const screenshotNameEl = document.getElementById('turninScreenshotName');
+  const codeFileNameEl = document.getElementById('turninCodeFileName');
+  const submitBtn = document.getElementById('turninSubmitBtn');
+  const clearBtn = document.getElementById('turninClearBtn');
+  const statusEl = document.getElementById('turninStatus');
+  const historyEl = document.getElementById('turninHistory');
+  const submitMeta = document.getElementById('submitMeta');
+  const levelCards = document.querySelectorAll('.activity-level');
+
+  if (!nameInput || !submitBtn || !historyEl) return;
+
+  if (ACTIVITY_SUBMIT.formspreeId) {
+    if (submitMeta) submitMeta.textContent = 'sent for teacher review';
+  } else if (submitMeta) {
+    submitMeta.textContent = 'saved on this device';
+  }
+
+  const savedName = localStorage.getItem(NAME_KEY);
+  if (savedName) nameInput.value = savedName;
+
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg || '';
+    statusEl.className = 'turnin-status' + (kind ? ' ' + kind : '');
+  }
+
+  function showToastMsg(msg) {
+    if (typeof showToast === 'function') showToast(msg);
+  }
+
+  function highlightLevel() {
+    const lv = levelSelect.value;
+    levelCards.forEach(function (card) {
+      card.classList.toggle('is-active', card.getAttribute('data-level') === lv);
+    });
+  }
+
+  levelSelect.addEventListener('change', highlightLevel);
+  highlightLevel();
+
+  function readFileAsDataUrl(file) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(reader.error); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function readFileAsText(file) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(reader.error); };
+      reader.readAsText(file);
+    });
+  }
+
+  function openDb() {
+    return new Promise(function (resolve, reject) {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onerror = function () { reject(req.error); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onupgradeneeded = function (e) {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE)) {
+          db.createObjectStore(STORE, { keyPath: 'id' });
+        }
+      };
+    });
+  }
+
+  function getAll() {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(STORE, 'readonly');
+        const req = tx.objectStore(STORE).getAll();
+        req.onsuccess = function () { resolve(req.result || []); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+
+  function putItem(item) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(item);
+        tx.oncomplete = function () { resolve(item); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  function deleteItem(id) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).delete(id);
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  function syncToFormspree(payload) {
+    if (!ACTIVITY_SUBMIT.formspreeId) return Promise.resolve(false);
+    const fd = new FormData();
+    fd.append('student_name', payload.studentName);
+    fd.append('level', 'Level ' + payload.level);
+    fd.append('_subject', payload.studentName + ' · Level ' + payload.level + ' · Pine Crest CS');
+    if (payload.screenshotFile) fd.append('screenshot', payload.screenshotFile, payload.screenshotFile.name);
+    if (payload.codeFile) fd.append('code_file', payload.codeFile, payload.codeFile.name);
+    if (payload.codeText) fd.append('code_text', payload.codeText);
+    return fetch('https://formspree.io/f/' + ACTIVITY_SUBMIT.formspreeId, {
+      method: 'POST',
+      body: fd,
+      headers: { Accept: 'application/json' }
+    }).then(function (res) {
+      if (!res.ok) return res.json().then(function (j) { throw new Error(j.error || 'Could not send to teacher.'); });
+      return true;
+    });
+  }
+
+  function formatWhen(ts) {
+    return new Date(ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderHistory() {
+    return getAll().then(function (items) {
+      items.sort(function (a, b) { return b.createdAt - a.createdAt; });
+      historyEl.innerHTML = '';
+      items.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'turnin-history-item';
+        const tags = [];
+        if (item.hasScreenshot) tags.push('<span class="turnin-tag">screenshot</span>');
+        if (item.hasCode) tags.push('<span class="turnin-tag">code</span>');
+        if (item.synced) tags.push('<span class="turnin-tag">sent</span>');
+        row.innerHTML =
+          '<div class="meta"><strong>' + escapeHtml(item.studentName) + '</strong>' +
+          '<span>Level ' + escapeHtml(String(item.level)) + ' · ' + formatWhen(item.createdAt) + '</span>' +
+          '<div class="tags">' + tags.join('') + '</div></div>';
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.textContent = 'remove';
+        del.addEventListener('click', function () {
+          deleteItem(item.id).then(renderHistory);
+        });
+        row.appendChild(del);
+        historyEl.appendChild(row);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function updateFileLabels() {
+    const sf = screenshotInput.files && screenshotInput.files[0];
+    const cf = codeFileInput.files && codeFileInput.files[0];
+    screenshotBox.classList.toggle('has-file', !!sf);
+    codeBox.classList.toggle('has-file', !!cf);
+    screenshotNameEl.textContent = sf ? sf.name : '';
+    codeFileNameEl.textContent = cf ? cf.name : '';
+  }
+
+  screenshotInput.addEventListener('change', updateFileLabels);
+  codeFileInput.addEventListener('change', updateFileLabels);
+
+  function clearForm() {
+    screenshotInput.value = '';
+    codeFileInput.value = '';
+    codePaste.value = '';
+    updateFileLabels();
+    setStatus('', '');
+  }
+
+  clearBtn.addEventListener('click', clearForm);
+
+  submitBtn.addEventListener('click', async function () {
+    const studentName = nameInput.value.trim();
+    const level = levelSelect.value;
+    const screenshotFile = screenshotInput.files && screenshotInput.files[0];
+    const codeFile = codeFileInput.files && codeFileInput.files[0];
+    const codeText = codePaste.value.trim();
+
+    if (!studentName) {
+      setStatus('Please enter your name.', 'err');
+      nameInput.focus();
+      return;
+    }
+    if (!screenshotFile && !codeFile && !codeText) {
+      setStatus('Add a screenshot, a .py file, or paste your code.', 'err');
+      return;
+    }
+
+    localStorage.setItem(NAME_KEY, studentName);
+    submitBtn.disabled = true;
+    setStatus('Saving…', '');
+
+    try {
+      let screenshotDataUrl = null;
+      let codeStoredText = codeText || null;
+      let codeStoredName = codeFile ? codeFile.name : (codeText ? 'pasted_code.py' : null);
+
+      if (screenshotFile) screenshotDataUrl = await readFileAsDataUrl(screenshotFile);
+      if (codeFile) codeStoredText = await readFileAsText(codeFile);
+
+      const item = {
+        id: 'turnin_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+        studentName: studentName,
+        level: level,
+        createdAt: Date.now(),
+        hasScreenshot: !!screenshotFile,
+        hasCode: !!(codeFile || codeText),
+        screenshotDataUrl: screenshotDataUrl,
+        codeText: codeStoredText,
+        codeName: codeStoredName,
+        synced: false
+      };
+
+      const synced = await syncToFormspree({
+        studentName: studentName,
+        level: level,
+        screenshotFile: screenshotFile,
+        codeFile: codeFile,
+        codeText: codeStoredText
+      });
+      item.synced = synced;
+      await putItem(item);
+
+      const msg = synced
+        ? 'Turned in! Your teacher can review your work.'
+        : 'Saved on this device. (Ask your teacher to enable online turn-in.)';
+      setStatus(msg, 'ok');
+      showToastMsg('Level ' + level + ' turned in');
+      clearForm();
+      await renderHistory();
+    } catch (err) {
+      setStatus(err.message || 'Something went wrong. Try again.', 'err');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  renderHistory();
+})();
+
+
+
+/* ---------- Session data · Python bonus metrics ---------- */
+const SESSION = {
+  start: Date.now(),
+  clicks: 0,
+  buttonClicks: 0,
+  mousePathPx: 0,
+  lastX: null,
+  lastY: null,
+  trailCurrent: 0,
+  trailMax: 0,
+  lastMoveAt: 0,
+  zones: {},
+  turtleDraws: 0,
+  keysTyped: 0
+};
+
+function zoneKey(x, y) {
+  const w = innerWidth;
+  const h = innerHeight;
+  const col = x < w / 3 ? 'left' : x < (2 * w) / 3 ? 'center' : 'right';
+  const row = y < h / 3 ? 'top' : y < (2 * h) / 3 ? 'middle' : 'bottom';
+  return row + '_' + col;
+}
+
+function busiestZone() {
+  let best = 'middle_center';
+  let max = 0;
+  for (const k in SESSION.zones) {
+    if (SESSION.zones[k] > max) {
+      max = SESSION.zones[k];
+      best = k;
+    }
+  }
+  return best.replace('_', ' ');
+}
+
+function trackMouse(e) {
+  const now = Date.now();
+  const x = e.clientX;
+  const y = e.clientY;
+  if (SESSION.lastX != null) {
+    const d = Math.hypot(x - SESSION.lastX, y - SESSION.lastY);
+    if (d >= 1) {
+      SESSION.mousePathPx += d;
+      if (now - SESSION.lastMoveAt > 450) SESSION.trailCurrent = 0;
+      SESSION.trailCurrent += d;
+      if (SESSION.trailCurrent > SESSION.trailMax) SESSION.trailMax = SESSION.trailCurrent;
+      SESSION.lastMoveAt = now;
+    }
+  }
+  SESSION.lastX = x;
+  SESSION.lastY = y;
+  const z = zoneKey(x, y);
+  SESSION.zones[z] = (SESSION.zones[z] || 0) + 1;
+}
+
+function trackClick(e) {
+  SESSION.clicks++;
+  if (e.target.closest('button, .chip, .choice, .star, a, .btn, .link, .slider, #logo')) {
+    SESSION.buttonClicks++;
+  }
+}
+
+function renderPyMetrics() {
+  const el = document.getElementById('pyMetrics');
+  if (!el) return;
+  const secs = Math.floor((Date.now() - SESSION.start) / 1000);
+  const eggs = window.__eggCount || 0;
+  el.innerHTML = [
+    '<span class="com"># your data right now</span>',
+    '<span class="k">clicks</span> = <span class="v">' + SESSION.clicks + '</span>',
+    '<span class="k">button_clicks</span> = <span class="v">' + SESSION.buttonClicks + '</span>',
+    '<span class="k">mouse_path_px</span> = <span class="v">' + Math.round(SESSION.mousePathPx) + '</span>',
+    '<span class="k">longest_trail_px</span> = <span class="v">' + Math.round(SESSION.trailMax) + '</span>',
+    '<span class="k">busiest_zone</span> = <span class="v">"' + busiestZone() + '"</span>',
+    '<span class="k">seconds_on_page</span> = <span class="v">' + secs + '</span>',
+    '<span class="k">keys_typed</span> = <span class="v">' + SESSION.keysTyped + '</span>',
+    '<span class="k">turtle_runs</span> = <span class="v">' + SESSION.turtleDraws + '</span>',
+    '<span class="k">easter_eggs_found</span> = <span class="v">' + eggs + '</span>'
+  ].join('\n');
+}
+
+setInterval(renderPyMetrics, 500);
+document.addEventListener('click', trackClick);
+
+/* ---------- 3. Spotlight (custom cursor removed) ---------- */
+const spotlight = document.querySelector('.spotlight');
+document.addEventListener('mousemove', (e) => {
+  trackMouse(e);
+  if (spotlight) {
+    spotlight.style.setProperty('--mx', e.clientX + 'px');
+    spotlight.style.setProperty('--my', e.clientY + 'px');
+  }
+});
+
+/* ---------- 4. Entry ticket interactions (optional in-page widgets) ---------- */
+const slider = document.getElementById('comfortSlider');
+const sliderVal = document.getElementById('comfortVal');
+if (slider && sliderVal) {
+  slider.addEventListener('input', () => {
+    sliderVal.textContent = slider.value + ' / 5';
+  });
+}
+
+document.querySelectorAll('.choices').forEach(group => {
+  group.querySelectorAll('.choice').forEach(c => {
+    c.addEventListener('click', () => {
+      group.querySelectorAll('.choice').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+    });
+  });
+});
+
+/* ---------- 5. Star rating (legacy; optional) ---------- */
+(function initStarRating() {
+  const stars = document.querySelectorAll('#ratingRow .star');
+  const row = document.getElementById('ratingRow');
+  if (!stars.length || !row) return;
+  let rating = 0;
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => {
+      const v = +s.dataset.v;
+      stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= v));
+    });
+    s.addEventListener('click', () => {
+      rating = +s.dataset.v;
+      stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= rating));
+    });
+  });
+  row.addEventListener('mouseleave', () => {
+    stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= rating));
+  });
+})();
+
+/* ---------- 6. Timers ---------- */
+const CIRC = 2 * Math.PI * 100;
+const FIVE_MIN = 5 * 60;
+
+function wireTimer(numEl, progEl, startBtn, resetBtn, total) {
+  let sec = total;
+  let running = false;
+  let intId = null;
+
+  function paint() {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    numEl.textContent = m + ':' + String(s).padStart(2, '0');
+    progEl.style.strokeDashoffset = CIRC * (1 - sec / total);
+  }
+  paint();
+
+  startBtn.addEventListener('click', () => {
+    if (running) {
+      clearInterval(intId);
+      running = false;
+      startBtn.innerHTML = '▶ resume';
+      return;
+    }
+    running = true;
+    startBtn.innerHTML = '⏸ pause';
+    intId = setInterval(() => {
+      if (sec > 0) {
+        sec--;
+        paint();
+      } else {
+        clearInterval(intId);
+        running = false;
+        startBtn.innerHTML = '▶ start';
+        numEl.textContent = 'TIME';
+        numEl.style.color = 'var(--pink)';
+        setTimeout(() => { numEl.style.color = ''; paint(); }, 2000);
+      }
+    }, 1000);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    clearInterval(intId);
+    running = false;
+    sec = total;
+    paint();
+    startBtn.innerHTML = '▶ start';
+    numEl.style.color = '';
+  });
+}
+
+const startNum = document.getElementById('startTimerNum');
+const startProg = document.getElementById('startTimerProgress');
+const startBtn = document.getElementById('startTimerStart');
+const startReset = document.getElementById('startTimerReset');
+if (startNum && startProg && startBtn && startReset) {
+  if (startProg) startProg.style.stroke = 'url(#timerGradWelcome)';
+  wireTimer(startNum, startProg, startBtn, startReset, FIVE_MIN);
+}
+
+
+
+
+/* ---------- Predict the output · carousel + trace ---------- */
+const PREDICT_SNIPPETS = [
+  {
+    title: 'Snippet 1: The Starting Grade',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nstudent_name = "Mia"\ncurrent_grade = 6\n\ndef get_grade(grade):\n    final_answer = grade\n    return final_answer\n\nanswer = get_grade(current_grade)\n\nprint(answer)`,
+    answer: '6',
+    note: '',
+    trace: [
+      { lines: [6], title: 'Create a variable', body: 'student_name stores the text "Mia".', vars: 'student_name = "Mia"' },
+      { lines: [7], title: 'Store the grade number', body: 'current_grade is the number 6 (not text).', vars: 'current_grade = 6' },
+      { lines: [9], title: 'Define the function', body: 'get_grade is a reusable mini-machine. It will receive one value called grade.', vars: '' },
+      { lines: [10, 11], title: 'Inside the function', body: 'final_answer gets whatever was passed in. Then return sends that value back.', vars: 'final_answer = grade → return final_answer' },
+      { lines: [13], title: 'Call the function', body: 'Python runs get_grade(6). The function returns 6, so answer becomes 6.', vars: 'answer = 6' },
+      { lines: [15], title: 'Print the result', body: 'print shows the value of answer on the screen.', vars: 'Output: 6' }
+    ]
+  },
+  {
+    title: 'Snippet 2: Moving Up One Grade',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nstudent_name = "Leo"\ncurrent_grade = 6\nyears_later = 1\n\ndef next_grade(grade, years):\n    new_grade = grade + years\n    return new_grade\n\nanswer = next_grade(current_grade, years_later)\n\nprint(answer)`,
+    answer: '7',
+    note: '',
+    trace: [
+      { lines: [7], title: 'Starting grade', body: 'current_grade is 6.', vars: 'current_grade = 6' },
+      { lines: [8], title: 'Years to add', body: 'years_later is 1.', vars: 'years_later = 1' },
+      { lines: [10], title: 'Define next_grade', body: 'This function adds two numbers.', vars: '' },
+      { lines: [11], title: 'Add inside the function', body: '6 + 1 = 7. Numbers add with +.', vars: 'new_grade = 7' },
+      { lines: [12], title: 'Return the sum', body: 'The function gives back 7.', vars: 'return 7' },
+      { lines: [14], title: 'Call the function', body: 'next_grade(6, 1) returns 7.', vars: 'answer = 7' },
+      { lines: [16], title: 'Print', body: 'Screen shows 7.', vars: 'Output: 7' }
+    ]
+  },
+  {
+    title: 'Snippet 3: Numbers Joined as Text',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nfirst_number = 6\nsecond_number = 7\n\ndef combine_numbers(number_one, number_two):\n    text_one = str(number_one)\n    text_two = str(number_two)\n    combined = text_one + text_two\n    return combined\n\nanswer = combine_numbers(first_number, second_number)\n\nprint(answer)`,
+    answer: '67',
+    note: 'This prints 67, not 13, because the numbers are turned into strings before being added.',
+    trace: [
+      { lines: [6, 7], title: 'Two numbers', body: 'first_number is 6 and second_number is 7.', vars: '6 and 7 (numbers)' },
+      { lines: [10], title: 'Function starts', body: 'combine_numbers will join text, not add math.', vars: '' },
+      { lines: [11], title: 'Convert to text', body: 'str(6) becomes "6" (text).', vars: 'text_one = "6"' },
+      { lines: [12], title: 'Convert second number', body: 'str(7) becomes "7".', vars: 'text_two = "7"' },
+      { lines: [13], title: 'Join text with +', body: '"6" + "7" glues them together → "67". Not 13!', vars: 'combined = "67"' },
+      { lines: [14], title: 'Return', body: 'Function returns "67".', vars: 'return "67"' },
+      { lines: [16], title: 'Print', body: 'print shows 67.', vars: 'Output: 67' }
+    ]
+  },
+  {
+    title: 'Snippet 4: The If Statement',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nstudent_name = "Ava"\nquiz_score = 75\npassing_score = 80\n\ndef choose_number(score, goal):\n    if score > goal:\n        result = 7\n    else:\n        result = 6\n\n    return result\n\nanswer = choose_number(quiz_score, passing_score)\n\nprint(answer)`,
+    answer: '6',
+    note: '',
+    trace: [
+      { lines: [7, 8], title: 'Scores', body: 'quiz_score is 75. passing_score is 80.', vars: '75 and 80' },
+      { lines: [11], title: 'Check the if', body: 'Is 75 > 80? No.', vars: 'False' },
+      { lines: [14], title: 'Run the else', body: 'Because the if was false, Python runs else: result = 6.', vars: 'result = 6' },
+      { lines: [16], title: 'Return', body: 'Function returns 6.', vars: 'return 6' },
+      { lines: [18], title: 'Print', body: 'Output is 6.', vars: 'Output: 6' }
+    ]
+  },
+  {
+    title: 'Snippet 5: Greater Than or Equal To',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nstudent_name = "Noah"\nquiz_score = 90\nhonor_score = 90\n\ndef choose_number(score, goal):\n    if score >= goal:\n        result = 7\n    else:\n        result = 6\n\n    return result\n\nanswer = choose_number(quiz_score, honor_score)\n\nprint(answer)`,
+    answer: '7',
+    note: '',
+    trace: [
+      { lines: [7, 8], title: 'Both scores are 90', body: 'quiz_score and honor_score are equal.', vars: '90 and 90' },
+      { lines: [11], title: 'Check >=', body: 'Is 90 >= 90? Yes! (equal counts too.)', vars: 'True' },
+      { lines: [12], title: 'If branch runs', body: 'result becomes 7.', vars: 'result = 7' },
+      { lines: [16], title: 'Return and print', body: 'Function returns 7. print shows 7.', vars: 'Output: 7' }
+    ]
+  },
+  {
+    title: 'Snippet 6: Text Variables',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\ngrade_six = "6"\ngrade_seven = "7"\n\ndef make_grade_code(first_grade, second_grade):\n    code = first_grade + second_grade\n    return code\n\nanswer = make_grade_code(grade_six, grade_seven)\n\nprint(answer)`,
+    answer: '67',
+    note: '"6" and "7" are text, so Python joins them together.',
+    trace: [
+      { lines: [6, 7], title: 'Text in quotes', body: '"6" and "7" are strings, not numbers.', vars: 'grade_six = "6", grade_seven = "7"' },
+      { lines: [10], title: 'Function', body: 'make_grade_code joins two strings.', vars: '' },
+      { lines: [11], title: 'Join with +', body: '"6" + "7" → "67".', vars: 'code = "67"' },
+      { lines: [14], title: 'Call and print', body: 'answer is "67". print shows 67.', vars: 'Output: 67' }
+    ]
+  },
+  {
+    title: 'Snippet 7: Changing a Variable Inside a Function',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nstarting_number = 6\nbonus_point = 1\n\ndef add_bonus(number, bonus):\n    number = number + bonus\n    return number\n\nanswer = add_bonus(starting_number, bonus_point)\n\nprint(answer)`,
+    answer: '7',
+    note: '',
+    trace: [
+      { lines: [6, 7], title: 'Start values', body: 'starting_number is 6. bonus_point is 1.', vars: '6 and 1' },
+      { lines: [10], title: 'Inside add_bonus', body: 'number starts as 6 (copied from the call).', vars: 'number = 6' },
+      { lines: [11], title: 'Add bonus', body: 'number = 6 + 1 → 7 inside the function.', vars: 'number = 7' },
+      { lines: [12], title: 'Return', body: 'Returns 7 to the caller.', vars: 'return 7' },
+      { lines: [14], title: 'Print', body: 'answer is 7.', vars: 'Output: 7' }
+    ]
+  },
+  {
+    title: 'Snippet 8: Function Uses Two Steps',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\nfirst_digit = 6\nsecond_digit = 7\n\ndef build_code(digit_one, digit_two):\n    digit_one_text = str(digit_one)\n    digit_two_text = str(digit_two)\n\n    secret_code = digit_one_text + digit_two_text\n\n    return secret_code\n\nanswer = build_code(first_digit, second_digit)\n\nprint(answer)`,
+    answer: '67',
+    note: '',
+    trace: [
+      { lines: [6, 7], title: 'Digits as numbers', body: '6 and 7 are stored as numbers first.', vars: 'first_digit = 6, second_digit = 7' },
+      { lines: [11], title: 'Step 1: to text', body: 'Convert first digit to "6".', vars: 'digit_one_text = "6"' },
+      { lines: [12], title: 'Step 2: to text', body: 'Convert second digit to "7".', vars: 'digit_two_text = "7"' },
+      { lines: [14], title: 'Join', body: 'secret_code = "6" + "7" → "67".', vars: 'secret_code = "67"' },
+      { lines: [17], title: 'Print', body: 'Output: 67.', vars: 'Output: 67' }
+    ]
+  },
+  {
+    title: 'Snippet 9: Careful With the Function Call',
+    code: `# What will Python print?\n# A. 6\n# B. 7\n# C. 67\n\ngrade_today = 6\ngrade_next_year = 7\n\ndef pick_grade(first_choice, second_choice):\n    chosen_grade = second_choice\n    return chosen_grade\n\nanswer = pick_grade(grade_today, grade_next_year)\n\nprint(answer)`,
+    answer: '7',
+    note: '',
+    trace: [
+      { lines: [6, 7], title: 'Two grades passed in', body: 'first argument is 6, second is 7.', vars: '6 and 7' },
+      { lines: [10], title: 'Function picks second', body: 'chosen_grade = second_choice → 7.', vars: 'chosen_grade = 7' },
+      { lines: [11], title: 'Return', body: 'Returns 7 (ignores the 6).', vars: 'return 7' },
+      { lines: [13], title: 'Print', body: 'Output: 7.', vars: 'Output: 7' }
+    ]
+  }
+];
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function highlightPython(code, activeLines, dimOthers) {
+  activeLines = activeLines || [];
+  var activeSet = {};
+  activeLines.forEach(function (n) { activeSet[n] = true; });
+  return code.split('\n').map(function (line, i) {
+    var lineNum = i + 1;
+    var n = String(lineNum).padStart(2, ' ');
+    var body;
+    if (/^\s*#/.test(line)) {
+      body = '<span class="hl-com">' + escapeHtml(line) + '</span>';
+    } else {
+      body = escapeHtml(line);
+      body = body.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="hl-str">$1</span>');
+      body = body.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="hl-str">$1</span>');
+      body = body.replace(/\b(def|return|if|else|elif|for|in|import|from)\b/g, '<span class="hl-kw">$1</span>');
+      body = body.replace(/\b(print|str|range)\b/g, '<span class="hl-fn">$1</span>');
+      body = body.replace(/\b([a-z_][a-z0-9_]*)\s*(?=\()/gi, function (m) {
+        var skip = ['if', 'for', 'def', 'in', 'return', 'print', 'str', 'range', 'else', 'elif'];
+        if (skip.indexOf(m) >= 0) return m;
+        return '<span class="hl-name">' + m + '</span>';
+      });
+      body = body.replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
+    }
+    var cls = 'ide-line';
+    if (activeSet[lineNum]) cls += ' ide-line-active';
+    else if (dimOthers && activeLines.length && !/^\s*#/.test(line) && line.trim()) cls += ' ide-line-dim';
+    return '<div class="' + cls + '"><span class="ide-ln">' + n + '</span><span class="ide-txt">' + body + '</span></div>';
+  }).join('');
+}
+
+(function initPredictStage() {
+  var viewport = document.getElementById('predictViewport');
+  if (!viewport || !PREDICT_SNIPPETS.length) return;
+
+  var index = 0;
+  var answerShown = false;
+  var traceOpen = true;
+  var traceStep = 0;
+
+  function updateNav() {
+    var counter = document.getElementById('predictCounter');
+    var prevBtn = document.getElementById('predictPrev');
+    var nextBtn = document.getElementById('predictNext');
+    if (counter) counter.textContent = 'Snippet ' + (index + 1) + ' of ' + PREDICT_SNIPPETS.length;
+    if (prevBtn) prevBtn.disabled = index === 0;
+    if (nextBtn) nextBtn.disabled = index >= PREDICT_SNIPPETS.length - 1;
+  }
+
+  function updateDots() {
+    var dotsEl = document.getElementById('predictDots');
+    if (!dotsEl) return;
+    dotsEl.querySelectorAll('.predict-dot').forEach(function (d, i) {
+      d.classList.toggle('active', i === index);
+      d.classList.toggle('done', i < index || (i === index && answerShown));
+    });
+  }
+
+  function buildDots() {
+    var dotsEl = document.getElementById('predictDots');
+    if (!dotsEl) return;
+    dotsEl.innerHTML = '';
+    PREDICT_SNIPPETS.forEach(function (_, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'predict-dot';
+      dot.title = 'Snippet ' + (i + 1);
+      dot.addEventListener('click', function () { goTo(i); });
+      dotsEl.appendChild(dot);
+    });
+  }
+
+  function activeTraceLines() {
+    var sn = PREDICT_SNIPPETS[index];
+    if (!traceOpen || !sn.trace || !sn.trace.length) return [];
+    var step = sn.trace[traceStep];
+    return step ? step.lines : [];
+  }
+
+  function updateTraceButtons() {
+    var sn = PREDICT_SNIPPETS[index];
+    var total = sn.trace ? sn.trace.length : 0;
+    var tracePrev = document.getElementById('traceStepPrev');
+    var traceNext = document.getElementById('traceStepNext');
+    if (!tracePrev || !traceNext) return;
+    if (!traceOpen || !total) {
+      tracePrev.disabled = true;
+      traceNext.disabled = true;
+      return;
+    }
+    tracePrev.disabled = traceStep <= 0;
+    traceNext.disabled = traceStep >= total - 1;
+  }
+
+  function renderTracePanel() {
+    var panel = document.getElementById('predictTracePanel');
+    if (!panel) return;
+    var sn = PREDICT_SNIPPETS[index];
+    if (!traceOpen || !sn.trace || !sn.trace.length) {
+      panel.innerHTML = '<p class="trace-hint">Use <strong>Trace step ▶</strong> on the right to walk through line by line.</p>';
+      updateTraceButtons();
+      return;
+    }
+    var step = sn.trace[traceStep];
+    var total = sn.trace.length;
+    panel.innerHTML =
+      '<div class="trace-step-label">Step ' + (traceStep + 1) + ' of ' + total + '</div>' +
+      '<h4 class="trace-step-title">' + step.title + '</h4>' +
+      '<p class="trace-step-body">' + step.body + '</p>' +
+      (step.vars ? '<pre class="trace-vars">' + escapeHtml(step.vars) + '</pre>' : '');
+    updateTraceButtons();
+  }
+
+  function refreshCode() {
+    var codeEl = document.getElementById('predictCodeBody');
+    if (!codeEl) return;
+    var sn = PREDICT_SNIPPETS[index];
+    codeEl.innerHTML = highlightPython(sn.code, activeTraceLines(), traceOpen);
+  }
+
+  function snippetNavHtml() {
+    return (
+      '<div class="predict-snippet-nav predict-nav-bar">' +
+      '<button type="button" class="predict-arrow" id="predictPrev" aria-label="Previous snippet">◀ Prev</button>' +
+      '<div class="predict-nav-center">' +
+      '<span class="predict-counter" id="predictCounter">Snippet 1 of 9</span>' +
+      '<div class="predict-dots" id="predictDots" aria-hidden="true"></div>' +
+      '</div>' +
+      '<button type="button" class="predict-arrow next-snippet" id="predictNext" aria-label="Next snippet">' +
+      'Next snippet ▶<span class="predict-next-label">next problem</span></button>' +
+      '</div>'
+    );
+  }
+
+  function render() {
+    var sn = PREDICT_SNIPPETS[index];
+    var fileNum = String(index + 1).padStart(2, '0');
+    answerShown = false;
+    traceOpen = !!(sn.trace && sn.trace.length);
+    traceStep = 0;
+
+    viewport.innerHTML =
+      '<article class="predict-slide">' +
+      '<h3 class="predict-slide-title">' + sn.title + '</h3>' +
+      '<p class="predict-q">What will Python print?</p>' +
+      '<div class="predict-choices"><span>A. 6</span><span>B. 7</span><span>C. 67</span></div>' +
+      snippetNavHtml() +
+      '<div class="predict-workspace" id="predictWorkspace">' +
+      '<div class="predict-code-col">' +
+      '<div class="ide-window"><div class="ide-titlebar"><span class="ide-dot r"></span><span class="ide-dot y"></span><span class="ide-dot g"></span><span class="ide-fname">snippet_' + fileNum + '.py</span></div>' +
+      '<div class="ide-body" id="predictCodeBody"></div></div></div>' +
+      '<div class="predict-trace-col" id="predictTraceCol">' +
+      '<div class="trace-header">Tracing</div>' +
+      '<div class="trace-panel" id="predictTracePanel"></div>' +
+      '<div class="trace-footer">' +
+      '<button type="button" class="btn" id="traceStepPrev" disabled>◀ Trace step</button>' +
+      '<button type="button" class="btn" id="traceStepNext" disabled>Trace step ▶</button>' +
+      '</div></div></div>' +
+      '<div class="predict-actions">' +
+      '<div class="predict-action-row">' +
+      '<button type="button" class="btn trace-toggle-btn active" id="predictTraceToggle">■ Reset trace</button>' +
+      '</div>' +
+      '<button type="button" class="btn primary reveal-btn" id="predictReveal">Show answer</button>' +
+      '<div class="answer-panel" id="predictAnswer"><strong>Answer: ' + sn.answer + '</strong>' +
+      (sn.note ? '<p class="teach-note">' + sn.note + '</p>' : '') +
+      '</div></div></article>';
+
+    viewport.innerHTML = viewport.innerHTML.replace(/<div /g, '<div ').replace(/<\/motion>/g, '</div>').replace(/<\/motion>/g, '</div>').replace(/<\/motion>/g, '</div>');
+
+    buildDots();
+    updateNav();
+    updateDots();
+    refreshCode();
+    renderTracePanel();
+
+    var traceToggle = document.getElementById('predictTraceToggle');
+    var tracePrev = document.getElementById('traceStepPrev');
+    var traceNext = document.getElementById('traceStepNext');
+    var reveal = document.getElementById('predictReveal');
+    var panel = document.getElementById('predictAnswer');
+    var prevBtn = document.getElementById('predictPrev');
+    var nextBtn = document.getElementById('predictNext');
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(index + 1); });
+
+    if (traceToggle) {
+      traceToggle.addEventListener('click', function () {
+        traceStep = 0;
+        traceOpen = !!(sn.trace && sn.trace.length);
+        traceToggle.classList.toggle('active', traceOpen);
+        refreshCode();
+        renderTracePanel();
+      });
+    }
+
+    if (tracePrev) {
+      tracePrev.addEventListener('click', function () {
+        if (traceStep > 0) {
+          traceStep--;
+          refreshCode();
+          renderTracePanel();
+        }
+      });
+    }
+    if (traceNext) {
+      traceNext.addEventListener('click', function () {
+        var total = sn.trace ? sn.trace.length : 0;
+        if (traceStep < total - 1) {
+          traceStep++;
+          refreshCode();
+          renderTracePanel();
+        }
+      });
+    }
+
+    if (reveal) {
+      reveal.addEventListener('click', function () {
+        answerShown = true;
+        panel.classList.add('show');
+        reveal.textContent = 'Answer: ' + sn.answer;
+        reveal.classList.add('done');
+        updateDots();
+      });
+    }
+  }
+
+  function goTo(i) {
+    index = Math.max(0, Math.min(PREDICT_SNIPPETS.length - 1, i));
+    render();
+  }
+
+  render();
+})();
+
+/* ---------- 7. Mini in-browser turtle (bonus zone) ---------- */
+const tCanvas = document.getElementById('turtleCanvas');
+const tCtx = tCanvas.getContext('2d');
+function resizeTurtle() {
+  const r = tCanvas.getBoundingClientRect();
+  tCanvas.width = r.width * window.devicePixelRatio;
+  tCanvas.height = r.height * window.devicePixelRatio;
+  tCtx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+}
+window.addEventListener('resize', resizeTurtle);
+setTimeout(resizeTurtle, 50);
+
+// Tiny turtle engine
+class Turtle {
+  constructor(ctx) {
+    this.ctx = ctx;
+    this.reset();
+  }
+  reset() {
+    const w = this.ctx.canvas.width / window.devicePixelRatio;
+    const h = this.ctx.canvas.height / window.devicePixelRatio;
+    this.x = w / 2;
+    this.y = h / 2;
+    this.heading = -90; // up
+    this.pen = true;
+    this.color = '#9b5cff';
+    this.width = 1.5;
+    this.steps = [];
+  }
+  setColor(c) { this.color = c; }
+  setWidth(w) { this.width = w; }
+  forward(d) {
+    const rad = this.heading * Math.PI / 180;
+    const nx = this.x + Math.cos(rad) * d;
+    const ny = this.y + Math.sin(rad) * d;
+    this.steps.push({ from: [this.x, this.y], to: [nx, ny], color: this.color, width: this.width });
+    this.x = nx; this.y = ny;
+  }
+  left(deg) { this.heading -= deg; }
+  right(deg) { this.heading += deg; }
+
+  async play(speed = 6) {
+    for (const s of this.steps) {
+      this.ctx.strokeStyle = s.color;
+      this.ctx.lineWidth = s.width;
+      this.ctx.lineCap = 'round';
+      this.ctx.beginPath();
+      this.ctx.moveTo(s.from[0], s.from[1]);
+      this.ctx.lineTo(s.to[0], s.to[1]);
+      this.ctx.stroke();
+      if (speed > 0) await new Promise(r => setTimeout(r, speed));
+    }
+  }
+}
+let currentTurtleRun = 0;
+function clearTurtle() {
+  tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
+}
+
+const PATTERNS = {
+  hex: (t) => {
+    for (let i = 0; i < 6; i++) {
+      t.setColor(`hsl(${i * 60}, 100%, 60%)`);
+      t.forward(60);
+      t.left(60);
+    }
+  },
+  star: (t) => {
+    for (let i = 0; i < 5; i++) {
+      t.setColor(`hsl(${i * 72 + 180}, 100%, 65%)`);
+      t.forward(120);
+      t.right(144);
+    }
+  },
+  spiral: (t) => {
+    for (let i = 0; i < 80; i++) {
+      t.setColor(`hsl(${i * 4}, 100%, 60%)`);
+      t.forward(i * 1.4);
+      t.right(35);
+    }
+  },
+  flower: (t) => {
+    for (let i = 0; i < 36; i++) {
+      t.setColor(`hsl(${i * 10}, 90%, 65%)`);
+      for (let j = 0; j < 6; j++) {
+        t.forward(20);
+        t.left(60);
+      }
+      t.right(10);
+    }
+  },
+  koch: (t) => {
+    function koch(d, n) {
+      if (n === 0) { t.forward(d); return; }
+      koch(d / 3, n - 1); t.left(60);
+      koch(d / 3, n - 1); t.right(120);
+      koch(d / 3, n - 1); t.left(60);
+      koch(d / 3, n - 1);
+    }
+    t.setColor('#00ffe0');
+    for (let i = 0; i < 3; i++) {
+      koch(180, 3);
+      t.right(120);
+    }
+  }
+};
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', async () => {
+    const p = chip.dataset.pattern;
+    if (p === 'clear') { clearTurtle(); return; }
+    SESSION.turtleDraws++;
+    currentTurtleRun++;
+    const myRun = currentTurtleRun;
+    clearTurtle();
+    const t = new Turtle(tCtx);
+    // start a bit lower-left for koch which expands right
+    if (p === 'koch') { t.x -= 90; t.y += 50; }
+    PATTERNS[p](t);
+    // play
+    for (const s of t.steps) {
+      if (myRun !== currentTurtleRun) return;
+      tCtx.strokeStyle = s.color;
+      tCtx.lineWidth = s.width;
+      tCtx.lineCap = 'round';
+      tCtx.beginPath();
+      tCtx.moveTo(s.from[0], s.from[1]);
+      tCtx.lineTo(s.to[0], s.to[1]);
+      tCtx.stroke();
+      await new Promise(r => setTimeout(r, 8));
+    }
+  });
+});
+
+// Draw default pattern on load so it's not empty
+setTimeout(() => {
+  document.querySelector('.chip[data-pattern="spiral"]').click();
+}, 3000);
+
+/* =================================================================
+   EASTER EGGS
+   ================================================================= */
+const eggsFound = new Set();
+const toast = document.getElementById('toast');
+const toastText = document.getElementById('toastText');
+const eggCountEl = document.getElementById('eggCount');
+const eggCountHero = document.getElementById('eggCountHero'); // optional
+let toastTimer;
+
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  toastText.textContent = msg;
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+function unlockEgg(name, msg) {
+  if (eggsFound.has(name)) {
+    showToast(msg + ' (already found)');
+    return;
+  }
+  eggsFound.add(name);
+  window.__eggCount = eggsFound.size;
+  const count = `${eggsFound.size} / 3`;
+  eggCountEl.textContent = count;
+  if (eggCountHero) eggCountHero.textContent = count;
+  const stamp = document.querySelector('.egg-stamp[data-egg="' + name + '"]');
+  if (stamp) stamp.classList.add('got');
+  showToast(msg);
+  console.log(`%c🥚 EGG_FOUND: ${name}`, 'background:#ff2e93;color:#fff;padding:4px 10px;border-radius:4px;font-weight:bold');
+  if (eggsFound.size === 3) {
+    setTimeout(() => showToast('all three. you found everything. respect.'), 3500);
+  }
+}
+
+const mCanvas = document.getElementById('matrixRain');
+const mCtx = mCanvas.getContext('2d');
+let mRAF = null;
+let hackerStopTimer = null;
+let pantherStopTimer = null;
+
+function setupMatrix() {
+  mCanvas.width = window.innerWidth;
+  mCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', setupMatrix);
+setupMatrix();
+
+function stopMatrixRain() {
+  mCanvas.classList.remove('on');
+  if (mRAF) {
+    cancelAnimationFrame(mRAF);
+    mRAF = null;
+  }
+  mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+}
+
+function stopHackerMode() {
+  clearTimeout(hackerStopTimer);
+  stopMatrixRain();
+  document.body.classList.remove('hacker-mode');
+}
+
+function stopPantherMode() {
+  clearTimeout(pantherStopTimer);
+  document.body.classList.remove('panther-mode');
+}
+
+function startMatrixRain() {
+  mCanvas.classList.add('on');
+  const cols = Math.max(1, Math.floor(mCanvas.width / 16));
+  let drops = Array(cols).fill(0).map(() => Math.random() * -100);
+  function loop() {
+    mCtx.fillStyle = 'rgba(0,0,0,0.06)';
+    mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+    mCtx.fillStyle = '#00ff66';
+    mCtx.font = '14px JetBrains Mono, monospace';
+    drops.forEach((y, i) => {
+      mCtx.fillText(String.fromCharCode(0x30A0 + Math.random() * 96), i * 16, y * 16);
+      if (y * 16 > mCanvas.height && Math.random() > 0.975) drops[i] = 0;
+      else drops[i]++;
+    });
+    mRAF = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function startHackerMode() {
+  stopHackerMode();
+  stopPantherMode();
+  document.body.classList.add('hacker-mode');
+  startMatrixRain();
+  hackerStopTimer = setTimeout(stopHackerMode, 3000);
+}
+
+function spawnParade() {
+  const emojis = ['🐾', '🐆', '✨', '💛', '💜', '⚡', '🎉', '🏫'];
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.textContent = emojis[i % emojis.length];
+      el.style.cssText = `position:fixed;left:-60px;top:${Math.random() * (window.innerHeight - 80) + 40}px;font-size:${24 + Math.random() * 24}px;z-index:10003;pointer-events:none;transition:transform 2.5s linear`;
+      document.body.appendChild(el);
+      requestAnimationFrame(() => {
+        el.style.transform = `translateX(${window.innerWidth + 200}px) rotate(${Math.random() * 360}deg)`;
+      });
+      setTimeout(() => el.remove(), 2800);
+    }, i * 120);
+  }
+}
+
+function startPantherMode() {
+  stopPantherMode();
+  stopHackerMode();
+  document.body.classList.add('panther-mode');
+  spawnParade();
+  pantherStopTimer = setTimeout(stopPantherMode, 3500);
+}
+
+function toAscii(word) {
+  return [...word].map(c => String(c.charCodeAt(0))).join(' ');
+}
+
+function toBinaryLines(str) {
+  const bins = [...str].map(c => c.charCodeAt(0).toString(2).padStart(8, '0'));
+  const lines = [];
+  for (let i = 0; i < bins.length; i += 4) {
+    lines.push(bins.slice(i, i + 4).join(' '));
+  }
+  return lines.join('\n');
+}
+
+let eggClueTimer;
+function showEggClue(which) {
+  const box = document.getElementById('eggClue');
+  const title = document.getElementById('eggClueTitle');
+  const body = document.getElementById('eggClueBody');
+  let text = '';
+  if (which === 'pinecrest') {
+    title.textContent = 'egg_01.py · ASCII decode';
+    text = 'Pine Crest School — type as one word.\nASCII value per letter:\n' + toAscii('pinecrest') + '\n\n→ pinecrest';
+  } else if (which === 'panther') {
+    title.textContent = 'egg_03.py · ASCII decode';
+    text = 'Type this word (ASCII value per letter):\n' + toAscii('panther') + '\n\n→ panther';
+  } else if (which === 'logo') {
+    title.textContent = 'egg_02.py · BINARY decode';
+    const msg = 'click logo 7 times';
+    text = 'Decode these 8-bit bytes, then do it:\n' + toBinaryLines(msg) + '\n\n→ ' + msg;
+  }
+  body.textContent = text;
+  box.classList.add('show');
+  clearTimeout(eggClueTimer);
+  eggClueTimer = setTimeout(() => box.classList.remove('show'), 3000);
+}
+
+function fireEgg(which) {
+  if (which === 'pinecrest') {
+    startHackerMode();
+    unlockEgg('pinecrest', 'hacker mode activated.');
+    return;
+  }
+  if (which === 'logo') {
+    startPantherMode();
+    unlockEgg('logo', 'go panthers. 🐾');
+    return;
+  }
+  if (which === 'panther') {
+    startPantherMode();
+    unlockEgg('panther', 'go panthers. 🐾');
+  }
+}
+
+document.getElementById('eggDemo').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-hint]');
+  if (!btn) return;
+  showEggClue(btn.dataset.hint);
+});
+
+let typedBuf = '';
+document.addEventListener('keydown', (e) => {
+  if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+  if (e.key.length !== 1) return;
+  SESSION.keysTyped++;
+  typedBuf += e.key.toLowerCase();
+  if (typedBuf.length > 24) typedBuf = typedBuf.slice(-24);
+  if (typedBuf.includes('pinecrest')) {
+    typedBuf = '';
+    fireEgg('pinecrest');
+  }
+  if (typedBuf.includes('panther')) {
+    typedBuf = '';
+    fireEgg('panther');
+  }
+});
+
+let logoClicks = 0;
+let logoTimer = null;
+document.getElementById('logo').addEventListener('click', () => {
+  logoClicks++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(() => { logoClicks = 0; }, 3000);
+  if (logoClicks >= 7) {
+    logoClicks = 0;
+    fireEgg('logo');
+  }
+});
+
+/* ---------- Footer hint subtle interaction ---------- */
+document.getElementById('footHint').addEventListener('click', () => {
+  console.log('%cthe clues are in the dev tools 👀', 'color: #00ffe0; font-family: monospace; font-size: 13px;');
+});
+
+</script>
+</body>
+</html>

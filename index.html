@@ -1,2075 +1,374 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=1280" />
-<title>Python Lesson — Pine Crest</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Anton&display=swap" rel="stylesheet">
-<style>
-  /* ============================================================
-     PINE CREST CS — MODULE 06
-     6th Grade // Functions in Python + Turtle
-     Built by Brett. Don't tell the kids the easter eggs.
-     ============================================================ */
-
-  :root {
-    --bg: #07080d;
-    --bg-2: #0c0e16;
-    --surface: rgba(255, 255, 255, 0.035);
-    --surface-hover: rgba(255, 255, 255, 0.06);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-bright: rgba(255, 255, 255, 0.18);
-    --text: #f4f4f7;
-    --muted: #7d7f8d;
-    --dim: #4a4c58;
-
-    --cyan: #00ffe0;
-    --pink: #ff2e93;
-    --lime: #d4ff3a;
-    --violet: #9b5cff;
-    --amber: #ffb800;
-
-    --glow-cyan: 0 0 24px rgba(0, 255, 224, 0.45);
-    --glow-pink: 0 0 24px rgba(255, 46, 147, 0.45);
-
-    --easing: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Space Grotesk', system-ui, sans-serif;
-    font-feature-settings: "ss01", "cv11";
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  body {
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(155, 92, 255, 0.12), transparent 60%),
-      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(0, 255, 224, 0.10), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(255, 46, 147, 0.05), transparent 70%);
-  }
-
-  /* Scanline texture overlay — Y2K seasoning */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 2px,
-      rgba(255, 255, 255, 0.012) 3px,
-      transparent 4px
-    );
-    mix-blend-mode: overlay;
-  }
-
-  /* Grain */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  }
-
-  /* ============== Custom cursor ============== */
-  .cursor-outer, .cursor-inner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 10001;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    will-change: transform;
-    mix-blend-mode: difference;
-  }
-  .cursor-outer {
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid rgba(255, 255, 255, 0.9);
-    transition: transform 0.18s var(--easing), width 0.2s var(--easing), height 0.2s var(--easing), border-color 0.2s;
-  }
-  .cursor-inner {
-    width: 6px;
-    height: 6px;
-    background: var(--cyan);
-    transition: transform 0.06s linear, background 0.2s;
-  }
-  .cursor-outer.hover {
-    width: 56px;
-    height: 56px;
-    border-color: var(--cyan);
-  }
-  .cursor-outer.click {
-    transform: translate(-50%, -50%) scale(0.6);
-  }
-
-  /* ============== Mouse spotlight ============== */
-  .spotlight {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    background: radial-gradient(
-      600px circle at var(--mx, 50%) var(--my, 50%),
-      rgba(0, 255, 224, 0.07),
-      transparent 40%
-    );
-    transition: background 0.3s;
-  }
-
-  /* ============== Boot screen ============== */
-  .boot {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 10000;
-    display: grid;
-    place-items: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--cyan);
-    transition: opacity 0.6s ease, visibility 0.6s;
-  }
-  .boot.done { opacity: 0; visibility: hidden; }
-  .boot-inner {
-    width: 480px;
-    max-width: 90vw;
-  }
-  .boot-line {
-    opacity: 0;
-    margin: 4px 0;
-    animation: bootLine 0.4s forwards;
-  }
-  .boot-line.ok::after { content: " [OK]"; color: var(--lime); }
-  .boot-line.run::after { content: " [...]"; color: var(--amber); }
-  @keyframes bootLine {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .boot-bar {
-    margin-top: 16px;
-    height: 4px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-  }
-  .boot-bar::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 0;
-    background: linear-gradient(90deg, var(--cyan), var(--pink));
-    animation: bootBar 2.5s ease forwards;
-    box-shadow: 0 0 20px var(--cyan);
-  }
-  @keyframes bootBar {
-    to { width: 100%; }
-  }
-
-  /* ============== Status bar ============== */
-  .status-bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 28px;
-    background: rgba(7, 8, 13, 0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .status-left, .status-right {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    color: var(--text);
-    user-select: none;
-    cursor: none;
-  }
-  .logo img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    box-shadow: 0 0 14px rgba(0, 255, 224, 0.25);
-  }
-  .egg-hint { color: var(--lime); font-size: 11px; }
-  .egg-demo { display: flex; gap: 6px; flex-wrap: wrap; }
-  .egg-demo button {
-    padding: 5px 9px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: rgba(0,0,0,0.35);
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: none;
-  }
-  .egg-demo button:hover { border-color: var(--cyan); color: var(--cyan); }
-  .status-date {
-    color: var(--lime);
-    font-weight: 600;
-    margin-right: 8px;
-  }
-  .egg-stamps {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  .egg-stamp {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    border: 1px dashed var(--dim);
-    display: grid;
-    place-items: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--dim);
-    opacity: 0.45;
-    transition: all 0.25s var(--easing);
-  }
-  .egg-stamp.got {
-    opacity: 1;
-    border-style: solid;
-    border-color: var(--lime);
-    color: var(--lime);
-    background: rgba(212, 255, 58, 0.12);
-    box-shadow: 0 0 12px rgba(212, 255, 58, 0.35);
-  }
-  .egg-clue {
-    position: fixed;
-    top: 72px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-12px);
-    z-index: 10003;
-    max-width: 520px;
-    width: 90%;
-    padding: 16px 20px;
-    background: rgba(7, 8, 13, 0.96);
-    border: 1px solid var(--cyan);
-    border-radius: 14px;
-    box-shadow: 0 0 32px rgba(0, 255, 224, 0.25);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1.55;
-    color: var(--text);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s, transform 0.25s var(--easing), visibility 0.2s;
-  }
-  .egg-clue.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-  .egg-clue-title {
-    color: var(--pink);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .egg-clue-body {
-    color: var(--cyan);
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-  .repo-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--cyan);
-    text-decoration: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .repo-link:hover {
-    border-color: var(--cyan);
-    transform: translateX(4px);
-  }
-  .slot {
-    min-height: 72px;
-    border: 2px dashed rgba(255,255,255,0.1);
-    border-radius: 12px;
-    background: rgba(0,0,0,0.22);
-  }
-  .logo-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--lime);
-    box-shadow: 0 0 12px var(--lime);
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.85); }
-  }
-  .divider { color: var(--dim); }
-  .status-item { color: var(--muted); }
-  .status-item.bright { color: var(--text); }
-  .status-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--pink);
-    margin-right: 6px;
-    animation: pulse 1.4s ease-in-out infinite;
-    box-shadow: 0 0 8px var(--pink);
-  }
-
-  /* ============== Layout ============== */
-  main.bento {
-    max-width: 1340px;
-    margin: 0 auto;
-    padding: 28px;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: minmax(120px, auto);
-    gap: 16px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .card {
-    background: var(--surface);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, background 0.3s, transform 0.3s var(--easing);
-  }
-  .card:hover {
-    border-color: var(--border-bright);
-    background: var(--surface-hover);
-  }
-  /* corner accent on hover */
-  .card::before {
-    content: "";
-    position: absolute;
-    top: 0; right: 0;
-    width: 60px; height: 60px;
-    background: radial-gradient(circle at top right, rgba(0, 255, 224, 0.18), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-  }
-  .card:hover::before { opacity: 1; }
-
-  /* Card chrome */
-  .card-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .step {
-    display: inline-grid;
-    place-items: center;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    background: rgba(0, 255, 224, 0.1);
-    color: var(--cyan);
-    font-size: 10px;
-    font-weight: 700;
-    border: 1px solid rgba(0, 255, 224, 0.25);
-  }
-  .card-title {
-    color: var(--text);
-    font-weight: 500;
-  }
-  .card-meta {
-    margin-left: auto;
-    color: var(--dim);
-  }
-
-  /* ============== Hero ============== */
-  .hero {
-    grid-column: span 12;
-    padding: 48px;
-    min-height: 380px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background:
-      radial-gradient(ellipse at top right, rgba(255, 46, 147, 0.08), transparent 60%),
-      radial-gradient(ellipse at bottom left, rgba(0, 255, 224, 0.08), transparent 60%),
-      var(--surface);
-  }
-  .hero-meta {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .hero-meta .tag {
-    padding: 4px 10px;
-    border: 1px solid rgba(212, 255, 58, 0.3);
-    border-radius: 100px;
-    color: var(--lime);
-    background: rgba(212, 255, 58, 0.05);
-  }
-  .hero h1 {
-    font-family: 'Anton', 'Space Grotesk', sans-serif;
-    font-weight: 400;
-    font-size: clamp(72px, 9vw, 140px);
-    line-height: 0.88;
-    letter-spacing: -0.03em;
-    margin: 22px 0 18px;
-    text-transform: uppercase;
-  }
-  .hero h1 .row {
-    display: block;
-    overflow: hidden;
-  }
-  .hero h1 .row span {
-    display: inline-block;
-    transform: translateY(110%);
-    animation: heroReveal 1s var(--easing) forwards;
-  }
-  .hero h1 .row:nth-child(2) span { animation-delay: 0.08s; }
-  .hero h1 .row:nth-child(3) span { animation-delay: 0.16s; }
-  @keyframes heroReveal {
-    to { transform: translateY(0); }
-  }
-  .hero h1 .accent {
-    background: linear-gradient(110deg, var(--cyan), var(--pink) 50%, var(--lime));
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 6s ease infinite, heroReveal 1s var(--easing) forwards;
-  }
-  @keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  .hero-sub {
-    max-width: 640px;
-    font-size: 18px;
-    color: var(--muted);
-    line-height: 1.55;
-  }
-  .hero-stats {
-    display: flex;
-    gap: 32px;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-  .stat .label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--dim);
-    display: block;
-    margin-bottom: 6px;
-  }
-  .stat .value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text);
-  }
-  .stat .value.lime { color: var(--lime); }
-  .stat .value.pink { color: var(--pink); }
-  .stat .value.cyan { color: var(--cyan); }
-
-  /* ============== Entry ticket ============== */
-  .entry { grid-column: span 7; grid-row: span 3; }
-  .q {
-    margin-bottom: 22px;
-  }
-  .q:last-child { margin-bottom: 0; }
-  .q-label {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .q-label .num { color: var(--cyan); margin-right: 8px; }
-  .q-text {
-    font-size: 18px;
-    color: var(--text);
-    margin-bottom: 12px;
-    font-weight: 400;
-  }
-  .input,
-  .textarea {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    padding: 10px 14px;
-    transition: border-color 0.2s, background 0.2s;
-    outline: none;
-    cursor: none;
-  }
-  .textarea {
-    resize: none;
-    min-height: 80px;
-    line-height: 1.5;
-  }
-  .input:focus,
-  .textarea:focus {
-    border-color: var(--cyan);
-    background: rgba(0, 255, 224, 0.04);
-  }
-  .input::placeholder,
-  .textarea::placeholder {
-    color: var(--dim);
-  }
-
-  .choices {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 8px;
-  }
-  .choice {
-    padding: 12px 14px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    cursor: none;
-    transition: all 0.2s;
-    text-align: center;
-    user-select: none;
-  }
-  .choice:hover {
-    border-color: var(--border-bright);
-    color: var(--text);
-  }
-  .choice.selected {
-    border-color: var(--cyan);
-    background: rgba(0, 255, 224, 0.08);
-    color: var(--cyan);
-    box-shadow: var(--glow-cyan);
-  }
-
-  /* Comfort slider */
-  .slider-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .slider {
-    flex: 1;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 6px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    outline: none;
-    cursor: none;
-  }
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px; height: 20px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 16px var(--cyan);
-    cursor: none;
-  }
-  .slider::-moz-range-thumb {
-    width: 20px; height: 20px;
-    background: var(--cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 16px var(--cyan);
-    border: none;
-    cursor: none;
-  }
-  .slider-val {
-    min-width: 60px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--cyan);
-    text-align: right;
-  }
-
-  /* ============== Q of the day ============== */
-  .qotd { grid-column: span 5; grid-row: span 3; display: flex; flex-direction: column; }
-  .qotd-big {
-    font-size: 28px;
-    font-weight: 500;
-    line-height: 1.25;
-    color: var(--text);
-    margin: 12px 0 18px;
-    letter-spacing: -0.01em;
-  }
-  .qotd-big em {
-    font-style: normal;
-    background: linear-gradient(110deg, var(--pink), var(--lime));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .syntax {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--pink);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .syntax .kw { color: var(--cyan); }
-  .syntax .blank {
-    display: inline-block;
-    min-width: 80px;
-    border-bottom: 1px dashed var(--pink);
-    color: var(--pink);
-    text-align: center;
-  }
-  .qotd .textarea { flex: 1; min-height: 100px; }
-
-  /* ============== Timer ============== */
-  .timer-card {
-    grid-column: span 4; grid-row: span 3;
-    display: flex; flex-direction: column;
-  }
-  .timer-wrap {
-    flex: 1;
-    display: grid;
-    place-items: center;
-    position: relative;
-    margin: 8px 0;
-  }
-  .timer-ring {
-    width: 220px;
-    height: 220px;
-    transform: rotate(-90deg);
-  }
-  .timer-ring circle {
-    fill: none;
-    stroke-width: 4;
-  }
-  .timer-track { stroke: rgba(255,255,255,0.06); }
-  .timer-progress {
-    stroke: url(#timerGrad);
-    stroke-linecap: round;
-    stroke-dasharray: 628.3;
-    stroke-dashoffset: 0;
-    filter: drop-shadow(0 0 6px var(--cyan));
-    transition: stroke-dashoffset 1s linear;
-  }
-  .timer-text {
-    position: absolute;
-    text-align: center;
-    pointer-events: none;
-  }
-  .timer-num {
-    font-family: 'Anton', sans-serif;
-    font-size: 64px;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--text);
-  }
-  .timer-lbl {
-    margin-top: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .timer-controls {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .btn {
-    flex: 1;
-    padding: 12px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: none;
-    transition: all 0.2s;
-  }
-  .btn:hover {
-    border-color: var(--border-bright);
-    background: var(--surface-hover);
-  }
-  .btn.primary {
-    background: linear-gradient(135deg, var(--cyan), #00b4ff);
-    color: #001218;
-    border: none;
-    font-weight: 700;
-  }
-  .btn.primary:hover { filter: brightness(1.1); }
-  .btn.pink {
-    background: linear-gradient(135deg, var(--pink), var(--violet));
-    color: #fff;
-    border: none;
-    font-weight: 700;
-  }
-
-  /* ============== Lesson content placeholder ============== */
-  .lesson { grid-column: span 8; grid-row: span 3; }
-  .lesson-body {
-    margin-top: 8px;
-  }
-  .lesson-body h2 {
-    font-size: 32px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-  }
-  .lesson-body p {
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 14px;
-    max-width: 600px;
-  }
-  .codeblock {
-    background: #03040a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin: 16px 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 1.7;
-    overflow-x: auto;
-    position: relative;
-  }
-  .codeblock::before {
-    content: "";
-    position: absolute;
-    top: 12px; left: 14px;
-    width: 50px; height: 10px;
-    background-image:
-      radial-gradient(circle at 5px 5px, #ff5f56 4px, transparent 5px),
-      radial-gradient(circle at 25px 5px, #ffbd2e 4px, transparent 5px),
-      radial-gradient(circle at 45px 5px, #27c93f 4px, transparent 5px);
-    opacity: 0.7;
-  }
-  .codeblock pre {
-    margin-top: 14px;
-    color: #d8d8e0;
-  }
-  .codeblock .c-key { color: var(--pink); }
-  .codeblock .c-fn { color: var(--cyan); }
-  .codeblock .c-str { color: var(--lime); }
-  .codeblock .c-num { color: var(--amber); }
-  .codeblock .c-com { color: var(--dim); font-style: italic; }
-
-  /* ============== Code submit ============== */
-  .submit { grid-column: span 7; grid-row: span 3; display: flex; flex-direction: column; }
-  .editor {
-    flex: 1;
-    background: #03040a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    min-height: 220px;
-    transition: border-color 0.2s;
-  }
-  .editor:focus-within { border-color: var(--cyan); }
-  .editor-head {
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.02);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .editor-head .dot {
-    width: 10px; height: 10px; border-radius: 50%;
-  }
-  .editor-head .dot.r { background: #ff5f56; }
-  .editor-head .dot.y { background: #ffbd2e; }
-  .editor-head .dot.g { background: #27c93f; }
-  .editor-textarea {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #d8d8e0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    padding: 16px 20px;
-    resize: none;
-    cursor: none;
-  }
-  .editor-textarea::placeholder {
-    color: var(--dim);
-  }
-  .submit-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  /* ============== Bonus / Turtle ============== */
-  .bonus { grid-column: span 5; grid-row: span 4; display: flex; flex-direction: column; gap: 12px; }
-  .py-lab {
-    background: #03040a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-  }
-  .py-lab-head {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--lime);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .py-metrics {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1.75;
-    color: #c8c8d4;
-  }
-  .py-metrics .k { color: var(--cyan); }
-  .py-metrics .v { color: var(--lime); }
-  .py-metrics .s { color: var(--dim); font-style: italic; }
-  .py-teach-head {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 4px 0 8px;
-  }
-  .py-snippet {
-    background: rgba(0,0,0,0.35);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--violet);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.55;
-    color: var(--muted);
-  }
-  .py-snippet:last-child { margin-bottom: 0; }
-  .py-snippet .label {
-    display: block;
-    color: var(--pink);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .py-snippet .kw { color: var(--pink); }
-  .py-snippet .fn { color: var(--cyan); }
-  .py-snippet .str { color: var(--lime); }
-  .py-snippet .com { color: var(--dim); font-style: italic; }
-  .bonus-meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 100px;
-    background: rgba(155, 92, 255, 0.1);
-    border: 1px solid rgba(155, 92, 255, 0.3);
-    color: var(--violet);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-left: auto;
-  }
-  .turtle-canvas-wrap {
-    flex: 1;
-    background: #03040a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    min-height: 200px;
-  }
-  #turtleCanvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-  .turtle-overlay {
-    position: absolute;
-    top: 12px; left: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--violet);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .turtle-overlay::before {
-    content: "● ";
-    color: var(--lime);
-    animation: pulse 1.5s infinite;
-  }
-  .turtle-controls {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-  .chip {
-    padding: 6px 10px;
-    background: rgba(155, 92, 255, 0.08);
-    border: 1px solid rgba(155, 92, 255, 0.25);
-    border-radius: 8px;
-    color: var(--violet);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    cursor: none;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .chip:hover {
-    background: rgba(155, 92, 255, 0.18);
-    color: #fff;
-  }
-
-  /* ============== Exit ticket ============== */
-  .exit { grid-column: span 8; grid-row: span 2; }
-  .rating-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .star {
-    font-size: 26px;
-    cursor: none;
-    color: var(--dim);
-    transition: color 0.15s, transform 0.15s;
-    user-select: none;
-  }
-  .star:hover { transform: scale(1.15); }
-  .star.on { color: var(--amber); text-shadow: 0 0 12px rgba(255, 184, 0, 0.6); }
-  .exit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  /* ============== Resources ============== */
-  .resources { grid-column: span 4; grid-row: span 2; }
-  .link-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: rgba(0,0,0,0.2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    text-decoration: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    transition: all 0.2s;
-  }
-  .link:hover {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    transform: translateX(4px);
-  }
-  .link-arrow {
-    margin-left: auto;
-    color: var(--dim);
-    transition: transform 0.2s;
-  }
-  .link:hover .link-arrow {
-    transform: translateX(2px);
-    color: var(--cyan);
-  }
-
-  /* ============== Footer ============== */
-  footer {
-    max-width: 1340px;
-    margin: 32px auto 60px;
-    padding: 0 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    z-index: 2;
-    position: relative;
-  }
-  footer .hint {
-    cursor: none;
-  }
-  footer .hint:hover { color: var(--muted); }
-
-  /* ============== Easter egg overlays ============== */
-  /* Matrix rain */
-  .matrix-rain {
-    position: fixed;
-    inset: 0;
-    z-index: 9990;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.6s;
-  }
-  .matrix-rain.on { opacity: 1; }
-
-  /* Hacker mode */
-  body.hacker-mode {
-    --cyan: #00ff00;
-    --pink: #00ff00;
-    --lime: #00ff00;
-    --text: #00ff00;
-    --muted: #008f00;
-  }
-  body.hacker-mode .hero h1 .accent {
-    background: var(--cyan) !important;
-    -webkit-background-clip: text !important;
-    color: transparent !important;
-  }
-
-  /* Panther mode */
-  body.panther-mode {
-    --cyan: #ffd700;
-    --pink: #9b5cff;
-    --lime: #ffd700;
-    --text: #fff8e7;
-  }
-  body.panther-mode {
-    background-image:
-      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(255, 215, 0, 0.2), transparent 55%),
-      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(155, 92, 255, 0.18), transparent 55%);
-  }
-  body.panther-mode::before {
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 2px,
-      rgba(255, 215, 0, 0.04) 3px,
-      transparent 4px
-    );
-  }
-  body.panther-mode .card { border-color: rgba(255, 215, 0, 0.35); box-shadow: 0 0 24px rgba(255, 215, 0, 0.1); }
-  body.hacker-mode .card { border-color: rgba(0, 255, 102, 0.3); }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%) translateY(120%);
-    background: rgba(7, 8, 13, 0.92);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--cyan);
-    border-radius: 100px;
-    padding: 14px 24px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    z-index: 10002;
-    box-shadow: 0 0 32px rgba(0, 255, 224, 0.4);
-    transition: transform 0.5s var(--easing);
-  }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast .eg-tag {
-    color: var(--pink);
-    margin-right: 8px;
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pine Crest CS · Code with Brett</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Pine Crest forest greens (from pinecrest.edu palette) */
+      --pc-dark: #003b0f;
+      --pc-green: #004712;
+      --pc-mid: #0d5e21;
+      --pc-light: #1a7a34;
+      --white: #ffffff;
+      --cream: #f4f7f4;
+      --muted: #b5c9b8;
+      --border: rgba(255, 255, 255, 0.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--pc-dark);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .splash {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .logo-mark {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+    .role-btns {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .role-btn {
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 18px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--pc-green);
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .role-btn:hover {
+      background: var(--pc-mid);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+    .role-btn.student {
+      background: var(--pc-mid);
+    }
+    .role-btn.student:hover {
+      background: var(--pc-light);
+    }
+    .passcode-panel {
+      display: none;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 22px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .passcode-panel.show { display: block; }
+    .splash.roles-hidden .role-btns,
+    .splash.roles-hidden .sub.pick { display: none; }
+    .passcode-panel h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+    .passcode-panel p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .passcode-form {
+      display: flex;
+      gap: 10px;
+    }
+    .passcode-input {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      text-align: center;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--white);
+      outline: none;
+    }
+    .passcode-input:focus {
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+    .passcode-submit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--white);
+      color: var(--pc-green);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .passcode-submit:hover { opacity: 0.92; }
+    .passcode-error {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #ffb4b4;
+      min-height: 1.2em;
+    }
+    .back-btn {
+      margin-top: 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+    .back-btn:hover { color: var(--white); }
+    footer {
+      margin-top: 28px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .load-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: var(--pc-dark);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--cream);
+      place-items: center;
+      padding: 24px;
+    }
+    .load-screen.show {
+      display: grid;
+    }
+    .load-inner {
+      width: 100%;
+      max-width: 440px;
+    }
+    .load-line {
+      opacity: 0;
+      margin: 5px 0;
+      color: var(--muted);
+      animation: loadLine 0.45s forwards;
+    }
+    .load-line.ok { color: var(--cream); }
+    .load-line.ok::after {
+      content: " [OK]";
+      color: #8fd4a0;
+    }
+    @keyframes loadLine {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .load-bar {
+      margin-top: 18px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .load-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #8fd4a0, var(--white));
+      animation: loadBar 2.4s ease forwards;
+    }
+    @keyframes loadBar {
+      to { width: 100%; }
+    }
+    .load-fact {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      line-height: 1.55;
+      color: #8fd4a0;
+      min-height: 2.8em;
+    }
+    .load-fact-label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+  </style>
 </head>
 <body>
+  <div class="splash" id="splash">
+    <div class="logo-mark">
+      <img src="/logo.png" alt="Pine Crest School" width="56" height="56">
+    </div>
+    <p class="eyebrow">Pine Crest · 6th grade CS</p>
+    <h1>Welcome</h1>
+    <p class="sub pick">Are you a teacher or a student?</p>
 
-<!-- ============== BOOT SCREEN ============== -->
-<div class="boot" id="boot">
-  <div class="boot-inner">
-    <div class="boot-line ok" style="animation-delay: 0s">> loading lesson</div>
-    <div class="boot-line ok" style="animation-delay: 0.3s">> pine crest school · florida</div>
-    <div class="boot-line ok" style="animation-delay: 0.8s">> warming up turtle.engine</div>
-    <div class="boot-line ok" style="animation-delay: 0.9s">> ready</div>
-    <div class="boot-bar"></div>
-    <div style="margin-top: 14px; color: var(--muted); font-size: 11px;">
-      // 6th GRADE COMPUTER SCIENCE · PINE CREST · FT LAUDERDALE
+    <div class="role-btns">
+      <button type="button" class="role-btn teacher" data-role="teacher">Pine Crest Teacher</button>
+      <button type="button" class="role-btn student" data-role="student">Pine Crest Student</button>
+    </div>
+
+    <div class="passcode-panel" id="passcodePanel">
+      <h2 id="passcodeTitle">Enter passcode</h2>
+      <p id="passcodeHint">Type the code from class.</p>
+      <form class="passcode-form" id="passcodeForm" autocomplete="off">
+        <input class="passcode-input" id="passcodeInput" type="password" inputmode="numeric" maxlength="8" placeholder="••••" aria-label="Passcode">
+        <button class="passcode-submit" type="submit">go</button>
+      </form>
+      <p class="passcode-error" id="passcodeError" role="alert" aria-live="polite"></p>
+      <button type="button" class="back-btn" id="backBtn">← choose again</button>
+    </div>
+
+    <footer>codewithbrett.com</footer>
+  </div>
+
+  <div class="load-screen" id="loadScreen" aria-live="polite" aria-busy="true" hidden>
+    <div class="load-inner">
+      <div class="load-line ok" style="animation-delay:0s">&gt; student access granted</div>
+      <div class="load-line ok" style="animation-delay:0.25s">&gt; loading lesson modules</div>
+      <div class="load-line ok" style="animation-delay:0.55s">&gt; starting python runtime</div>
+      <div class="load-line ok" style="animation-delay:0.85s">&gt; opening class page</div>
+      <div class="load-bar"><span></span></div>
+      <p class="load-fact">
+        <span class="load-fact-label">python fun fact</span>
+        <span id="loadFactText">Python was named after Monty Python, not the snake.</span>
+      </p>
     </div>
   </div>
-</div>
 
-<!-- Custom cursor -->
-<div class="cursor-outer"></div>
-<div class="cursor-inner"></div>
+  <script>
+    (function () {
+      const PASS = '67';
+      const ROUTES = {
+        teacher: '/pinecrest-teacher/',
+        student: '/pinecrest-student/'
+      };
+      const PYTHON_FACTS = [
+        'Python was named after Monty Python, not the snake.',
+        'In Python, indentation is part of the syntax — no curly braces needed.',
+        'The built-in turtle module is perfect for drawing with code.',
+        'print("hello") is often the first line new Python coders run.',
+        'Lists in Python can hold mixed types: [1, "hi", True].'
+      ];
 
-<!-- Spotlight -->
-<div class="spotlight"></div>
+      const splash = document.getElementById('splash');
+      const loadScreen = document.getElementById('loadScreen');
+      const loadFactText = document.getElementById('loadFactText');
+      const panel = document.getElementById('passcodePanel');
+      const title = document.getElementById('passcodeTitle');
+      const hint = document.getElementById('passcodeHint');
+      const form = document.getElementById('passcodeForm');
+      const input = document.getElementById('passcodeInput');
+      const err = document.getElementById('passcodeError');
+      const backBtn = document.getElementById('backBtn');
+      let role = null;
 
-<!-- Matrix rain (hidden by default) -->
-<canvas class="matrix-rain" id="matrixRain"></canvas>
-
-<!-- ============== STATUS BAR ============== -->
-<header class="status-bar">
-  <div class="status-left">
-    <span class="status-item status-date" id="statusDate"></span>
-    <span class="logo" id="logo">
-      <img src="logo.png" alt="Pine Crest School" width="40" height="40">
-      <span class="egg-hint">3 easter eggs hidden</span>
-    </span>
-  </div>
-  <div class="status-right">
-    <span class="status-item"><span class="status-dot"></span>LIVE</span>
-    <span class="status-item bright" id="clock">--:--:--</span>
-    <span class="status-item">FT_LAUD · 79°F</span>
-    <div class="egg-stamps" id="eggStamps" aria-label="Egg awards">
-      <span class="egg-stamp" data-egg="pinecrest" title="egg_01">01</span>
-      <span class="egg-stamp" data-egg="logo" title="egg_02">02</span>
-      <span class="egg-stamp" data-egg="panther" title="egg_03">03</span>
-    </div>
-    <span class="status-item bright" id="eggCount" style="color:var(--pink)">0 / 3</span>
-    <div class="egg-demo" id="eggDemo">
-      <button type="button" data-hint="pinecrest">egg_01.py</button>
-      <button type="button" data-hint="logo">egg_02.py</button>
-      <button type="button" data-hint="panther">egg_03.py</button>
-    </div>
-  </div>
-</header>
-
-<!-- ============== BENTO GRID ============== -->
-<main class="bento">
-
-  <!-- HERO -->
-  <section class="card hero">
-    <div class="card-head"><span class="step">01</span></div>
-    <div class="slot" style="min-height:180px;margin-bottom:16px"></div>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="label">Easter eggs</span>
-        <span class="value pink" id="eggCountHero">0 / 3</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ENTRY TICKET -->
-  <section class="card entry">
-    <div class="card-head">
-      <span class="step">02</span>
-      <span class="card-title">entry_ticket</span>
-      <span class="card-meta">placeholder</span>
-    </div>
-
-    <div class="q">
-      <span class="q-label"><span class="num">01</span>—</span>
-      <div class="slider-row">
-        <input type="range" min="1" max="5" value="3" class="slider" id="comfortSlider">
-        <span class="slider-val" id="comfortVal">3 / 5</span>
-      </div>
-    </div>
-
-    <div class="q">
-      <span class="q-label"><span class="num">02</span>—</span>
-      <div class="choices" data-group="fnSeen">
-        <div class="choice">never</div>
-        <div class="choice">i think so?</div>
-        <div class="choice">yeah, in Scratch</div>
-        <div class="choice">yeah, in code</div>
-      </div>
-    </div>
-
-    <div class="q">
-      <span class="q-label"><span class="num">03</span>—</span>
-      <input type="text" class="input" placeholder="" maxlength="60">
-    </div>
-  </section>
-
-  <!-- Q OF THE DAY -->
-  <section class="card qotd">
-    <div class="card-head">
-      <span class="step">03</span>
-      <span class="card-title">q_of_the_day</span>
-      <span class="card-meta">placeholder</span>
-    </div>
-    <div class="slot" style="min-height:100px;margin-bottom:12px"></div>
-    <textarea class="textarea" placeholder=""></textarea>
-  </section>
-
-  <!-- TIMER -->
-  <section class="card timer-card">
-    <div class="card-head">
-      <span class="step">04</span>
-      <span class="card-title">timer</span>
-      <span class="card-meta">5 min</span>
-    </div>
-    <div class="timer-wrap">
-      <svg class="timer-ring" viewBox="0 0 220 220">
-        <defs>
-          <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00ffe0"/>
-            <stop offset="100%" stop-color="#ff2e93"/>
-          </linearGradient>
-        </defs>
-        <circle class="timer-track" cx="110" cy="110" r="100"/>
-        <circle class="timer-progress" id="timerProgress" cx="110" cy="110" r="100"/>
-      </svg>
-      <div class="timer-text">
-        <div class="timer-num" id="timerNum">5:00</div>
-        <div class="timer-lbl">—</div>
-      </div>
-    </div>
-    <div class="timer-controls">
-      <button class="btn primary" id="timerStart">▶ start</button>
-      <button class="btn" id="timerReset">↺ reset</button>
-    </div>
-  </section>
-
-  <!-- LESSON CONTENT -->
-  <section class="card lesson">
-    <div class="card-head">
-      <span class="step">05</span>
-      <span class="card-title">core_lesson</span>
-      <span class="card-meta">placeholder</span>
-    </div>
-    <div class="slot" style="min-height:200px"></div>
-    <div class="lesson-body" hidden aria-hidden="true">
-      <h2>Functions: little machines.</h2>
-      <p>A function is a reusable chunk of code. You give it some <em style="color:var(--cyan);font-style:normal">input</em>, it does work, it hands you back an <em style="color:var(--pink);font-style:normal">output</em>. Like a vending machine, but for math.</p>
-
-      <div class="codeblock">
-        <pre><span class="c-com"># the world's simplest function</span>
-<span class="c-key">def</span> <span class="c-fn">square</span>(n):
-    <span class="c-key">return</span> n * n
-
-<span class="c-com"># now use it as many times as you want</span>
-<span class="c-fn">print</span>(<span class="c-fn">square</span>(<span class="c-num">5</span>))   <span class="c-com"># → 25</span>
-<span class="c-fn">print</span>(<span class="c-fn">square</span>(<span class="c-num">12</span>))  <span class="c-com"># → 144</span></pre>
-      </div>
-
-      <p>Now let's give a function to a <strong style="color:var(--lime)">turtle</strong> and watch geometry happen for free:</p>
-
-      <div class="codeblock">
-        <pre><span class="c-key">import</span> turtle
-t = turtle.<span class="c-fn">Turtle</span>()
-
-<span class="c-key">def</span> <span class="c-fn">polygon</span>(sides, size):
-    <span class="c-key">for</span> i <span class="c-key">in</span> <span class="c-fn">range</span>(sides):
-        t.<span class="c-fn">forward</span>(size)
-        t.<span class="c-fn">left</span>(<span class="c-num">360</span> / sides)
-
-<span class="c-fn">polygon</span>(<span class="c-num">6</span>, <span class="c-num">100</span>)   <span class="c-com"># hexagon</span>
-<span class="c-fn">polygon</span>(<span class="c-num">100</span>, <span class="c-num">8</span>)   <span class="c-com"># near-perfect circle 🤯</span></pre>
-      </div>
-
-      <p style="color:var(--muted)">↑ Brett: drop your actual slides / live-code here. This card just holds the structure.</p>
-    </div>
-  </section>
-
-  <!-- CODE SUBMIT -->
-  <section class="card submit">
-    <div class="card-head">
-      <span class="step">05</span>
-      <span class="card-title">your_code.submit</span>
-      <span class="card-meta">try it</span>
-    </div>
-    <div class="editor">
-      <div class="editor-head">
-        <span class="dot r"></span>
-        <span class="dot y"></span>
-        <span class="dot g"></span>
-        <span style="margin-left:8px">~/student/lesson_06.py</span>
-      </div>
-      <textarea class="editor-textarea" placeholder="# write a function that draws something cool
-# then paste it here when you're done
-
-def my_polygon(sides, size):
-    for i in range(sides):
-        t.forward(size)
-        t.left(360 / sides)
-"></textarea>
-    </div>
-    <div class="submit-row">
-      <button class="btn primary">↑ submit code</button>
-      <button class="btn">copy</button>
-      <button class="btn">save draft</button>
-    </div>
-  </section>
-
-  <!-- BONUS -->
-  <section class="card bonus">
-    <div class="card-head">
-      <span class="step">06</span>
-      <span class="card-title">session_data.py</span>
-      <span class="bonus-meta">⚡ python bonus</span>
-    </div>
-
-    <a class="repo-link" href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener">
-      github.com/krazno/pinecrestlessons <span style="margin-left:auto;color:var(--muted)">→</span>
-    </a>
-
-    <div class="py-lab">
-      <div class="py-lab-head"># your session · updates live</div>
-      <pre class="py-metrics" id="pyMetrics"># move and click around…</pre>
-    </div>
-
-    <div>
-      <div class="py-teach-head">// python behind these numbers</div>
-      <div class="py-snippet">
-        <span class="label">1 · counting clicks</span>
-        <span class="com"># each click adds 1, like a counter function</span><br>
-        <span class="kw">def</span> <span class="fn">count_click</span>(total):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> total + <span class="str">1</span>
-      </div>
-      <div class="py-snippet">
-        <span class="label">2 · mouse path & longest trail</span>
-        <span class="com"># adds pixel distance; trail = one long drag without pausing</span><br>
-        <span class="kw">def</span> <span class="fn">add_distance</span>(total, x1, y1, x2, y2):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;step = ((x2 - x1) ** <span class="str">2</span> + (y2 - y1) ** <span class="str">2</span>) ** <span class="str">0.5</span><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> total + step
-      </div>
-      <div class="py-snippet">
-        <span class="label">3 · busiest screen zone</span>
-        <span class="com"># tracks where your mouse hangs out most</span><br>
-        <span class="kw">def</span> <span class="fn">record_zone</span>(zones, name):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;zones[name] = zones.get(name, <span class="str">0</span>) + <span class="str">1</span><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> zones
-      </div>
-    </div>
-
-    <div class="turtle-canvas-wrap">
-      <div class="turtle-overlay">turtle_sandbox · live</div>
-      <canvas id="turtleCanvas"></canvas>
-    </div>
-    <div class="turtle-controls">
-      <button class="chip" data-pattern="hex">hexagon</button>
-      <button class="chip" data-pattern="star">star</button>
-      <button class="chip" data-pattern="spiral">spiral</button>
-      <button class="chip" data-pattern="flower">flower</button>
-      <button class="chip" data-pattern="koch">snowflake</button>
-      <button class="chip" data-pattern="clear">↺ clear</button>
-    </div>
-  </section>
-
-  <!-- EXIT TICKET -->
-  <section class="card exit">
-    <div class="card-head">
-      <span class="step">07</span>
-      <span class="card-title">exit_ticket.log</span>
-      <span class="card-meta">// 2 min · last 2 min of class</span>
-    </div>
-    <div style="margin-bottom: 14px">
-      <span class="q-label" style="margin-bottom: 8px;">Rate today's class</span>
-      <div class="rating-row" id="ratingRow">
-        <span class="star" data-v="1">★</span>
-        <span class="star" data-v="2">★</span>
-        <span class="star" data-v="3">★</span>
-        <span class="star" data-v="4">★</span>
-        <span class="star" data-v="5">★</span>
-      </div>
-    </div>
-    <div class="exit-grid">
-      <div class="q" style="margin:0">
-        <span class="q-label">one thing that clicked</span>
-        <textarea class="textarea" placeholder="..."></textarea>
-      </div>
-      <div class="q" style="margin:0">
-        <span class="q-label">one thing still fuzzy</span>
-        <textarea class="textarea" placeholder="..."></textarea>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESOURCES -->
-  <section class="card resources">
-    <div class="card-head">
-      <span class="step">08</span>
-      <span class="card-title">resources.md</span>
-    </div>
-    <ul class="link-list">
-      <li><a class="link" href="#">turtle docs <span class="link-arrow">→</span></a></li>
-      <li><a class="link" href="#">trinket.io sandbox <span class="link-arrow">→</span></a></li>
-      <li><a class="link" href="#">replit python <span class="link-arrow">→</span></a></li>
-      <li><a class="link" href="#">today's slides <span class="link-arrow">→</span></a></li>
-    </ul>
-  </section>
-
-</main>
-
-<footer>
-  <span>// PINE CREST · PYTHON LESSON</span>
-  <span class="hint" id="footHint">// psst — 3 easter eggs hidden. find them.</span>
-</footer>
-
-<!-- toast -->
-<div class="toast" id="toast"><span class="eg-tag">EGG_FOUND</span><span id="toastText"></span></div>
-
-<div class="egg-clue" id="eggClue" role="status" aria-live="polite">
-  <div class="egg-clue-title" id="eggClueTitle"></div>
-  <div class="egg-clue-body" id="eggClueBody"></div>
-</div>
-
-<script>
-/* =================================================================
-   PCS_CS · interactive layer
-   ================================================================= */
-
-/* ---------- 0. Console message (the curious dev-tools kid) ---------- */
-console.log(
-  '%c PINE CREST · PYTHON LESSON ',
-  'background: linear-gradient(90deg, #00ffe0, #ff2e93); color: #000; padding: 6px 14px; border-radius: 4px; font-weight: bold; font-size: 14px;'
-);
-console.log('%cnice. you opened the dev tools. that\'s already pretty hacker.', 'color: #00ffe0; font-family: monospace; font-size: 12px;');
-console.log('%cwant to find the easter eggs? here are three clues:', 'color: #8b8b95; font-family: monospace;');
-console.log('%c  1. type "pinecrest" anywhere on the page\n  2. click the school logo 7 times\n  3. type "panther" anywhere on the page', 'color: #d4ff3a; font-family: monospace;');
-
-/* ---------- 1. Boot fade ---------- */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('boot').classList.add('done');
-  }, 2600);
-});
-
-/* ---------- 2. Live clock ---------- */
-const clockEl = document.getElementById('clock');
-function tick() {
-  const d = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  clockEl.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-tick();
-setInterval(tick, 1000);
-
-document.getElementById('statusDate').textContent = new Date().toLocaleDateString('en-US', {
-  weekday: 'short',
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric'
-});
-
-/* ---------- Session data · Python bonus metrics ---------- */
-const SESSION = {
-  start: Date.now(),
-  clicks: 0,
-  buttonClicks: 0,
-  mousePathPx: 0,
-  lastX: null,
-  lastY: null,
-  trailCurrent: 0,
-  trailMax: 0,
-  lastMoveAt: 0,
-  zones: {},
-  turtleDraws: 0,
-  keysTyped: 0
-};
-
-function zoneKey(x, y) {
-  const w = innerWidth;
-  const h = innerHeight;
-  const col = x < w / 3 ? 'left' : x < (2 * w) / 3 ? 'center' : 'right';
-  const row = y < h / 3 ? 'top' : y < (2 * h) / 3 ? 'middle' : 'bottom';
-  return row + '_' + col;
-}
-
-function busiestZone() {
-  let best = 'middle_center';
-  let max = 0;
-  for (const k in SESSION.zones) {
-    if (SESSION.zones[k] > max) {
-      max = SESSION.zones[k];
-      best = k;
-    }
-  }
-  return best.replace('_', ' ');
-}
-
-function trackMouse(e) {
-  const now = Date.now();
-  const x = e.clientX;
-  const y = e.clientY;
-  if (SESSION.lastX != null) {
-    const d = Math.hypot(x - SESSION.lastX, y - SESSION.lastY);
-    if (d >= 1) {
-      SESSION.mousePathPx += d;
-      if (now - SESSION.lastMoveAt > 450) SESSION.trailCurrent = 0;
-      SESSION.trailCurrent += d;
-      if (SESSION.trailCurrent > SESSION.trailMax) SESSION.trailMax = SESSION.trailCurrent;
-      SESSION.lastMoveAt = now;
-    }
-  }
-  SESSION.lastX = x;
-  SESSION.lastY = y;
-  const z = zoneKey(x, y);
-  SESSION.zones[z] = (SESSION.zones[z] || 0) + 1;
-}
-
-function trackClick(e) {
-  SESSION.clicks++;
-  if (e.target.closest('button, .chip, .choice, .star, a, .btn, .link, .slider, #logo')) {
-    SESSION.buttonClicks++;
-  }
-}
-
-function renderPyMetrics() {
-  const el = document.getElementById('pyMetrics');
-  if (!el) return;
-  const secs = Math.floor((Date.now() - SESSION.start) / 1000);
-  const eggs = window.__eggCount || 0;
-  el.innerHTML = [
-    '<span class="com"># your data right now</span>',
-    '<span class="k">clicks</span> = <span class="v">' + SESSION.clicks + '</span>',
-    '<span class="k">button_clicks</span> = <span class="v">' + SESSION.buttonClicks + '</span>',
-    '<span class="k">mouse_path_px</span> = <span class="v">' + Math.round(SESSION.mousePathPx) + '</span>',
-    '<span class="k">longest_trail_px</span> = <span class="v">' + Math.round(SESSION.trailMax) + '</span>',
-    '<span class="k">busiest_zone</span> = <span class="v">"' + busiestZone() + '"</span>',
-    '<span class="k">seconds_on_page</span> = <span class="v">' + secs + '</span>',
-    '<span class="k">keys_typed</span> = <span class="v">' + SESSION.keysTyped + '</span>',
-    '<span class="k">turtle_runs</span> = <span class="v">' + SESSION.turtleDraws + '</span>',
-    '<span class="k">easter_eggs_found</span> = <span class="v">' + eggs + '</span>'
-  ].join('\n');
-}
-
-setInterval(renderPyMetrics, 500);
-document.addEventListener('click', trackClick);
-
-/* ---------- 3. Custom cursor + spotlight ---------- */
-const cOuter = document.querySelector('.cursor-outer');
-const cInner = document.querySelector('.cursor-inner');
-const spotlight = document.querySelector('.spotlight');
-let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-let ox = mx, oy = my;
-
-document.addEventListener('mousemove', (e) => {
-  mx = e.clientX; my = e.clientY;
-  trackMouse(e);
-  cInner.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-  spotlight.style.setProperty('--mx', mx + 'px');
-  spotlight.style.setProperty('--my', my + 'px');
-});
-function animateCursor() {
-  ox += (mx - ox) * 0.2;
-  oy += (my - oy) * 0.2;
-  cOuter.style.transform = `translate(${ox}px, ${oy}px) translate(-50%, -50%)`;
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-document.addEventListener('mousedown', () => cOuter.classList.add('click'));
-document.addEventListener('mouseup', () => cOuter.classList.remove('click'));
-
-// Hover detection for cursor swell
-const HOVER_SELECTORS = 'button, .choice, .star, .chip, a, input, textarea, .slider, #logo, .hint, .link, .egg-demo button';
-document.querySelectorAll(HOVER_SELECTORS).forEach(el => {
-  el.addEventListener('mouseenter', () => cOuter.classList.add('hover'));
-  el.addEventListener('mouseleave', () => cOuter.classList.remove('hover'));
-});
-
-/* ---------- 4. Entry ticket interactions ---------- */
-// comfort slider
-const slider = document.getElementById('comfortSlider');
-const sliderVal = document.getElementById('comfortVal');
-slider.addEventListener('input', () => {
-  sliderVal.textContent = slider.value + ' / 5';
-});
-
-// choice groups (entry ticket)
-document.querySelectorAll('.choices').forEach(group => {
-  group.querySelectorAll('.choice').forEach(c => {
-    c.addEventListener('click', () => {
-      group.querySelectorAll('.choice').forEach(x => x.classList.remove('selected'));
-      c.classList.add('selected');
-    });
-  });
-});
-
-/* ---------- 5. Star rating ---------- */
-const stars = document.querySelectorAll('#ratingRow .star');
-let rating = 0;
-stars.forEach(s => {
-  s.addEventListener('mouseenter', () => {
-    const v = +s.dataset.v;
-    stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= v));
-  });
-  s.addEventListener('click', () => {
-    rating = +s.dataset.v;
-    stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= rating));
-  });
-});
-document.getElementById('ratingRow').addEventListener('mouseleave', () => {
-  stars.forEach(x => x.classList.toggle('on', +x.dataset.v <= rating));
-});
-
-/* ---------- 6. Timer ---------- */
-const timerNum = document.getElementById('timerNum');
-const timerProg = document.getElementById('timerProgress');
-const startBtn = document.getElementById('timerStart');
-const resetBtn = document.getElementById('timerReset');
-const TIMER_TOTAL = 5 * 60; // 5 min
-const CIRC = 2 * Math.PI * 100;
-let timerSec = TIMER_TOTAL, timerRunning = false, timerInt = null;
-function paintTimer() {
-  const m = Math.floor(timerSec / 60);
-  const s = timerSec % 60;
-  timerNum.textContent = `${m}:${String(s).padStart(2, '0')}`;
-  const pct = timerSec / TIMER_TOTAL;
-  timerProg.style.strokeDashoffset = CIRC * (1 - pct);
-}
-paintTimer();
-startBtn.addEventListener('click', () => {
-  if (timerRunning) {
-    clearInterval(timerInt);
-    timerRunning = false;
-    startBtn.innerHTML = '▶ resume';
-    return;
-  }
-  timerRunning = true;
-  startBtn.innerHTML = '⏸ pause';
-  timerInt = setInterval(() => {
-    if (timerSec > 0) {
-      timerSec--;
-      paintTimer();
-    } else {
-      clearInterval(timerInt);
-      timerRunning = false;
-      startBtn.innerHTML = '▶ start';
-      timerNum.textContent = "TIME";
-      // brief flash
-      timerNum.style.color = 'var(--pink)';
-      setTimeout(() => timerNum.style.color = '', 2000);
-    }
-  }, 1000);
-});
-resetBtn.addEventListener('click', () => {
-  clearInterval(timerInt);
-  timerRunning = false;
-  timerSec = TIMER_TOTAL;
-  paintTimer();
-  startBtn.innerHTML = '▶ start';
-  timerNum.style.color = '';
-});
-
-/* ---------- 7. Mini in-browser turtle (bonus zone) ---------- */
-const tCanvas = document.getElementById('turtleCanvas');
-const tCtx = tCanvas.getContext('2d');
-function resizeTurtle() {
-  const r = tCanvas.getBoundingClientRect();
-  tCanvas.width = r.width * window.devicePixelRatio;
-  tCanvas.height = r.height * window.devicePixelRatio;
-  tCtx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-}
-window.addEventListener('resize', resizeTurtle);
-setTimeout(resizeTurtle, 50);
-
-// Tiny turtle engine
-class Turtle {
-  constructor(ctx) {
-    this.ctx = ctx;
-    this.reset();
-  }
-  reset() {
-    const w = this.ctx.canvas.width / window.devicePixelRatio;
-    const h = this.ctx.canvas.height / window.devicePixelRatio;
-    this.x = w / 2;
-    this.y = h / 2;
-    this.heading = -90; // up
-    this.pen = true;
-    this.color = '#9b5cff';
-    this.width = 1.5;
-    this.steps = [];
-  }
-  setColor(c) { this.color = c; }
-  setWidth(w) { this.width = w; }
-  forward(d) {
-    const rad = this.heading * Math.PI / 180;
-    const nx = this.x + Math.cos(rad) * d;
-    const ny = this.y + Math.sin(rad) * d;
-    this.steps.push({ from: [this.x, this.y], to: [nx, ny], color: this.color, width: this.width });
-    this.x = nx; this.y = ny;
-  }
-  left(deg) { this.heading -= deg; }
-  right(deg) { this.heading += deg; }
-
-  async play(speed = 6) {
-    for (const s of this.steps) {
-      this.ctx.strokeStyle = s.color;
-      this.ctx.lineWidth = s.width;
-      this.ctx.lineCap = 'round';
-      this.ctx.beginPath();
-      this.ctx.moveTo(s.from[0], s.from[1]);
-      this.ctx.lineTo(s.to[0], s.to[1]);
-      this.ctx.stroke();
-      if (speed > 0) await new Promise(r => setTimeout(r, speed));
-    }
-  }
-}
-let currentTurtleRun = 0;
-function clearTurtle() {
-  tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
-}
-
-const PATTERNS = {
-  hex: (t) => {
-    for (let i = 0; i < 6; i++) {
-      t.setColor(`hsl(${i * 60}, 100%, 60%)`);
-      t.forward(60);
-      t.left(60);
-    }
-  },
-  star: (t) => {
-    for (let i = 0; i < 5; i++) {
-      t.setColor(`hsl(${i * 72 + 180}, 100%, 65%)`);
-      t.forward(120);
-      t.right(144);
-    }
-  },
-  spiral: (t) => {
-    for (let i = 0; i < 80; i++) {
-      t.setColor(`hsl(${i * 4}, 100%, 60%)`);
-      t.forward(i * 1.4);
-      t.right(35);
-    }
-  },
-  flower: (t) => {
-    for (let i = 0; i < 36; i++) {
-      t.setColor(`hsl(${i * 10}, 90%, 65%)`);
-      for (let j = 0; j < 6; j++) {
-        t.forward(20);
-        t.left(60);
+      function showPasscode(selected) {
+        role = selected;
+        splash.classList.add('roles-hidden');
+        panel.classList.add('show');
+        title.textContent = selected === 'teacher' ? 'Teacher password' : 'Student password';
+        hint.textContent = 'Enter password 67.';
+        err.textContent = '';
+        input.value = '';
+        input.focus();
       }
-      t.right(10);
-    }
-  },
-  koch: (t) => {
-    function koch(d, n) {
-      if (n === 0) { t.forward(d); return; }
-      koch(d / 3, n - 1); t.left(60);
-      koch(d / 3, n - 1); t.right(120);
-      koch(d / 3, n - 1); t.left(60);
-      koch(d / 3, n - 1);
-    }
-    t.setColor('#00ffe0');
-    for (let i = 0; i < 3; i++) {
-      koch(180, 3);
-      t.right(120);
-    }
-  }
-};
 
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', async () => {
-    const p = chip.dataset.pattern;
-    if (p === 'clear') { clearTurtle(); return; }
-    SESSION.turtleDraws++;
-    currentTurtleRun++;
-    const myRun = currentTurtleRun;
-    clearTurtle();
-    const t = new Turtle(tCtx);
-    // start a bit lower-left for koch which expands right
-    if (p === 'koch') { t.x -= 90; t.y += 50; }
-    PATTERNS[p](t);
-    // play
-    for (const s of t.steps) {
-      if (myRun !== currentTurtleRun) return;
-      tCtx.strokeStyle = s.color;
-      tCtx.lineWidth = s.width;
-      tCtx.lineCap = 'round';
-      tCtx.beginPath();
-      tCtx.moveTo(s.from[0], s.from[1]);
-      tCtx.lineTo(s.to[0], s.to[1]);
-      tCtx.stroke();
-      await new Promise(r => setTimeout(r, 8));
-    }
-  });
-});
+      function resetSplash() {
+        role = null;
+        splash.classList.remove('roles-hidden');
+        panel.classList.remove('show');
+        err.textContent = '';
+        input.value = '';
+      }
 
-// Draw default pattern on load so it's not empty
-setTimeout(() => {
-  document.querySelector('.chip[data-pattern="spiral"]').click();
-}, 3000);
-
-/* =================================================================
-   EASTER EGGS
-   ================================================================= */
-const eggsFound = new Set();
-const toast = document.getElementById('toast');
-const toastText = document.getElementById('toastText');
-const eggCountEl = document.getElementById('eggCount');
-const eggCountHero = document.getElementById('eggCountHero');
-let toastTimer;
-
-function showToast(msg) {
-  clearTimeout(toastTimer);
-  toastText.textContent = msg;
-  toast.classList.add('show');
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
-}
-
-function unlockEgg(name, msg) {
-  if (eggsFound.has(name)) {
-    showToast(msg + ' (already found)');
-    return;
-  }
-  eggsFound.add(name);
-  window.__eggCount = eggsFound.size;
-  const count = `${eggsFound.size} / 3`;
-  eggCountEl.textContent = count;
-  eggCountHero.textContent = count;
-  const stamp = document.querySelector('.egg-stamp[data-egg="' + name + '"]');
-  if (stamp) stamp.classList.add('got');
-  showToast(msg);
-  console.log(`%c🥚 EGG_FOUND: ${name}`, 'background:#ff2e93;color:#fff;padding:4px 10px;border-radius:4px;font-weight:bold');
-  if (eggsFound.size === 3) {
-    setTimeout(() => showToast('all three. you found everything. respect.'), 3500);
-  }
-}
-
-const mCanvas = document.getElementById('matrixRain');
-const mCtx = mCanvas.getContext('2d');
-let mRAF = null;
-let hackerStopTimer = null;
-let pantherStopTimer = null;
-
-function setupMatrix() {
-  mCanvas.width = window.innerWidth;
-  mCanvas.height = window.innerHeight;
-}
-window.addEventListener('resize', setupMatrix);
-setupMatrix();
-
-function stopMatrixRain() {
-  mCanvas.classList.remove('on');
-  if (mRAF) {
-    cancelAnimationFrame(mRAF);
-    mRAF = null;
-  }
-  mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-}
-
-function stopHackerMode() {
-  clearTimeout(hackerStopTimer);
-  stopMatrixRain();
-  document.body.classList.remove('hacker-mode');
-}
-
-function stopPantherMode() {
-  clearTimeout(pantherStopTimer);
-  document.body.classList.remove('panther-mode');
-}
-
-function startMatrixRain() {
-  mCanvas.classList.add('on');
-  const cols = Math.max(1, Math.floor(mCanvas.width / 16));
-  let drops = Array(cols).fill(0).map(() => Math.random() * -100);
-  function loop() {
-    mCtx.fillStyle = 'rgba(0,0,0,0.06)';
-    mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
-    mCtx.fillStyle = '#00ff66';
-    mCtx.font = '14px JetBrains Mono, monospace';
-    drops.forEach((y, i) => {
-      mCtx.fillText(String.fromCharCode(0x30A0 + Math.random() * 96), i * 16, y * 16);
-      if (y * 16 > mCanvas.height && Math.random() > 0.975) drops[i] = 0;
-      else drops[i]++;
-    });
-    mRAF = requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-function startHackerMode() {
-  stopHackerMode();
-  stopPantherMode();
-  document.body.classList.add('hacker-mode');
-  startMatrixRain();
-  hackerStopTimer = setTimeout(stopHackerMode, 3000);
-}
-
-function spawnParade() {
-  const emojis = ['🐾', '🐆', '✨', '💛', '💜', '⚡', '🎉', '🏫'];
-  for (let i = 0; i < 8; i++) {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.textContent = emojis[i % emojis.length];
-      el.style.cssText = `position:fixed;left:-60px;top:${Math.random() * (window.innerHeight - 80) + 40}px;font-size:${24 + Math.random() * 24}px;z-index:10003;pointer-events:none;transition:transform 2.5s linear`;
-      document.body.appendChild(el);
-      requestAnimationFrame(() => {
-        el.style.transform = `translateX(${window.innerWidth + 200}px) rotate(${Math.random() * 360}deg)`;
+      document.querySelectorAll('.role-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showPasscode(btn.dataset.role);
+        });
       });
-      setTimeout(() => el.remove(), 2800);
-    }, i * 120);
-  }
-}
 
-function startPantherMode() {
-  stopPantherMode();
-  stopHackerMode();
-  document.body.classList.add('panther-mode');
-  spawnParade();
-  pantherStopTimer = setTimeout(stopPantherMode, 3500);
-}
+      backBtn.addEventListener('click', resetSplash);
 
-function toAscii(word) {
-  return [...word].map(c => String(c.charCodeAt(0))).join(' ');
-}
+      function goStudentLesson() {
+        loadScreen.removeAttribute('hidden');
+        loadScreen.classList.add('show');
+        loadFactText.textContent = PYTHON_FACTS[Math.floor(Math.random() * PYTHON_FACTS.length)];
+        window.setTimeout(function () {
+          window.location.href = ROUTES.student;
+        }, 2600);
+      }
 
-function toBinaryLines(str) {
-  const bins = [...str].map(c => c.charCodeAt(0).toString(2).padStart(8, '0'));
-  const lines = [];
-  for (let i = 0; i < bins.length; i += 4) {
-    lines.push(bins.slice(i, i + 4).join(' '));
-  }
-  return lines.join('\n');
-}
-
-let eggClueTimer;
-function showEggClue(which) {
-  const box = document.getElementById('eggClue');
-  const title = document.getElementById('eggClueTitle');
-  const body = document.getElementById('eggClueBody');
-  let text = '';
-  if (which === 'pinecrest') {
-    title.textContent = 'egg_01.py · ASCII decode';
-    text = 'Pine Crest School — type as one word.\nASCII value per letter:\n' + toAscii('pinecrest') + '\n\n→ pinecrest';
-  } else if (which === 'panther') {
-    title.textContent = 'egg_03.py · ASCII decode';
-    text = 'Type this word (ASCII value per letter):\n' + toAscii('panther') + '\n\n→ panther';
-  } else if (which === 'logo') {
-    title.textContent = 'egg_02.py · BINARY decode';
-    const msg = 'click logo 7 times';
-    text = 'Decode these 8-bit bytes, then do it:\n' + toBinaryLines(msg) + '\n\n→ ' + msg;
-  }
-  body.textContent = text;
-  box.classList.add('show');
-  clearTimeout(eggClueTimer);
-  eggClueTimer = setTimeout(() => box.classList.remove('show'), 3000);
-}
-
-function fireEgg(which) {
-  if (which === 'pinecrest') {
-    startHackerMode();
-    unlockEgg('pinecrest', 'hacker mode activated.');
-    return;
-  }
-  if (which === 'logo') {
-    startPantherMode();
-    unlockEgg('logo', 'go panthers. 🐾');
-    return;
-  }
-  if (which === 'panther') {
-    startPantherMode();
-    unlockEgg('panther', 'go panthers. 🐾');
-  }
-}
-
-document.getElementById('eggDemo').addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-hint]');
-  if (!btn) return;
-  showEggClue(btn.dataset.hint);
-});
-
-let typedBuf = '';
-document.addEventListener('keydown', (e) => {
-  if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
-  if (e.key.length !== 1) return;
-  SESSION.keysTyped++;
-  typedBuf += e.key.toLowerCase();
-  if (typedBuf.length > 24) typedBuf = typedBuf.slice(-24);
-  if (typedBuf.includes('pinecrest')) {
-    typedBuf = '';
-    fireEgg('pinecrest');
-  }
-  if (typedBuf.includes('panther')) {
-    typedBuf = '';
-    fireEgg('panther');
-  }
-});
-
-let logoClicks = 0;
-let logoTimer = null;
-document.getElementById('logo').addEventListener('click', () => {
-  logoClicks++;
-  clearTimeout(logoTimer);
-  logoTimer = setTimeout(() => { logoClicks = 0; }, 3000);
-  if (logoClicks >= 7) {
-    logoClicks = 0;
-    fireEgg('logo');
-  }
-});
-
-/* ---------- Footer hint subtle interaction ---------- */
-document.getElementById('footHint').addEventListener('click', () => {
-  console.log('%cthe clues are in the dev tools 👀', 'color: #00ffe0; font-family: monospace; font-size: 13px;');
-});
-
-</script>
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (input.value.trim() !== PASS) {
+          err.textContent = 'Wrong passcode — try again.';
+          input.value = '';
+          input.focus();
+          return;
+        }
+        sessionStorage.setItem('cwb_role', role);
+        sessionStorage.setItem('cwb_unlocked', '1');
+        if (role === 'student') {
+          splash.style.display = 'none';
+          goStudentLesson();
+          return;
+        }
+        window.location.href = ROUTES.teacher;
+      });
+    })();
+  </script>
 </body>
 </html>

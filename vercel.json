@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/pinecrest", "destination": "/pinecrest-teacher", "permanent": true },
+    { "source": "/pinecrest/", "destination": "/pinecrest-teacher/", "permanent": true },
+    { "source": "/pinecrest/class", "destination": "/pinecrest-student", "permanent": true },
+    { "source": "/pinecrest/class/", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/pinecrest-student", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/student", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/student/", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/class", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/class/", "destination": "/pinecrest-student/", "permanent": true }
+  ]
+}
