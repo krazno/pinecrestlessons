@@ -132,7 +132,7 @@
               <tr><td>right</td><td>50</td><td>-100</td><td>50</td><td>100</td></tr>
             </tbody>
           </table>
-          <p class="planning-grid-letter-label"><strong>B</strong> — 4 lines (lightweight block letter)</p>
+          <p class="planning-grid-letter-label"><strong>B (block)</strong> — 6 lines</p>
           <table class="segment-plan-table">
             <thead>
               <tr>
@@ -145,11 +145,15 @@
             </thead>
             <tbody>
               <tr><td>spine</td><td>-50</td><td>-100</td><td>-50</td><td>100</td></tr>
-              <tr><td>top</td><td>-50</td><td>100</td><td>40</td><td>100</td></tr>
+              <tr><td>top bar</td><td>-50</td><td>100</td><td>40</td><td>100</td></tr>
+              <tr><td>top right</td><td>40</td><td>100</td><td>40</td><td>0</td></tr>
               <tr><td>middle</td><td>-50</td><td>0</td><td>40</td><td>0</td></tr>
-              <tr><td>bottom</td><td>-50</td><td>-100</td><td>40</td><td>-100</td></tr>
+              <tr><td>bottom bar</td><td>-50</td><td>-100</td><td>40</td><td>-100</td></tr>
+              <tr><td>bottom right</td><td>40</td><td>-100</td><td>40</td><td>0</td></tr>
             </tbody>
           </table>
+          <p class="planning-grid-letter-label"><strong>B (round)</strong> — spine + 2 half-circles</p>
+          <p class="planning-grid-note" style="margin-top:8px">Use <code>t.circle(50, 180)</code> after <code>setheading</code> — see <code>draw_B_round()</code> in the starter example.</p>
         </div>
       </div>
     </details>
@@ -157,7 +161,7 @@
     <details class="mission-panel mission-panel--starter">
       <summary>📋 Starter example</summary>
       <div class="mission-panel-body">
-        <p>Each line uses the same pattern: <strong>pen up</strong> → <code>goto(start)</code> → <strong>pen down</strong> → <code>goto(end)</code>. Switch between <strong>draw_H()</strong> and <strong>draw_B()</strong> below — then copy the pattern for your own initial.</p>
+        <p>Each line uses the same pattern: <strong>pen up</strong> → <code>goto(start)</code> → <strong>pen down</strong> → <code>goto(end)</code> (or <code>circle()</code> for curves). Pick an example below — then copy the pattern for your own initial.</p>
 
         <div class="fn-spotlight" role="toolbar" aria-label="Starter example">
           <button type="button" class="fn-spotlight-btn" data-spotlight="draw_H" data-letter="H">
@@ -168,7 +172,12 @@
           <button type="button" class="fn-spotlight-btn" data-spotlight="draw_B" data-letter="B">
             <span class="fn-icon">🔤</span>
             <span class="fn-name">draw_B()</span>
-            <span class="fn-desc">Four lines — spine plus three bars (lightweight block B).</span>
+            <span class="fn-desc">Six lines — block B with two bumps.</span>
+          </button>
+          <button type="button" class="fn-spotlight-btn" data-spotlight="draw_B_round" data-letter="R">
+            <span class="fn-icon">⭕</span>
+            <span class="fn-name">draw_B_round()</span>
+            <span class="fn-desc">Spine plus two half-circles — round B.</span>
           </button>
         </div>
 
@@ -226,6 +235,6 @@
 
   <script src="../class-timer.js"></script>
   <script src="../activity-config.js"></script>
-  <script src="../activity-initials-grid.js"></script>
+  <script src="../activity-initials-grid.js?v=20260520"></script>
 </body>
 </html>

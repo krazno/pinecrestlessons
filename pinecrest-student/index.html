@@ -1707,6 +1707,14 @@
     position: relative;
     isolation: isolate;
   }
+  .func-example .predict-embed {
+    margin-top: 36px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border-bright);
+  }
+  .func-example .predict-embed .predict-stage {
+    min-height: 58vh;
+  }
   .func-part-viewport {
     overflow: hidden;
     max-width: 100%;
@@ -2971,6 +2979,51 @@
   .trace-toggle-btn.active { border-color: var(--pink); color: var(--pink); background: rgba(255, 46, 147, 0.12); }
   .predict-workspace .ide-window { min-height: 400px; }
   .predict-slide .predict-workspace { margin-bottom: 8px; }
+  .predict-slide-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 14px;
+    margin-bottom: 4px;
+  }
+  .predict-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .predict-level-easy { color: var(--lime); border-color: rgba(212, 255, 58, 0.45); background: rgba(212, 255, 58, 0.08); }
+  .predict-level-medium { color: var(--cyan); border-color: rgba(0, 255, 224, 0.35); background: rgba(0, 255, 224, 0.08); }
+  .predict-level-hard { color: var(--pink); border-color: rgba(255, 46, 147, 0.35); background: rgba(255, 46, 147, 0.08); }
+  .predict-ide-body {
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 18px 0 22px;
+  }
+  .predict-workspace .ide-txt {
+    white-space: pre;
+    word-break: normal;
+  }
+  .predict-workspace .hl-kw { color: #ff7b72; font-weight: 600; }
+  .predict-workspace .hl-fn { color: #d2a8ff; }
+  .predict-workspace .hl-name { color: #79c0ff; }
+  .predict-workspace .hl-str { color: #a5d6ff; }
+  .predict-workspace .hl-num { color: #ffa657; }
+  .predict-workspace .hl-com { color: #8b949e; font-style: italic; }
+  .predict-workspace .hl-com strong { color: #e6edf3; font-weight: 700; font-style: italic; }
+  .trace-start-btn {
+    margin-top: 14px;
+    width: 100%;
+    max-width: 280px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .predict-trace-col.is-on .trace-panel { border-left: 2px solid rgba(0, 255, 224, 0.25); }
   @media (max-width: 820px) {
     .predict-workspace { grid-template-columns: 1fr; }
     .predict-trace-col { min-height: 280px; }
@@ -4869,23 +4922,6 @@
     <span class="section-python-line"></span>
   </div>
 
-
-
-  <!-- PREDICT THE OUTPUT · 6, 7, or 67 -->
-  <section class="card predict" id="predict">
-    <div class="card-head">
-      <span class="step">01</span>
-      <span class="card-title">predict_the_output.py</span>
-      <span class="card-meta">9 problems · step through · reveal</span>
-    </div>
-    <p class="predict-tagline">Is it six? Seven? Or six seven?</p>
-    <p class="predict-intro">Ask: <em>Is it 6, 7, or 67?</em> Read each snippet, use <strong>Step by step</strong> on the right, then <strong>Show answer</strong>. Problems get harder as you go.</p>
-    <div class="predict-stage" id="predictStage">
-      <div class="predict-viewport" id="predictViewport"></div>
-    </div>
-  </section>
-
-
   <!-- PYTHON FUNCTIONS -->
   <section class="card func-example" id="pythonFunctions">
     <div class="card-head">
@@ -5052,6 +5088,19 @@
         </div>
         <p class="func-output-hint">This is what appears on the screen when the function runs</p>
       </article>
+    </div>
+
+    <!-- PREDICT THE OUTPUT · 6, 7, or 67 (after the 3 function parts) -->
+    <div class="predict predict-embed" id="predict">
+      <div class="card-head">
+        <span class="step">9</span>
+        <span class="card-title">predict_the_output.py</span>
+        <span class="card-meta">9 problems · step through · reveal</span>
+      </div>
+      <p class="predict-tagline">Is it six? Seven? Or six seven?</p>
+      <div class="predict-stage" id="predictStage">
+        <div class="predict-viewport" id="predictViewport"></div>
+      </div>
     </div>
   </section>
 
@@ -6082,8 +6131,8 @@ document.getElementById('footHint').addEventListener('click', () => {
 });
 
 </script>
-<script src="predict-snippets.js"></script>
-<script src="predict-carousel.js"></script>
+<script src="predict-snippets.js?v=20260520"></script>
+<script src="predict-carousel.js?v=20260520b"></script>
 <script src="class-timer.js"></script>
 <script src="activity-config.js"></script>
 <script src="activity-gallery.js"></script>

@@ -1,6 +1,28 @@
-/* Initials on a Grid — graph paper → coordinates → draw_H() / draw_B() */
+/* Initials on a Grid — graph paper → coordinates → draw_H() / draw_B() / draw_B_round() */
 (function () {
   var CHECK_KEY = 'pinecrest_initials_grid_mission_checks';
+
+  function arcToLineSegments(cx, cy, r, startRad, endRad, clockwise, steps, color) {
+    var out = [];
+    var sweep = endRad - startRad;
+    if (clockwise) {
+      if (sweep > 0) sweep -= Math.PI * 2;
+    } else if (sweep < 0) {
+      sweep += Math.PI * 2;
+    }
+    for (var i = 0; i < steps; i++) {
+      var a1 = startRad + (sweep * i) / steps;
+      var a2 = startRad + (sweep * (i + 1)) / steps;
+      out.push({
+        x1: cx + r * Math.cos(a1),
+        y1: cy + r * Math.sin(a1),
+        x2: cx + r * Math.cos(a2),
+        y2: cy + r * Math.sin(a2),
+        color: color
+      });
+    }
+    return out;
+  }
 
   var STARTER_CODE_H =
     '# Mission 2 · Initials — sample letter H\n' +
@@ -37,28 +59,34 @@
     'turtle.done()';
 
   var STARTER_CODE_B =
-    '# Mission 2 · Initials — sample letter B\n' +
+    '# Mission 2 · Initials — block letter B (straight lines)\n' +
     'import turtle\n' +
     '\n' +
     't = turtle.Turtle()\n' +
     't.speed(3)\n' +
     '\n' +
     'def draw_B():\n' +
-    '    # Spine (left vertical)\n' +
+    '    # Spine (left side)\n' +
     '    t.color("blue")\n' +
     '    t.penup()\n' +
     '    t.goto(-50, -100)\n' +
     '    t.pendown()\n' +
     '    t.goto(-50, 100)\n' +
     '\n' +
-    '    # Top bar\n' +
+    '    # Top bar (across the top bump)\n' +
     '    t.color("cyan")\n' +
     '    t.penup()\n' +
     '    t.goto(-50, 100)\n' +
     '    t.pendown()\n' +
     '    t.goto(40, 100)\n' +
     '\n' +
-    '    # Middle bar\n' +
+    '    # Right side of top bump\n' +
+    '    t.penup()\n' +
+    '    t.goto(40, 100)\n' +
+    '    t.pendown()\n' +
+    '    t.goto(40, 0)\n' +
+    '\n' +
+    '    # Middle bar (between the two bumps)\n' +
     '    t.color("green")\n' +
     '    t.penup()\n' +
     '    t.goto(-50, 0)\n' +
@@ -72,8 +100,50 @@
     '    t.pendown()\n' +
     '    t.goto(40, -100)\n' +
     '\n' +
+    '    # Right side of bottom bump\n' +
+    '    t.penup()\n' +
+    '    t.goto(40, -100)\n' +
+    '    t.pendown()\n' +
+    '    t.goto(40, 0)\n' +
+    '\n' +
     '\n' +
     'draw_B()\n' +
+    '\n' +
+    'turtle.done()';
+
+  var STARTER_CODE_B_ROUND =
+    '# Mission 2 · Initials — round letter B (half-circles)\n' +
+    'import turtle\n' +
+    '\n' +
+    't = turtle.Turtle()\n' +
+    't.speed(3)\n' +
+    '\n' +
+    'def draw_B_round():\n' +
+    '    # Spine (left side)\n' +
+    '    t.color("blue")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, -100)\n' +
+    '    t.pendown()\n' +
+    '    t.goto(-50, 100)\n' +
+    '\n' +
+    '    # Top bump — half circle\n' +
+    '    t.color("cyan")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, 0)\n' +
+    '    t.pendown()\n' +
+    '    t.setheading(90)\n' +
+    '    t.circle(50, 180)\n' +
+    '\n' +
+    '    # Bottom bump — half circle\n' +
+    '    t.color("green")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, 0)\n' +
+    '    t.pendown()\n' +
+    '    t.setheading(270)\n' +
+    '    t.circle(50, -180)\n' +
+    '\n' +
+    '\n' +
+    'draw_B_round()\n' +
     '\n' +
     'turtle.done()';
 
@@ -86,9 +156,15 @@
   var LETTER_B = [
     { x1: -50, y1: -100, x2: -50, y2: 100, color: '#3b82f6' },
     { x1: -50, y1: 100, x2: 40, y2: 100, color: '#22d3ee' },
+    { x1: 40, y1: 100, x2: 40, y2: 0, color: '#22d3ee' },
     { x1: -50, y1: 0, x2: 40, y2: 0, color: '#22c55e' },
-    { x1: -50, y1: -100, x2: 40, y2: -100, color: '#22d3ee' }
+    { x1: -50, y1: -100, x2: 40, y2: -100, color: '#22d3ee' },
+    { x1: 40, y1: -100, x2: 40, y2: 0, color: '#22d3ee' }
   ];
+
+  var LETTER_B_ROUND = [{ x1: -50, y1: -100, x2: -50, y2: 100, color: '#3b82f6' }]
+    .concat(arcToLineSegments(0, 50, 50, Math.PI, -Math.PI / 2, false, 20, '#22d3ee'))
+    .concat(arcToLineSegments(0, -50, 50, Math.PI, Math.PI / 2, true, 20, '#22c55e'));
 
   var LETTERS = {
     H: {
@@ -104,10 +180,19 @@
       code: STARTER_CODE_B,
       segments: LETTER_B,
       svg: '../examples/initials-letter-b.svg',
-      spotlight: { draw_B: [7, 36] },
+      spotlight: { draw_B: [7, 48] },
       defaultSpotlight: 'draw_B',
       runHint:
-        'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw letter <strong>B</strong> on the grid.'
+        'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>block B</strong> (six straight lines).'
+    },
+    R: {
+      code: STARTER_CODE_B_ROUND,
+      segments: LETTER_B_ROUND,
+      svg: '../examples/initials-letter-b-round.svg',
+      spotlight: { draw_B_round: [7, 38] },
+      defaultSpotlight: 'draw_B_round',
+      runHint:
+        'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with two half-circles.'
     }
   };
 

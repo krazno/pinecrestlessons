@@ -8,38 +8,84 @@
   var traceOpen = false;
   var traceStep = 0;
 
+  var PY_KEYWORDS = {
+    def: 1, return: 1, if: 1, else: 1, elif: 1, for: 1, in: 1,
+    import: 1, from: 1, print: 1, and: 1, or: 1, not: 1, True: 1, False: 1
+  };
+
   function escapeHtml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  function highlightPython(code, activeLines, dimOthers) {
+  function appendText(parent, text, className) {
+    var span = document.createElement('span');
+    if (className) span.className = className;
+    span.textContent = text;
+    parent.appendChild(span);
+  }
+
+  /* Build highlighted line with DOM nodes only — no HTML strings, no broken tags. */
+  function fillHighlightedLine(container, line) {
+    if (/^\s*#/.test(line)) {
+      var com = document.createElement('span');
+      com.className = 'hl-com';
+      var parts = line.split(/(\b(?:6|7|67)\b)/);
+      parts.forEach(function (part) {
+        if (part === '6' || part === '7' || part === '67') {
+          var strong = document.createElement('strong');
+          strong.textContent = part;
+          com.appendChild(strong);
+        } else {
+          com.appendChild(document.createTextNode(part));
+        }
+      });
+      container.appendChild(com);
+      return;
+    }
+
+    var re = /("[^"\\]*(?:\\.[^"\\]*)*"|'[^'\\]*(?:\\.[^'\\]*)*'|\b\d+\b|\b[A-Za-z_]\w*\b|[^\w\s]|\s+)/g;
+    var m;
+    while ((m = re.exec(line)) !== null) {
+      var tok = m[0];
+      var next = line.charAt(m.index + tok.length);
+      if (/^["']/.test(tok)) appendText(container, tok, 'hl-str');
+      else if (/^\d+$/.test(tok)) appendText(container, tok, 'hl-num');
+      else if (PY_KEYWORDS[tok]) appendText(container, tok, 'hl-kw');
+      else if (/^[A-Za-z_]\w*$/.test(tok) && next === '(') appendText(container, tok, 'hl-fn');
+      else if (/^[A-Za-z_]\w*$/.test(tok)) appendText(container, tok, 'hl-name');
+      else appendText(container, tok, '');
+    }
+  }
+
+  function renderCode(codeEl, code, activeLines, dimOthers) {
     activeLines = activeLines || [];
     var activeSet = {};
     activeLines.forEach(function (n) { activeSet[n] = true; });
 
-    return code.split('\n').map(function (line, i) {
+    codeEl.innerHTML = '';
+    var lines = code.split('\n');
+
+    lines.forEach(function (line, i) {
       var lineNum = i + 1;
-      var n = String(lineNum).padStart(2, ' ');
-      var body;
-      if (/^\s*#/.test(line)) {
-        body = '<span class="hl-com">' + escapeHtml(line) + '</span>';
-      } else {
-        body = escapeHtml(line);
-        body = body.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="hl-str">$1</span>');
-        body = body.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="hl-str">$1</span>');
-        body = body.replace(/\b(def|return|if|else|elif|for|in|import|from|print)\b/g, '<span class="hl-kw">$1</span>');
-        body = body.replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
-        body = body.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*(?=\()/g, '<span class="hl-fn">$1</span>');
-        body = body.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, function (m, name) {
-          if (/^(def|return|if|else|elif|for|in|import|from|print)$/.test(name)) return m;
-          return '<span class="hl-name">' + name + '</span>';
-        });
+      var row = document.createElement('div');
+      row.className = 'ide-line';
+      if (activeSet[lineNum]) row.className += ' ide-line-active';
+      else if (dimOthers && activeLines.length && !/^\s*#/.test(line) && line.trim()) {
+        row.className += ' ide-line-dim';
       }
-      var cls = 'ide-line';
-      if (activeSet[lineNum]) cls += ' ide-line-active';
-      else if (dimOthers && activeLines.length && !/^\s*#/.test(line) && line.trim()) cls += ' ide-line-dim';
-      return '<div class="' + cls + '"><span class="ide-ln">' + n + '</span><span class="ide-txt">' + body + '</span></div>';
-    }).join('');
+
+      var ln = document.createElement('span');
+      ln.className = 'ide-ln';
+      ln.textContent = String(lineNum).padStart(2, ' ');
+
+      var txt = document.createElement('span');
+      txt.className = 'ide-txt';
+      fillHighlightedLine(txt, line);
+
+      row.appendChild(ln);
+      row.appendChild(txt);
+      codeEl.appendChild(row);
+    });
   }
 
   function activeTraceLines() {
@@ -108,6 +154,15 @@
     });
   }
 
+  function openTrace() {
+    traceOpen = true;
+    traceStep = 0;
+    refreshCode();
+    renderTracePanel();
+    updateTraceCol();
+    updateTraceButtons();
+  }
+
   function buildTraceStepButtons() {
     var strip = document.getElementById('traceStepStrip');
     if (!strip) return;
@@ -127,9 +182,8 @@
         btn.addEventListener('click', function () {
           if (!sn.trace || !sn.trace.length) return;
           if (!traceOpen) {
-            if (stepIndex !== total - 1) return;
-            traceOpen = true;
-            traceStep = 0;
+            openTrace();
+            traceStep = stepIndex;
           } else {
             traceStep = stepIndex;
           }
@@ -165,13 +219,19 @@
     var panel = document.getElementById('predictTracePanel');
     if (!panel) return;
     var sn = PREDICT_SNIPPETS[index];
-    if (!traceOpen || !sn.trace || !sn.trace.length) {
-      panel.innerHTML = '<p class="trace-hint">Click the highlighted step on the right to walk through the code. Use the arrows or step numbers to go one step at a time.</p>';
+    var total = sn.trace ? sn.trace.length : 0;
+
+    if (!traceOpen || !total) {
+      panel.innerHTML =
+        '<p class="trace-hint">Read the code on the left. When you are ready, click <strong>Start walkthrough</strong> or tap a step number below to see what each line does.</p>' +
+        '<button type="button" class="btn trace-start-btn" id="traceStartBtn">Start walkthrough</button>';
+      var startBtn = document.getElementById('traceStartBtn');
+      if (startBtn) startBtn.addEventListener('click', openTrace);
       updateTraceButtons();
       return;
     }
+
     var step = sn.trace[traceStep];
-    var total = sn.trace.length;
     panel.innerHTML =
       '<div class="trace-step-label">Step ' + (traceStep + 1) + ' of ' + total + '</div>' +
       '<h4 class="trace-step-title">' + escapeHtml(step.title) + '</h4>' +
@@ -184,7 +244,7 @@
     var codeEl = document.getElementById('predictCodeBody');
     if (!codeEl) return;
     var sn = PREDICT_SNIPPETS[index];
-    codeEl.innerHTML = highlightPython(sn.code, activeTraceLines(), traceOpen);
+    renderCode(codeEl, sn.code, activeTraceLines(), traceOpen);
   }
 
   function snippetMetaHtml() {
@@ -200,19 +260,16 @@
     var sn = PREDICT_SNIPPETS[index];
     var fileNum = String(index + 1).padStart(2, '0');
     var fileName = sn.file || ('snippet_' + fileNum + '.py');
-    var title = sn.title ? escapeHtml(sn.title) : ('Problem ' + (index + 1));
     answerShown = false;
     traceOpen = false;
     traceStep = 0;
 
     viewport.innerHTML =
       '<article class="predict-slide">' +
-      '<h2 class="predict-slide-title">' + title + '</h2>' +
-      '<p class="predict-q">What will <code>print</code> show? Pick <strong>6</strong>, <strong>7</strong>, or <strong>67</strong> before you reveal.</p>' +
       '<div class="predict-workspace" id="predictWorkspace">' +
       '<div class="predict-code-col">' +
       '<div class="ide-window"><div class="ide-titlebar"><span class="ide-dot r"></span><span class="ide-dot y"></span><span class="ide-dot g"></span><span class="ide-fname">' + fileName + '</span></div>' +
-      '<div class="ide-body" id="predictCodeBody"></div></div></div>' +
+      '<div class="ide-body predict-ide-body" id="predictCodeBody"></div></div></div>' +
       '<div class="predict-trace-col is-off" id="predictTraceCol">' +
       '<div class="trace-header">Step by step</div>' +
       '<div class="trace-panel" id="predictTracePanel"></div>' +
