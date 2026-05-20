@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🪙 Mission 1 · Color Art Lab · Pinecrest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../class-timer-bar.css" />
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <div class="activity-top-left">
+      <a class="site-brand" href="../" title="Pinecrest School">
+        <img src="../logo.png" alt="Pinecrest School" width="40" height="40">
+      </a>
+      <a class="back" href="../#activity">← Back to missions</a>
+    </div>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/" class="is-current">🪙 Mission 1</a>
+      <a href="../initials-grid/">🎯 Mission 2</a>
+      <a href="../flag-challenge/">⚡ Mission 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">🪙 Mission 1 · 🎨 Color Art Lab</p>
+      <h1>Color Art Lab</h1>
+      <p class="activity-meta"><span>⏱ 8–10 min</span><span>🪙 Mission 1</span></p>
+      <p class="mission-hero-unlock">🪙 Start here — this is your main mission.</p>
+      <p class="mission-hero-note">Love this activity? <strong>Keep going here</strong> — level up with more bubbles, colors, and ideas. Missions 2 and 3 are waiting when you want a new challenge.</p>
+    </header>
+
+    <details class="mission-panel mission-panel--mission">
+      <summary>🎯 Your mission</summary>
+      <div class="mission-panel-body">
+        <p class="mission-lead">You're going to create a simple colorful turtle drawing that shows the following.</p>
+        <p>Check each item as you add it to your code — checked items fade and strike through so you can see what is left.</p>
+        <p>When every box is checked, upload your <strong>code</strong> and <strong>screenshot</strong> to the class shared folder.</p>
+        <ul class="mission-checklist" id="missionChecklist">
+          <li>
+            <label class="mission-check-item" data-check-id="colors">
+              <input type="checkbox" />
+              <span>🎨 <strong>3 colors</strong> in your drawing</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="function">
+              <input type="checkbox" />
+              <span>⚙️ <strong>1 function</strong> you define with <code>def</code></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="calls">
+              <input type="checkbox" />
+              <span>📣 <strong>3 function calls</strong> (run your function 3 times)</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="if">
+              <input type="checkbox" />
+              <span>🔀 <strong>1 conditional</strong> (<code>if</code>) — <a href="../python-syntax-guide/#if">syntax guide</a></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="comments">
+              <input type="checkbox" />
+              <span>💬 <strong>Comments</strong> that explain your design</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="screenshot">
+              <input type="checkbox" />
+              <span>📸 <strong>Screenshot</strong> of your finished drawing</span>
+            </label>
+          </li>
+        </ul>
+        <p>This should feel easy, creative, and fun. The goal is not perfection — make something appear, change it, and see how your code controls the art.</p>
+      </div>
+    </details>
+
+    <details class="mission-panel">
+      <summary>🕹️ What to do</summary>
+      <div class="mission-panel-body">
+        <ol class="mission-step-list">
+          <li><strong>Run</strong> the starter example below.</li>
+          <li>Change at least <strong>3 colors</strong>.</li>
+          <li>Change at least <strong>2 sizes</strong>.</li>
+          <li>Change at least <strong>1 x/y location</strong>.</li>
+          <li>Add <strong>comments</strong> that explain your design.</li>
+          <li>Take a <strong>screenshot</strong> when your drawing works.</li>
+          <li><strong>Upload</strong> your <code>.py</code> file and your screenshot to the class shared folder.</li>
+        </ol>
+        <div class="editor-encourage">
+          <p>🧪 <strong>Open your editor</strong> and write your own code from scratch, or use Mr. Brett&apos;s template and modify it. Try the <a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox turtle IDE</a>, or Trinket, Replit, or IDLE.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--starter">
+      <summary>📋 Starter example</summary>
+      <div class="mission-panel-body">
+        <p class="starter-version-lead" id="starterVersionLead">Pick a version: <strong>Starter</strong> is the easiest way in — one function, three bubbles. <strong>Math · coordinates</strong> adds x/y and a grid (same drawing, more math).</p>
+
+        <div class="starter-version-tabs" role="tablist" aria-label="Example version">
+          <button type="button" class="starter-version-tab is-active" role="tab" id="starterTabStarter" data-version="starter" aria-selected="true" aria-controls="starterPanelStarter">Starter</button>
+          <button type="button" class="starter-version-tab" role="tab" id="starterTabMath" data-version="math" aria-selected="false" aria-controls="starterPanelMath">Math · coordinates</button>
+        </div>
+
+        <div class="starter-version-panel" id="starterPanelStarter" role="tabpanel" aria-labelledby="starterTabStarter">
+          <div class="fn-spotlight" role="toolbar" aria-label="Starter example — simple">
+            <button type="button" class="fn-spotlight-btn" data-spotlight="draw_bubble_fn" data-version="starter">
+              <span class="fn-icon">🫧</span>
+              <span class="fn-name">draw_bubble(size, color)</span>
+              <span class="fn-desc">One function + an <code>if</code> for line thickness. No x/y in the function yet.</span>
+            </button>
+            <button type="button" class="fn-spotlight-btn" data-spotlight="three_bubbles" data-version="starter">
+              <span class="fn-icon">🎨</span>
+              <span class="fn-name">Three bubbles</span>
+              <span class="fn-desc">Pen up → goto → pen down → call your function. Repeat three times.</span>
+            </button>
+            <button type="button" class="fn-spotlight-btn" data-spotlight="your_turn" data-version="starter">
+              <span class="fn-icon">🧪</span>
+              <span class="fn-name">Your turn!</span>
+              <span class="fn-desc">Change colors and sizes first — save x/y planning for Mission 2.</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="starter-version-panel" id="starterPanelMath" role="tabpanel" aria-labelledby="starterTabMath" hidden>
+          <div class="fn-spotlight" role="toolbar" aria-label="Starter example — coordinates">
+            <button type="button" class="fn-spotlight-btn" data-spotlight="move_to" data-version="math">
+              <span class="fn-icon">🎯</span>
+              <span class="fn-name">move_to(x, y)</span>
+              <span class="fn-desc">Pen up → goto → pen down. Jump without leaving a trail.</span>
+            </button>
+            <button type="button" class="fn-spotlight-btn" data-spotlight="draw_bubble" data-version="math">
+              <span class="fn-icon">📐</span>
+              <span class="fn-name">draw_bubble(x, y, ...)</span>
+              <span class="fn-desc">Uses coordinates on the grid. The <code>if</code> picks line thickness.</span>
+            </button>
+            <button type="button" class="fn-spotlight-btn" data-spotlight="your_turn" data-version="math">
+              <span class="fn-icon">🧪</span>
+              <span class="fn-name">Your turn!</span>
+              <span class="fn-desc">Change colors, sizes, and x/y positions — watch the coordinate plane.</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="starter-run-row">
+          <button type="button" class="btn-run-example" id="runStarterExample">▶ Run example</button>
+          <p class="starter-run-hint" id="starterRunHint">Click <strong>Run example</strong> to animate three colorful circles. Copy the starter code into your editor and run it for real.</p>
+        </div>
+
+        <div class="starter-example-stage">
+          <div class="starter-example-code">
+            <div class="starter-example-head"><span>Python code</span></div>
+            <pre class="starter-example-body" id="starterExampleCode" aria-label="Starter example Python code"></pre>
+          </div>
+          <div class="starter-example-visual">
+            <div class="starter-example-head"><span id="starterVisualHead">Drawing preview</span></div>
+            <div class="starter-output-frame" id="starterOutputFrame" aria-label="Turtle coordinate plane preview">
+              <img src="../examples/color-art-bubbles.svg" alt="Three colorful circles" width="400" height="240">
+              <canvas class="starter-live-canvas" id="starterLiveCanvas" hidden aria-hidden="true" role="img" aria-label="Drawing preview"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel" id="tryChangingPanel">
+      <summary>🔧 Try changing</summary>
+      <div class="mission-panel-body">
+        <p>Use and modify Mr. Brett&apos;s code, or write your own. Good places to experiment:</p>
+        <ul class="req-list">
+          <li>Change <code>"blue"</code>, <code>"green"</code>, and <code>"purple"</code> to other colors</li>
+          <li>Change the circle <strong>sizes</strong></li>
+          <li>Change the <strong>x/y positions</strong></li>
+          <li>Change the condition from <code>size &gt; 50</code> to <code>size &gt; 40</code></li>
+          <li>Add a <strong>fourth</strong> bubble</li>
+          <li>Rename <code>draw_bubble()</code> to something creative, like <code>draw_planet()</code> or <code>draw_power_circle()</code></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--submit">
+      <summary>📤 Submit your work</summary>
+      <div class="mission-panel-body submit-panel" style="border:none;padding:0;background:transparent;">
+        <p>Upload your <strong>Python code</strong> (<code>.py</code> file) and your <strong>screenshot</strong> to the class shared folder.</p>
+        <ol class="submit-checklist">
+          <li>Submit your <strong>Python code</strong> (.py file)</li>
+          <li>Submit a <strong>screenshot</strong> of your drawing</li>
+          <li>Rename your screenshot to your <strong>first name</strong> (example: <code>alex.png</code>)</li>
+        </ol>
+        <a class="btn primary submit-folder-link" id="submitFolderLink" data-class-folder href="https://drive.google.com/drive/folders/1Ba48ZTAtgJGDwemyXqB7CkK3HM2h_6tN" target="_blank" rel="noopener noreferrer">📁 Open shared folder</a>
+        <p class="submit-folder-hint">Upload both files, then check the gallery on the main lesson page.</p>
+      </div>
+    </details>
+  </main>
+
+  <footer class="site-foot">Pinecrest · 6th grade CS · codewithbrett.com · <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a></footer>
+
+  <script src="../class-timer.js"></script>
+  <script src="../activity-config.js"></script>
+  <script src="../activity-color-art-lab.js"></script>
+</body>
+</html>

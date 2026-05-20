@@ -1,108 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Activity submissions · Pine Crest CS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --green-deep: #003b0f;
-      --green: #004712;
-      --green-soft: #e8f2eb;
-      --ink: #1a2e24;
-      --muted: #5a6d63;
-      --gold: #c9a227;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--green-soft);
-      color: var(--ink);
-      line-height: 1.55;
-      font-size: 17px;
-    }
-    .top {
-      background: var(--green-deep);
-      color: #fff;
-      padding: 14px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .top a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px; }
-    .top a:hover { color: #fff; }
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 40px 24px 64px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 32px 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 24px rgba(0, 59, 15, 0.08);
-      border-left: 5px solid var(--gold);
-    }
-    h1 {
-      font-size: 1.75rem;
-      color: var(--green-deep);
-      margin-bottom: 12px;
-    }
-    h2 {
-      font-size: 1.15rem;
-      color: var(--green);
-      margin: 24px 0 10px;
-    }
-    p, li { color: var(--muted); margin-bottom: 10px; }
-    ol { padding-left: 1.25rem; margin-bottom: 16px; }
-    code {
-      font-family: ui-monospace, monospace;
-      font-size: 0.9em;
-      background: var(--green-soft);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .note {
-      background: #f4faf5;
-      border: 1px solid #b8d9c0;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.95rem;
-    }
-  </style>
+  <title>Redirect — Pinecrest Teacher</title>
+  <meta http-equiv="refresh" content="0; url=/pinecrest-teacher/" />
+  <script>location.replace('/pinecrest-teacher/');</script>
 </head>
 <body>
-  <header class="top">
-    <span>Pine Crest · Teacher</span>
-    <a href="/pinecrest-teacher/">← Back to faculty deck</a>
-  </header>
-  <main class="wrap">
-    <section class="card">
-      <h1>Review student activity turn-ins</h1>
-      <p>Students turn in work on the <strong>student lesson page</strong> (name, level, screenshot, and code) in the section right above the exit ticket.</p>
-
-      <h2>Enable online review (recommended)</h2>
-      <ol>
-        <li>Create a free form at <a href="https://formspree.io/" target="_blank" rel="noopener">formspree.io</a> with file uploads enabled.</li>
-        <li>Copy your form id (the part after <code>/f/</code> in the form URL).</li>
-        <li>In <code>pinecrest-student/index.html</code>, set <code>ACTIVITY_SUBMIT.formspreeId</code> to that id.</li>
-        <li>Redeploy the site. Submissions appear in your Formspree inbox with student name, level, screenshot, and code.</li>
-      </ol>
-      <p class="note">Until <code>formspreeId</code> is set, turn-ins are saved only on each student&apos;s browser (they still see their history, but you cannot review them remotely).</p>
-
-      <h2>What students submit</h2>
-      <ul>
-        <li><strong>Level 1, 2, or 3</strong> — three placeholder activity cards on the page today</li>
-        <li><strong>Screenshot</strong> — image of their work</li>
-        <li><strong>Code</strong> — <code>.py</code> file or pasted Python</li>
-      </ul>
-    </section>
-  </main>
+  <p>Moved to <a href="/pinecrest-teacher/">Pinecrest Teacher — Prompt Like a Pro</a>.</p>
 </body>
 </html>

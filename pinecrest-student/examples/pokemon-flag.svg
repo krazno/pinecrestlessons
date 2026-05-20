@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-260 -150 520 300" role="img" aria-label="Poké Ball-inspired flag with red and white halves, black stripe, and center button">
+  <rect x="-250" y="-140" width="500" height="140" fill="#e3350d" stroke="#000" stroke-width="3"/>
+  <rect x="-250" y="0" width="500" height="140" fill="#ffffff" stroke="#000" stroke-width="3"/>
+  <rect x="-250" y="-15" width="500" height="30" fill="#000000" stroke="#000" stroke-width="3"/>
+  <circle cx="0" cy="0" r="55" fill="#000000" stroke="#000" stroke-width="3"/>
+  <circle cx="0" cy="0" r="35" fill="#ffffff" stroke="#000" stroke-width="3"/>
+  <circle cx="0" cy="0" r="12" fill="#d3d3d3" stroke="#000" stroke-width="3"/>
+</svg>

@@ -5,7 +5,7 @@
 | URL | Page |
 |-----|------|
 | `/` | Splash — teacher or student, passcode **67** |
-| `/pinecrest-teacher/` | Faculty PD (*Prompt Like a Pro*) |
+| `/pinecrest-teacher/` | **Only teacher page** — faculty PD (*Prompt Like a Pro*) |
 | `/pinecrest-student/` | **6th grade CS student lesson (only student page)** |
 
 Old URLs (`/pinecrest/class/`, `/student/`, etc.) redirect to `/pinecrest-student/`.
@@ -13,7 +13,7 @@ Old URLs (`/pinecrest/class/`, `/student/`, etc.) redirect to `/pinecrest-studen
 ## Local preview
 
 ```bash
-cd codewithbrett
+cd pinecrest_lessons   # or codewithbrett — same student lesson after sync
 python3 -m http.server 8765
 ```
 
@@ -21,19 +21,30 @@ python3 -m http.server 8765
 - http://localhost:8765/pinecrest-student/
 - http://localhost:8765/pinecrest-teacher/
 
-**Use `pinecrest-student` only** for the student lesson. Do not serve the old `pinecrest_lessons` repo for class — that repo redirects here.
+**One student page only:** `/pinecrest-student/` is the full interactive lesson (boot screen, easter eggs, predict-the-output, activities). There is no separate “simple” student landing page.
+
+**One teacher page only:** `/pinecrest-teacher/` is the full faculty deck. Old `/pinecrest-teacher/activity-submissions` URLs redirect here.
 
 ## Editing the student lesson
 
-Change **only**:
+Edit in this repo, then sync to production if you deploy from `codewithbrett`:
+
+```bash
+rsync -a --delete pinecrest-student/ ../codewithbrett/pinecrest-student/
+```
+
+Main files:
 
 - `pinecrest-student/index.html`
 - `pinecrest-student/logo.png`
+- activity folders (`color-art-lab/`, `initials-grid/`, `flag-challenge/`, `turtle-playground/`, `python-syntax-guide/`)
 
 Form links are set in the `CLASS_LINKS` object near the bottom of `index.html`.
 
 ### Activity turn-ins (3 levels)
 
-The student page includes **Level one / two / three** placeholders and a **Turn in work** block (screenshot + code + name) above the exit ticket.
+Sequence: **Activity 1** Color Art Lab → **Activity 2** Initials on a Grid → **Activity 3** Poké Ball-inspired Flag. Activity 1 is required; 2 and 3 are optional. Minimum requirements for each activity are on the student homepage in the **Minimum before moving on** table.
 
-To receive submissions for review, set `ACTIVITY_SUBMIT.formspreeId` in `pinecrest-student/index.html` (see `pinecrest-teacher/activity-submissions.html`).
+Each layer has its own activity page (`color-art-lab/`, `initials-grid/`, `flag-challenge/`) with **Submit your work** (Google Drive) at the bottom. Teacher examples use **Code** / **Output** panels.
+
+Set your class folder URL once in `pinecrest-student/activity-config.js` (`googleFolderId` / `googleFolderUrl`). Share the folder so students can **upload** (e.g. anyone with the link can edit, or your school domain). The lesson page embeds the folder in step 04; students click **Refresh gallery** after uploading. Replace preview SVGs in `pinecrest-student/examples/` with real screenshots if you prefer.

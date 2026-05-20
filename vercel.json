@@ -10,6 +10,8 @@
     { "source": "/student", "destination": "/pinecrest-student/", "permanent": true },
     { "source": "/student/", "destination": "/pinecrest-student/", "permanent": true },
     { "source": "/class", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/class/", "destination": "/pinecrest-student/", "permanent": true }
+    { "source": "/class/", "destination": "/pinecrest-student/", "permanent": true },
+    { "source": "/pinecrest-teacher/activity-submissions", "destination": "/pinecrest-teacher/", "permanent": true },
+    { "source": "/pinecrest-teacher/activity-submissions/", "destination": "/pinecrest-teacher/", "permanent": true }
   ]
 }

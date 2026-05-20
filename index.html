@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pine Crest CS · Code with Brett</title>
+  <title>Pinecrest CS · Code with Brett</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Pine Crest forest greens (from pinecrest.edu palette) */
+      /* Pinecrest forest greens (from pinecrest.edu palette) */
       --pc-dark: #003b0f;
       --pc-green: #004712;
       --pc-mid: #0d5e21;
@@ -111,7 +111,8 @@
     }
     .passcode-panel.show { display: block; }
     .splash.roles-hidden .role-btns,
-    .splash.roles-hidden .sub.pick { display: none; }
+    .splash.roles-hidden .sub.pick,
+    .splash.roles-hidden .thank-you { display: none; }
     .passcode-panel h2 {
       font-size: 1.15rem;
       margin-bottom: 6px;
@@ -171,11 +172,67 @@
       padding: 0;
     }
     .back-btn:hover { color: var(--white); }
+    .thank-you {
+      margin: 20px 0 8px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--cream);
+      text-align: center;
+    }
+    .thank-you p { margin: 0; }
+    .thank-you .sign {
+      display: block;
+      margin-top: 10px;
+      font-style: italic;
+      color: var(--muted);
+    }
+    .thank-you .not-a-robot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: default;
+    }
+    .thank-you .not-a-robot input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--pc-light);
+      cursor: default;
+      pointer-events: none;
+    }
     footer {
       margin-top: 28px;
       font-size: 0.8rem;
       color: var(--muted);
+      line-height: 1.6;
     }
+    footer a {
+      color: var(--pc-light);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    .fun-fact {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: #8fd4a0;
+    }
+    .fun-fact strong { color: var(--cream); font-weight: 500; }
     .load-screen {
       display: none;
       position: fixed;
@@ -249,20 +306,29 @@
 <body>
   <div class="splash" id="splash">
     <div class="logo-mark">
-      <img src="/logo.png" alt="Pine Crest School" width="56" height="56">
+      <img src="/logo.png" alt="Pinecrest School" width="56" height="56">
     </div>
-    <p class="eyebrow">Pine Crest · 6th grade CS</p>
+    <p class="eyebrow">Pinecrest · 6th grade CS</p>
     <h1>Welcome</h1>
     <p class="sub pick">Are you a teacher or a student?</p>
 
     <div class="role-btns">
-      <button type="button" class="role-btn teacher" data-role="teacher">Pine Crest Teacher</button>
-      <button type="button" class="role-btn student" data-role="student">Pine Crest Student</button>
+      <button type="button" class="role-btn teacher" data-role="teacher">Pinecrest Teacher · Prompt Like a Pro</button>
+      <button type="button" class="role-btn student" data-role="student">Pinecrest Student</button>
+    </div>
+
+    <div class="thank-you">
+      <p>Thank you for having me today.</p>
+      <span class="sign">— Brett Hannan</span>
+      <label class="not-a-robot">
+        <input type="checkbox" checked disabled aria-hidden="true">
+        Not a robot
+      </label>
     </div>
 
     <div class="passcode-panel" id="passcodePanel">
       <h2 id="passcodeTitle">Enter passcode</h2>
-      <p id="passcodeHint">Type the code from class.</p>
+      <p id="passcodeHint">Students: type <strong>67</strong> (the numbers 6 and 7).</p>
       <form class="passcode-form" id="passcodeForm" autocomplete="off">
         <input class="passcode-input" id="passcodeInput" type="password" inputmode="numeric" maxlength="8" placeholder="••••" aria-label="Passcode">
         <button class="passcode-submit" type="submit">go</button>
@@ -271,21 +337,14 @@
       <button type="button" class="back-btn" id="backBtn">← choose again</button>
     </div>
 
-    <footer>codewithbrett.com</footer>
-  </div>
-
-  <div class="load-screen" id="loadScreen" aria-live="polite" aria-busy="true" hidden>
-    <div class="load-inner">
-      <div class="load-line ok" style="animation-delay:0s">&gt; student access granted</div>
-      <div class="load-line ok" style="animation-delay:0.25s">&gt; loading lesson modules</div>
-      <div class="load-line ok" style="animation-delay:0.55s">&gt; starting python runtime</div>
-      <div class="load-line ok" style="animation-delay:0.85s">&gt; opening class page</div>
-      <div class="load-bar"><span></span></div>
-      <p class="load-fact">
-        <span class="load-fact-label">python fun fact</span>
-        <span id="loadFactText">Python was named after Monty Python, not the snake.</span>
+    <footer>
+      codewithbrett.com
+      ·
+      <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a>
+      <p class="fun-fact" id="funFact">
+        <strong>Fun fact:</strong> this was built with Python — <span id="pythonLineCount">…</span> lines of Python code in today’s lesson.
       </p>
-    </div>
+    </footer>
   </div>
 
   <script>
@@ -295,17 +354,13 @@
         teacher: '/pinecrest-teacher/',
         student: '/pinecrest-student/'
       };
-      const PYTHON_FACTS = [
-        'Python was named after Monty Python, not the snake.',
-        'In Python, indentation is part of the syntax — no curly braces needed.',
-        'The built-in turtle module is perfect for drawing with code.',
-        'print("hello") is often the first line new Python coders run.',
-        'Lists in Python can hold mixed types: [1, "hi", True].'
-      ];
+      /* Lines of Python in lesson snippets (pinecrest-student predict exercises) */
+      const PYTHON_LESSON_LINES = 112;
+
+      const pythonLineEl = document.getElementById('pythonLineCount');
+      if (pythonLineEl) pythonLineEl.textContent = String(PYTHON_LESSON_LINES);
 
       const splash = document.getElementById('splash');
-      const loadScreen = document.getElementById('loadScreen');
-      const loadFactText = document.getElementById('loadFactText');
       const panel = document.getElementById('passcodePanel');
       const title = document.getElementById('passcodeTitle');
       const hint = document.getElementById('passcodeHint');
@@ -319,8 +374,8 @@
         role = selected;
         splash.classList.add('roles-hidden');
         panel.classList.add('show');
-        title.textContent = selected === 'teacher' ? 'Teacher password' : 'Student password';
-        hint.textContent = 'Enter password 67.';
+        title.textContent = selected === 'teacher' ? 'Teacher passcode' : 'Student passcode';
+        hint.textContent = 'Type the code your teacher shared in class.';
         err.textContent = '';
         input.value = '';
         input.focus();
@@ -342,15 +397,6 @@
 
       backBtn.addEventListener('click', resetSplash);
 
-      function goStudentLesson() {
-        loadScreen.removeAttribute('hidden');
-        loadScreen.classList.add('show');
-        loadFactText.textContent = PYTHON_FACTS[Math.floor(Math.random() * PYTHON_FACTS.length)];
-        window.setTimeout(function () {
-          window.location.href = ROUTES.student;
-        }, 2600);
-      }
-
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (input.value.trim() !== PASS) {
@@ -362,8 +408,7 @@
         sessionStorage.setItem('cwb_role', role);
         sessionStorage.setItem('cwb_unlocked', '1');
         if (role === 'student') {
-          splash.style.display = 'none';
-          goStudentLesson();
+          window.location.href = ROUTES.student;
           return;
         }
         window.location.href = ROUTES.teacher;
