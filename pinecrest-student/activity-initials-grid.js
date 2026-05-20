@@ -145,7 +145,7 @@
     '    t.pendown()\n' +
     '    t.circle(-50, 180)  # half circle opening to the right\n' +
     '\n' +
-    '\n' +
+    '# Call the function\n' +
     'draw_B_round()\n' +
     '\n' +
     'turtle.done()';
@@ -165,9 +165,10 @@
     { x1: 40, y1: -100, x2: 40, y2: 0, color: '#22d3ee' }
   ];
 
+  /* Match turtle: circle(-50, 180) at top/bottom of spine — centers at (-50, ±50) */
   var LETTER_B_ROUND = [{ x1: -50, y1: -100, x2: -50, y2: 100, color: '#3b82f6' }]
-    .concat(arcToLineSegments(0, 100, 50, Math.PI, 0, false, 22, '#22d3ee'))
-    .concat(arcToLineSegments(0, 0, 50, Math.PI, 0, false, 22, '#22c55e'));
+    .concat(arcToLineSegments(-50, 50, 50, Math.PI / 2, -Math.PI / 2, true, 28, '#22d3ee'))
+    .concat(arcToLineSegments(-50, -50, 50, Math.PI / 2, -Math.PI / 2, true, 28, '#22c55e'));
 
   var LETTERS = {
     H: {
@@ -192,14 +193,14 @@
       code: STARTER_CODE_B_ROUND,
       segments: LETTER_B_ROUND,
       svg: '../examples/initials-letter-b-round.svg',
-      spotlight: { draw_B_round: [10, 38] },
+      spotlight: { draw_B_round: [10, 36] },
       defaultSpotlight: 'draw_B_round',
       runHint:
         'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with <code>circle(-50, 180)</code> bumps.'
     }
   };
 
-  var activeLetter = 'H';
+  var activeLetter = 'R';
 
   var PLANE_SCALE = 0.55;
   var PLANE_CY_OFFSET = 8;
@@ -287,7 +288,7 @@
         setSpotlight(btn.dataset.spotlight);
       });
     });
-    switchLetter('H');
+    switchLetter('R');
   }
 
   function loadChecks() {
