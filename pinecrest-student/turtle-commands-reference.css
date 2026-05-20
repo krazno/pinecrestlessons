@@ -487,6 +487,25 @@
   background: rgba(212, 255, 58, 0.05);
 }
 
+.turtle-ref-lead-question {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.turtle-ref-lead-answer {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.turtle-ref-lead-answer strong {
+  color: var(--text);
+}
+
 .turtle-ref-where-code-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -515,22 +534,24 @@
 
 .turtle-ref-ide-cta {
   display: inline-block;
-  margin-right: 6px;
-  padding: 8px 14px;
+  margin: 0 0 12px;
+  padding: 10px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 255, 224, 0.4);
-  background: rgba(0, 255, 224, 0.1);
+  border: 1px solid rgba(0, 255, 224, 0.45);
+  background: linear-gradient(145deg, rgba(0, 255, 224, 0.14), rgba(155, 92, 255, 0.12));
   color: var(--cyan);
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
 }
 
 .turtle-ref-ide-cta:hover {
   color: var(--text);
-  background: rgba(0, 255, 224, 0.2);
+  background: rgba(0, 255, 224, 0.22);
+  transform: translateY(-1px);
 }
 
 .turtle-ref-where-code-text .turtle-ref-ide-cta {

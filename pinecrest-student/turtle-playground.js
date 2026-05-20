@@ -480,7 +480,7 @@ for i in range(5):
   function showCode(pattern) {
     if (!codeEl) return;
     if (!pattern || !PATTERN_CODE[pattern]) {
-      if (patternNameEl) patternNameEl.textContent = 'pick a shape';
+      if (patternNameEl) patternNameEl.textContent = 'Choose below';
       codeEl.innerHTML = '<p class="playground-code-hint">' + DEFAULT_HINT + '</p>';
       updateOptimizeButton(null);
       return;

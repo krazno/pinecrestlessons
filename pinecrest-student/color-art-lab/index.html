@@ -103,7 +103,7 @@
     <details class="mission-panel mission-panel--starter">
       <summary>📋 Starter example</summary>
       <div class="mission-panel-body">
-        <p class="starter-version-lead" id="starterVersionLead">Pick a version: <strong>Starter</strong> is the easiest way in — one function, three bubbles. <strong>Math · coordinates</strong> adds x/y and a grid (same drawing, more math).</p>
+        <p class="starter-version-lead" id="starterVersionLead">Pick a version: <strong>Starter</strong> is the easiest way in — one function, three bubbles. <strong>Math · coordinates</strong> adds x/y and a grid (same drawing, more math). Scroll down for the <strong>extension</strong> that fills the screen with random circles.</p>
 
         <div class="starter-version-tabs" role="tablist" aria-label="Example version">
           <button type="button" class="starter-version-tab is-active" role="tab" id="starterTabStarter" data-version="starter" aria-selected="true" aria-controls="starterPanelStarter">Starter</button>
@@ -157,14 +157,31 @@
 
         <div class="starter-example-stage">
           <div class="starter-example-code">
-            <div class="starter-example-head"><span>Python code</span></div>
+            <div class="starter-example-head"><span>Python code · starter</span></div>
             <pre class="starter-example-body" id="starterExampleCode" aria-label="Starter example Python code"></pre>
           </div>
           <div class="starter-example-visual">
             <div class="starter-example-head"><span id="starterVisualHead">Drawing preview</span></div>
-            <div class="starter-output-frame" id="starterOutputFrame" aria-label="Turtle coordinate plane preview">
-              <img src="../examples/color-art-bubbles.svg" alt="Three colorful circles" width="400" height="240">
+            <div class="starter-output-frame" id="starterOutputFrame" aria-label="Drawing preview — run the example to animate">
+              <p class="placeholder" id="starterPreviewPlaceholder">Click <strong>Run example</strong> to see the animation.</p>
               <canvas class="starter-live-canvas" id="starterLiveCanvas" hidden aria-hidden="true" role="img" aria-label="Drawing preview"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="starter-extension-block">
+          <h3 class="starter-extension-title">Extension · Random Bubble Drawing</h3>
+          <p class="starter-extension-lead">Below the starter — copy this when you want a screen full of random circles. Uses <code>random</code>, a <code>for</code> loop, and <strong>100</strong> bubble draws on a black background.</p>
+          <div class="starter-example-stage starter-example-stage--extension">
+            <div class="starter-example-code">
+              <div class="starter-example-head"><span>Python code · extension</span></div>
+              <pre class="starter-example-body starter-extension-code" id="starterExtensionCode" aria-label="Extension example — random bubble drawing"></pre>
+            </div>
+            <div class="starter-example-visual">
+              <div class="starter-example-head"><span>What you&apos;ll see</span></div>
+              <div class="starter-output-frame starter-output-frame--extension" aria-label="Extension output description">
+                <p class="placeholder">Paste into your editor and run — <strong>100 random colorful circles</strong> scattered on a black screen. Every run looks a little different.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -203,6 +220,7 @@
 
   <footer class="site-foot">Pinecrest · 6th grade CS · codewithbrett.com · <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a></footer>
 
+  <script src="../lesson-return.js"></script>
   <script src="../class-timer.js"></script>
   <script src="../activity-config.js"></script>
   <script src="../activity-color-art-lab.js"></script>

@@ -30,7 +30,7 @@
   function showSetupMessage() {
     if (!frameEl) return;
     frameEl.innerHTML =
-      '<p class="gallery-drive-placeholder">Set <code>googleFolderUrl</code> in <code>activity-config.js</code> to show class work.</p>';
+      '<p class="gallery-drive-placeholder">Class gallery is not connected yet. Ask your teacher for the shared folder link.</p>';
   }
 
   function mountIframe() {

@@ -252,6 +252,12 @@
 
     var whereToCode = section.whereToCode
       ? '<div class="turtle-ref-where-code">' +
+        (section.leadQuestion
+          ? '<p class="turtle-ref-lead-question">' + section.leadQuestion + '</p>'
+          : '') +
+        (section.leadAnswer
+          ? '<p class="turtle-ref-lead-answer">' + section.leadAnswer + '</p>'
+          : '') +
         '<p class="turtle-ref-where-code-label">Where to write your code</p>' +
         '<p class="turtle-ref-where-code-text">' +
         section.whereToCode +

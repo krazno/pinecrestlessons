@@ -982,7 +982,7 @@
     font-weight: 700;
   }
 
-  /* ============== Lesson content placeholder ============== */
+  /* ============== Lesson content panel ============== */
   .lesson { grid-column: span 8; grid-row: span 3; }
   .lesson-body {
     margin-top: 8px;
@@ -2258,6 +2258,243 @@
   .hero-title-line {
     display: block;
   }
+  .hero-board-tagline {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 28em;
+  }
+  .hero-board-tagline strong {
+    color: var(--pink);
+    font-weight: 600;
+  }
+
+  /* ============== About Brett (after hero) ============== */
+  .about-brett {
+    grid-column: span 12 !important;
+    padding: 28px 36px 32px !important;
+    background:
+      radial-gradient(ellipse 60% 70% at 100% 0%, rgba(155, 92, 255, 0.1), transparent 55%),
+      radial-gradient(ellipse 50% 50% at 0% 100%, rgba(0, 255, 224, 0.06), transparent 50%),
+      var(--surface);
+  }
+  .about-brett-body {
+    display: grid;
+    grid-template-columns: auto 1fr minmax(220px, 280px);
+    gap: 24px 32px;
+    align-items: start;
+  }
+  .about-brett-photo {
+    margin: 0;
+    padding-top: 4px;
+  }
+  .about-brett-photo img {
+    display: block;
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(0, 255, 224, 0.35);
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.45);
+  }
+  @media (max-width: 768px) {
+    .about-brett { padding: 22px 18px 26px !important; }
+    .about-brett-body {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+    .about-brett-intro { text-align: left; width: 100%; }
+    .about-brett-faves { width: 100%; max-width: 280px; }
+  }
+  .about-brett-intro h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(22px, 2.8vw, 28px);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .about-brett-intro p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 52em;
+  }
+  .about-brett-intro p:last-child {
+    margin-bottom: 0;
+  }
+  .about-brett-intro strong {
+    color: var(--text);
+  }
+  .about-brett-faves {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .about-brett-fave {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-bright);
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .about-brett-fave-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+  .about-brett-fave-value {
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--cyan);
+    line-height: 1.3;
+  }
+  .about-brett-fave--paradigm .about-brett-fave-value {
+    font-size: 15px;
+    color: var(--violet);
+  }
+  .about-brett-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .about-brett-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(212, 255, 58, 0.25);
+    background: rgba(212, 255, 58, 0.08);
+    color: var(--lime);
+  }
+  .about-brett-paper-btn {
+    display: inline-block;
+    margin: 14px 0 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(155, 92, 255, 0.5);
+    background: linear-gradient(145deg, rgba(155, 92, 255, 0.18), rgba(0, 255, 224, 0.1));
+    color: var(--violet);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+  }
+  .about-brett-paper-btn:hover {
+    color: var(--text);
+    background: rgba(155, 92, 255, 0.28);
+    transform: translateY(-1px);
+  }
+
+  /* ============== Who are you? (class intro) ============== */
+  .who-are-you {
+    grid-column: span 12 !important;
+    padding: 28px 36px 32px !important;
+    background:
+      radial-gradient(ellipse 55% 60% at 0% 0%, rgba(255, 46, 147, 0.08), transparent 50%),
+      radial-gradient(ellipse 50% 50% at 100% 100%, rgba(212, 255, 58, 0.06), transparent 50%),
+      var(--surface);
+  }
+  .who-are-you-body {
+    max-width: 720px;
+  }
+  .who-are-you-body h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(22px, 2.8vw, 28px);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 0 0 10px;
+  }
+  .who-are-you-lead {
+    margin: 0 0 20px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .who-are-you-lead strong {
+    color: var(--text);
+  }
+  .who-are-you-prompts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) {
+    .who-are-you { padding: 22px 18px 26px !important; }
+    .who-are-you-prompts { grid-template-columns: 1fr; }
+  }
+  .who-are-you-prompt {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-bright);
+    background: rgba(0, 0, 0, 0.35);
+    text-align: center;
+  }
+  .who-are-you-prompt-num {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-bottom: 8px;
+    border-radius: 7px;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    color: #07080d;
+    background: var(--pink);
+  }
+  .who-are-you-prompt-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+  .who-are-you-prompt-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .who-are-you-example {
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 255, 224, 0.28);
+    background: rgba(0, 255, 224, 0.06);
+  }
+  .who-are-you-example-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin: 0 0 8px;
+  }
+  .who-are-you-example p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .who-are-you-example em {
+    color: var(--lime);
+    font-style: normal;
+    font-weight: 600;
+  }
   .hero-steps {
     list-style: none;
     display: flex;
@@ -2457,10 +2694,30 @@
     gap: 14px;
   }
   .hero-goals-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
     padding: 12px 14px;
     border-radius: 10px;
     border: 1px solid var(--border-bright);
     background: rgba(0, 0, 0, 0.25);
+  }
+  .hero-goals-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: #07080d;
+    background: var(--lime);
+  }
+  .hero-goals-item-body {
+    flex: 1;
+    min-width: 0;
   }
   .hero-goals-list li strong {
     display: block;
@@ -2468,10 +2725,19 @@
     color: var(--lime);
     margin-bottom: 4px;
   }
-  .hero-goals-list li span {
-    font-size: 13px;
-    line-height: 1.45;
+  .hero-goals-list li .hero-goals-desc {
+    display: block;
+    font-size: 14px;
+    line-height: 1.5;
     color: var(--muted);
+  }
+  .hero-goals-list li .hero-goals-desc code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92em;
+    color: var(--cyan);
+  }
+  .hero-goals-focus strong {
+    color: var(--text);
   }
   .activity-mission-group {
     margin: 0 0 14px;
@@ -3099,6 +3365,17 @@
     padding: 0 40px 36px;
     border-top: 1px solid var(--border);
   }
+  .turtle-ref-playground-bar {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0 28px;
+  }
+  .turtle-ref-playground-bar .playground-link-btn {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 420px;
+    margin: 0;
+  }
   .turtle-ref-starter {
     max-width: 640px;
     margin: 0 auto 28px;
@@ -3538,6 +3815,18 @@
     color: var(--muted);
     font-size: 15px;
     line-height: 1.45;
+  }
+  .activity-requirements-head p a {
+    color: var(--cyan);
+  }
+  .activity-req-blurb {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .activity-req-blurb strong {
+    color: var(--text);
   }
   .activity-requirements-table-wrap {
     overflow-x: auto;
@@ -4690,6 +4979,7 @@
           <span class="hero-title-line">6th grade</span>
           <span class="hero-title-line">computer science</span>
         </h1>
+        <p class="hero-board-tagline">End-of-year <strong>show me what you know</strong> challenge — review functions &amp; turtle, then share your art.</p>
         <ol class="hero-steps">
           <li class="hero-step-bar">
             <span class="hero-step-num">1</span>
@@ -4812,23 +5102,107 @@
         </figure>
         <button type="button" class="hero-goals-toggle" id="heroGoalsToggle" aria-expanded="true" aria-controls="heroGoalsPanel">Hide today&apos;s learning goals ▲</button>
         <div class="hero-goals-panel" id="heroGoalsPanel">
-          <h3>Today&apos;s focus</h3>
-          <p class="hero-goals-focus">Three ways we get creative with code today:</p>
+          <h3>Today&apos;s challenge</h3>
+          <p class="hero-goals-focus">End-of-year <strong>show me what you know</strong> — we review, you create, then you share. Four steps:</p>
           <ul class="hero-goals-list">
             <li>
-              <strong>Functions</strong>
-              <span>Invent named recipes in Python — define them once, pass in values, and call them again to build bigger drawings without repeating yourself.</span>
+              <span class="hero-goals-num" aria-hidden="true">1</span>
+              <div class="hero-goals-item-body">
+                <strong>Functions</strong>
+                <span class="hero-goals-desc">Review <code>def</code> — write a function once, then call it again so you don&apos;t copy the same code over and over.</span>
+              </div>
             </li>
             <li>
-              <strong>Turtle library</strong>
-              <span>Turn code into art: steer a turtle on the screen, combine lines and shapes, and use the command card when you want a creative boost.</span>
+              <span class="hero-goals-num" aria-hidden="true">2</span>
+              <div class="hero-goals-item-body">
+                <strong>Turtle library</strong>
+                <span class="hero-goals-desc">Review how the turtle draws — move, turn, colors, and shapes. Use the command card if you need a reminder.</span>
+              </div>
             </li>
             <li>
-              <strong>Get creative</strong>
-              <span>Break a big picture into small functions, then mix colors, patterns, and details until your flag, letter, or scene feels like yours.</span>
+              <span class="hero-goals-num" aria-hidden="true">3</span>
+              <div class="hero-goals-item-body">
+                <strong>Get creative</strong>
+                <span class="hero-goals-desc">Put functions and turtle together to make your own art. Show what you learned this year in your colors and design.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hero-goals-num" aria-hidden="true">4</span>
+              <div class="hero-goals-item-body">
+                <strong>Share &amp; gallery</strong>
+                <span class="hero-goals-desc">Upload your code and screenshot. Check the class gallery and grab ideas from your classmates&apos; projects.</span>
+              </div>
             </li>
           </ul>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT BRETT (after hero) -->
+  <section class="card about-brett" id="aboutBrett">
+    <div class="card-head">
+      <span class="step">·</span>
+      <span class="card-title">about_brett.py</span>
+      <span class="card-meta">who&apos;s teaching today</span>
+    </div>
+    <div class="about-brett-body">
+      <figure class="about-brett-photo">
+        <img src="images/brett-hannan.png" alt="Photo of Brett Hannan" width="148" height="148" loading="lazy" decoding="async">
+      </figure>
+      <div class="about-brett-intro">
+        <h2>Hi! I&apos;m Brett Hannan</h2>
+        <p>I&apos;m a <strong>software engineer</strong>. I love building things with code.</p>
+        <p>When I&apos;m not at the keyboard, I like <strong>outdoor adventures</strong>: hikes and exploring <strong>waterfalls</strong>.</p>
+        <div class="about-brett-tags" aria-label="Interests">
+          <span class="about-brett-tag">software engineer</span>
+          <span class="about-brett-tag">hikes</span>
+          <span class="about-brett-tag">waterfalls</span>
+        </div>
+      </div>
+      <aside class="about-brett-faves" aria-label="Coding favorites">
+        <div class="about-brett-fave">
+          <span class="about-brett-fave-label">Favorite language</span>
+          <span class="about-brett-fave-value">Python</span>
+        </div>
+        <div class="about-brett-fave about-brett-fave--paradigm">
+          <span class="about-brett-fave-label">Favorite paradigm</span>
+          <span class="about-brett-fave-value">Agentic vibe paradigm</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- WHO ARE YOU? (class introductions) -->
+  <section class="card who-are-you" id="whoAreYou">
+    <div class="card-head">
+      <span class="step">·</span>
+      <span class="card-title">who_are_you.py</span>
+      <span class="card-meta">class intro · go around the room</span>
+    </div>
+    <div class="who-are-you-body">
+      <h2>Who are you?</h2>
+      <p class="who-are-you-lead">We will go around the room. When it is your turn, say your <strong>name</strong> and either your <strong>favorite coding language</strong> or <strong>something you would like to build with code</strong>. No wrong answers. Just share!</p>
+      <div class="who-are-you-prompts" role="list" aria-label="What to say">
+        <div class="who-are-you-prompt" role="listitem">
+          <span class="who-are-you-prompt-num" aria-hidden="true">1</span>
+          <span class="who-are-you-prompt-label">Your name</span>
+          <p class="who-are-you-prompt-text">Say your first name clearly so everyone can hear.</p>
+        </div>
+        <div class="who-are-you-prompt" role="listitem">
+          <span class="who-are-you-prompt-num" aria-hidden="true">2</span>
+          <span class="who-are-you-prompt-label">Favorite language</span>
+          <p class="who-are-you-prompt-text">Python, Scratch, JavaScript, or another one you like.</p>
+        </div>
+        <div class="who-are-you-prompt" role="listitem">
+          <span class="who-are-you-prompt-num" aria-hidden="true">3</span>
+          <span class="who-are-you-prompt-label">Or what to build</span>
+          <p class="who-are-you-prompt-text">A game, a robot, art, an app, a website, anything!</p>
+        </div>
+      </div>
+      <div class="who-are-you-example">
+        <p class="who-are-you-example-label">Example sentence</p>
+        <p>&ldquo;Hi, I&apos;m <em>Alex</em>. My favorite language is <em>Python</em>, and I want to build a turtle drawing game.&rdquo;</p>
       </div>
     </div>
   </section>
@@ -4843,8 +5217,6 @@
 
     <div class="entry-prep-grid" id="todayFlow">
       <div class="entry-prep-structure">
-        <h3 class="entry-prep-panel-title">One function, labeled</h3>
-        <p class="entry-prep-flow">def → function body → function call → output</p>
         <div class="entry-prep-example" role="figure" aria-label="Labeled Pokémon function example">
           <div class="entry-prep-example-head">
             <span class="ide-dot r"></span>
@@ -5122,6 +5494,10 @@
         <p class="turtle-cmd-topics-label">Pick a section</p>
         <div class="turtle-cmd-topics" id="turtleRefTopics" role="toolbar" aria-label="Turtle command sections"></div>
 
+        <div class="turtle-ref-playground-bar">
+          <a class="cta-btn playground-link-btn playground-link-btn--turtle" href="turtle-playground/" data-return-from="turtleRef">Turtle Playground <span class="cta-sub">view shapes · read the code →</span></a>
+        </div>
+
         <article class="turtle-ref-panel" aria-live="polite">
           <header class="turtle-ref-panel-head">
             <h2 id="turtleRefTitle">Getting started with turtle</h2>
@@ -5148,12 +5524,12 @@
     </div>
 
     <div class="activity-mission-banner">
-      <strong>Mission select</strong>
-      <p><em>Mission 1 is for everyone.</em> Missions 2 and 3 are bonus. <strong>It&apos;s okay if you only do Mission 1.</strong> Open a mission for directions, your checklist, and turn-in on that page.</p>
+      <strong>Show me what you know</strong>
+      <p><em>Mission 1 is for everyone.</em> Missions 2 and 3 are bonus — it&apos;s okay if you only finish Mission 1. Review functions and turtle, make something creative, then share your code and screenshot in the gallery.</p>
     </div>
 
     <div class="activity-levels">
-      <a class="activity-level activity-level--1" href="color-art-lab/" id="activityLevel1">
+      <a class="activity-level activity-level--1" href="color-art-lab/" id="activityLevel1" data-return-from="activity">
         <span class="activity-level-num" aria-hidden="true">01</span>
         <p class="activity-level-tag">🪙 Mission 1<span class="activity-level-required">Start here</span></p>
         <div class="diff-meter" aria-label="Difficulty: low">
@@ -5170,7 +5546,7 @@
         <p class="activity-purpose">Turtle, color, your own function, and one <code>if</code> — creative drawing.</p>
         <span class="activity-play-btn">Play Mission 1 ▶</span>
       </a>
-      <a class="activity-level activity-level--2" href="initials-grid/" id="activityLevel2">
+      <a class="activity-level activity-level--2" href="initials-grid/" id="activityLevel2" data-return-from="activity">
         <span class="activity-level-num" aria-hidden="true">02</span>
         <p class="activity-level-tag">🎯 Mission 2 · optional</p>
         <div class="diff-meter" aria-label="Difficulty: medium">
@@ -5187,7 +5563,7 @@
         <p class="activity-purpose">Graph paper → coordinates → a letter function like <code>draw_H()</code>.</p>
         <span class="activity-play-btn">Play Mission 2 ▶</span>
       </a>
-      <a class="activity-level activity-level--3" href="flag-challenge/" id="activityLevel3">
+      <a class="activity-level activity-level--3" href="flag-challenge/" id="activityLevel3" data-return-from="activity">
         <span class="activity-level-num" aria-hidden="true">03</span>
         <p class="activity-level-tag">⚡ Mission 3 · optional</p>
         <div class="diff-meter" aria-label="Difficulty: high">
@@ -5201,7 +5577,7 @@
         </div>
         <h3>Poké Ball-inspired Flag</h3>
         <p class="activity-level-time">⏱ 10–15 min · bonus</p>
-        <p class="activity-purpose">Custom flag with a function, a loop, shapes, and colors that mean something to you.</p>
+        <p class="activity-purpose">Copy my Poké Ball flag or create your own — function, loop, shapes, and colors.</p>
         <span class="activity-play-btn">Play Mission 3 ▶</span>
       </a>
     </div>
@@ -5209,69 +5585,72 @@
     <div class="activity-requirements">
       <div class="activity-requirements-head">
         <h3>Mission objectives</h3>
-        <p>What to include before you turn in — each mission page has a checklist you can tick off as you go.</p>
+        <p><strong>Show me what you know.</strong> End-of-year review — use functions and turtle to make art, then share it. Open each mission for step-by-step directions and a checklist you can tick off. When you are done, upload your <code>.py</code> file and a <strong>screenshot</strong> to the class folder so your work shows up in the <a href="#studentGallery">gallery</a>.</p>
       </div>
       <div class="activity-requirements-table-wrap">
         <table class="activity-requirements-table">
           <thead>
             <tr>
               <th scope="col">Mission</th>
-              <th scope="col">Objectives</th>
+              <th scope="col">What to include</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row">
-                <a class="activity-req-activity" href="color-art-lab/">
+                <a class="activity-req-activity" href="color-art-lab/" data-return-from="activity">
                   <span>Mission 1 · everyone</span>
                   🪙 Color Art Lab
                 </a>
               </th>
               <td>
+                <p class="activity-req-blurb">Start here. Use the <strong>starter example</strong> (three bubbles) or try the <strong>extension</strong> (100 random circles) when you want more.</p>
                 <ul class="activity-req-items">
-                  <li>3 colors</li>
-                  <li>1 <code>def</code> function</li>
-                  <li>3 function calls</li>
-                  <li>1 <code>if</code></li>
-                  <li>comments</li>
-                  <li>screenshot</li>
+                  <li>🎨 <strong>3 colors</strong> in your drawing</li>
+                  <li>⚙️ <strong>1 function</strong> with <code>def</code></li>
+                  <li>📣 <strong>3 function calls</strong> (run your function three times)</li>
+                  <li>🔀 <strong>1 <code>if</code></strong> (for example, thicker lines when size is big)</li>
+                  <li>💬 <strong>Comments</strong> that explain your design</li>
+                  <li>📸 <strong>Screenshot</strong> + <code>.py</code> file uploaded</li>
                 </ul>
               </td>
             </tr>
             <tr>
               <th scope="row">
-                <a class="activity-req-activity" href="initials-grid/">
+                <a class="activity-req-activity" href="initials-grid/" data-return-from="activity">
                   <span>Mission 2 · bonus</span>
                   🎯 Initials on a Grid
                 </a>
               </th>
               <td>
+                <p class="activity-req-blurb">Optional. Plan on graph paper, then code one letter with <code>goto</code>.</p>
                 <ul class="activity-req-items">
-                  <li>1 initial letter</li>
-                  <li>3 line segments</li>
-                  <li><code>draw_H()</code> (letter function)</li>
-                  <li>2 colors</li>
-                  <li>2 comments</li>
-                  <li>screenshot</li>
+                  <li>🔤 <strong>1 letter</strong> from your initials</li>
+                  <li>📏 <strong>3 line segments</strong></li>
+                  <li>⚙️ <strong>Letter function</strong> (like <code>draw_H()</code>)</li>
+                  <li>🎨 <strong>2 colors</strong></li>
+                  <li>💬 <strong>2 comments</strong></li>
+                  <li>📸 <strong>Screenshot</strong> + <code>.py</code> file uploaded</li>
                 </ul>
               </td>
             </tr>
             <tr>
               <th scope="row">
-                <a class="activity-req-activity" href="flag-challenge/">
+                <a class="activity-req-activity" href="flag-challenge/" data-return-from="activity">
                   <span>Mission 3 · bonus</span>
                   ⚡ Poké Ball Flag
                 </a>
               </th>
               <td>
+                <p class="activity-req-blurb">Optional. <strong>Copy my Poké Ball example</strong> or <strong>create your own flag</strong> — build in layers (background first).</p>
                 <ul class="activity-req-items">
-                  <li>3 colors</li>
-                  <li>1 function</li>
-                  <li>1 <code>for</code> loop</li>
-                  <li>1 circle</li>
-                  <li>1 rectangle stripe</li>
-                  <li>2 comments</li>
-                  <li>screenshot</li>
+                  <li>🎨 <strong>3 colors</strong></li>
+                  <li>⚙️ <strong>1 function</strong> with <code>def</code></li>
+                  <li>🔁 <strong>1 <code>for</code> loop</strong></li>
+                  <li>⭕ <strong>1 circle</strong></li>
+                  <li>▭ <strong>1 rectangle</strong> (stripe or shape)</li>
+                  <li>💬 <strong>2 comments</strong></li>
+                  <li>📸 <strong>Screenshot</strong> + <code>.py</code> file uploaded</li>
                 </ul>
               </td>
             </tr>
@@ -5347,7 +5726,7 @@
     <ul class="link-list">
       <li><a class="link" href="#turtleRef">Turtle commands <span class="link-arrow">→</span></a></li>
       <li><a class="link" href="#playgroundNav">Playground <span class="link-arrow">→</span></a></li>
-      <li><a class="link" href="python-syntax-guide/">If / else &amp; loops guide <span class="link-arrow">→</span></a></li>
+      <li><a class="link" href="python-syntax-guide/" data-return-from="finishEarly">If / else &amp; loops guide <span class="link-arrow">→</span></a></li>
       <li><a class="link" href="https://docs.python.org/3/library/turtle.html" target="_blank" rel="noopener">turtle docs <span class="link-arrow">→</span></a></li>
       <li><a class="link" href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle in browser) <span class="link-arrow">→</span></a></li>
       <li><a class="link" href="https://trinket.io/python" target="_blank" rel="noopener">trinket.io sandbox <span class="link-arrow">→</span></a></li>
@@ -5356,7 +5735,7 @@
 
     <div class="turtle-commands-card" data-turtle-commands-card id="turtleCommandCard" aria-labelledby="turtleCommandCardTitle">
       <p class="turtle-cmd-ref-lead" id="turtleCommandCardTitle" style="margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5;">
-        <strong style="color:var(--text)">Quick command card</strong> — while you work. For getting started, drawing methods, and a live example, expand <a href="#turtleRef" style="color:var(--cyan)">turtle_commands.py</a> above. Open the <a href="turtle-playground/" style="color:var(--cyan)">Playground</a> for live shapes.
+        <strong style="color:var(--text)">Quick command card</strong> — while you work. For getting started, drawing methods, and a live example, expand <a href="#turtleRef" style="color:var(--cyan)">turtle_commands.py</a> above. Open the <a href="turtle-playground/" style="color:var(--cyan)" data-return-from="resources">Playground</a> for live shapes.
       </p>
       <div class="turtle-commands-card-grid">
         <div class="turtle-commands-card-main">
@@ -5406,8 +5785,8 @@
       <div class="playground-nav-body">
         <p class="playground-nav-text">The <strong>Playground</strong> is at the bottom of the page — turtle shapes with live code, Pinecrest letters, or the <strong>if / else / loops</strong> syntax guide when you have extra time.</p>
         <div class="playground-links">
-          <a class="cta-btn playground-link-btn playground-link-btn--turtle" href="turtle-playground/">Turtle Playground <span class="cta-sub">shapes · Pinecrest letters →</span></a>
-          <a class="cta-btn playground-link-btn playground-link-btn--syntax" href="python-syntax-guide/">If / else &amp; loops <span class="cta-sub">click each topic →</span></a>
+          <a class="cta-btn playground-link-btn playground-link-btn--turtle" href="turtle-playground/" data-return-from="playgroundNav">Turtle Playground <span class="cta-sub">shapes · Pinecrest letters →</span></a>
+          <a class="cta-btn playground-link-btn playground-link-btn--syntax" href="python-syntax-guide/" data-return-from="playgroundNav">If / else &amp; loops <span class="cta-sub">click each topic →</span></a>
         </div>
       </div>
     </details>
@@ -5427,7 +5806,7 @@
         </div>
       </summary>
       <div class="learning-goals-body">
-        <p class="learning-goals-intro">Today you will work on <strong>functions</strong>, the <strong>turtle library</strong>, and <strong>getting creative</strong> with both. Below are skills that help you design your own drawings in code.</p>
+        <p class="learning-goals-intro">Today you will work on <strong>functions</strong>, the <strong>turtle library</strong>, <strong>getting creative</strong>, and <strong>sharing your work</strong> in the gallery. Below are skills that help you design your own drawings in code.</p>
         <div class="learning-goals-example">
           <p class="learning-goals-example-label">Example · one program that uses many of today’s ideas</p>
           <pre class="py-snippet learning-goals-snippet" aria-label="Example Python program"><span class="label">draw_H.py</span><span class="kw">import</span> turtle
@@ -5506,6 +5885,21 @@ turtle.done()</pre>
               <tr>
                 <td>Share your work</td>
                 <td>Save a screenshot and turn in code you&apos;re proud of — your creativity counts</td>
+              </tr>
+              <tr>
+                <th scope="row" colspan="2" class="learning-goals-pillar">Share &amp; gallery</th>
+              </tr>
+              <tr>
+                <td>Share designs</td>
+                <td>Upload a screenshot of your turtle art so classmates can see what you made</td>
+              </tr>
+              <tr>
+                <td>Share code</td>
+                <td>Turn in your <code>.py</code> file to the class folder — your program is part of the gallery too</td>
+              </tr>
+              <tr>
+                <td>Learn from peers</td>
+                <td>Browse the gallery, notice ideas you like, and use them to enhance your own code</td>
               </tr>
             </tbody>
           </table>
@@ -6133,6 +6527,7 @@ document.getElementById('footHint').addEventListener('click', () => {
 </script>
 <script src="predict-snippets.js?v=20260520"></script>
 <script src="predict-carousel.js?v=20260520b"></script>
+<script src="lesson-return.js"></script>
 <script src="class-timer.js"></script>
 <script src="activity-config.js"></script>
 <script src="activity-gallery.js"></script>

@@ -55,7 +55,7 @@ Form links are set in the `CLASS_LINKS` object near the bottom of `index.html`.
 
 ### Activity turn-ins (3 levels)
 
-Sequence: **Activity 1** Color Art Lab → **Activity 2** Initials on a Grid → **Activity 3** Poké Ball-inspired Flag. Activity 1 is required; 2 and 3 are optional. Minimum requirements for each activity are on the student homepage in the **Minimum before moving on** table.
+Sequence: **Activity 1** Color Art Lab → **Activity 2** Initials on a Grid → **Activity 3** Poké Ball-inspired Flag. Activity 1 is required; 2 and 3 are optional. Requirements for each mission are on the student homepage in the **Mission objectives** table.
 
 Each layer has its own activity page (`color-art-lab/`, `initials-grid/`, `flag-challenge/`) with **Submit your work** (Google Drive) at the bottom. Teacher examples use **Code** / **Output** panels.
 

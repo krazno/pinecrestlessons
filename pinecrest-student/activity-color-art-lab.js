@@ -67,6 +67,55 @@
     't.hideturtle()\n' +
     'turtle.done()';
 
+  var EXTENSION_CODE =
+    '# Mission 1 · Color Art Lab\n' +
+    '# Random Bubble Drawing\n' +
+    '\n' +
+    'import turtle\n' +
+    'import random\n' +
+    '\n' +
+    't = turtle.Turtle()\n' +
+    't.speed(0)\n' +
+    '\n' +
+    'screen = turtle.Screen()\n' +
+    'screen.bgcolor("black")\n' +
+    '\n' +
+    'def draw_bubble(size, color):\n' +
+    '    # Make bigger circles have thicker lines\n' +
+    '    if size > 50:\n' +
+    '        t.width(5)\n' +
+    '    else:\n' +
+    '        t.width(2)\n' +
+    '\n' +
+    '    t.color(color)\n' +
+    '    t.circle(size)\n' +
+    '\n' +
+    '# List of colors the turtle can choose from\n' +
+    'colors = ["blue", "green", "purple", "red", "orange", "cyan", "yellow", "pink", "white"]\n' +
+    '\n' +
+    '# Draw 100 random circles\n' +
+    'for i in range(100):\n' +
+    '    # Pick a random spot on the screen\n' +
+    '    x = random.randint(-300, 300)\n' +
+    '    y = random.randint(-250, 250)\n' +
+    '\n' +
+    '    # Pick a random circle size\n' +
+    '    size = random.randint(10, 80)\n' +
+    '\n' +
+    '    # Pick a random color\n' +
+    '    color = random.choice(colors)\n' +
+    '\n' +
+    '    # Move without drawing\n' +
+    '    t.penup()\n' +
+    '    t.goto(x, y)\n' +
+    '    t.pendown()\n' +
+    '\n' +
+    '    # Draw the circle\n' +
+    '    draw_bubble(size, color)\n' +
+    '\n' +
+    't.hideturtle()\n' +
+    'turtle.done()';
+
   var VERSIONS = {
     starter: {
       code: STARTER_SIMPLE_CODE,
@@ -401,10 +450,17 @@
     }
   }
 
+  function setPreviewPlaceholder(visible) {
+    var placeholder = document.getElementById('starterPreviewPlaceholder');
+    if (!placeholder) return;
+    placeholder.hidden = !visible;
+    if (visible) placeholder.removeAttribute('aria-hidden');
+    else placeholder.setAttribute('aria-hidden', 'true');
+  }
+
   function refreshPreview() {
     var frame = document.getElementById('starterOutputFrame');
     var canvas = document.getElementById('starterLiveCanvas');
-    var img = frame && frame.querySelector('img');
     var usePlane = getVersionConfig().usePlane;
 
     if (!frame || !canvas) return null;
@@ -413,10 +469,7 @@
       frame.classList.add('has-plane');
       canvas.hidden = false;
       canvas.removeAttribute('aria-hidden');
-      if (img) {
-        img.hidden = true;
-        img.setAttribute('aria-hidden', 'true');
-      }
+      setPreviewPlaceholder(false);
       var metrics = getStageMetrics();
       if (!metrics.canvas) return null;
       var ctx = setupCanvas(metrics);
@@ -428,10 +481,7 @@
     frame.classList.remove('is-live');
     canvas.hidden = true;
     canvas.setAttribute('aria-hidden', 'true');
-    if (img) {
-      img.hidden = false;
-      img.removeAttribute('aria-hidden');
-    }
+    setPreviewPlaceholder(true);
     return null;
   }
 
@@ -453,16 +503,12 @@
     var runBtn = document.getElementById('runStarterExample');
     var frame = document.getElementById('starterOutputFrame');
     var canvas = document.getElementById('starterLiveCanvas');
-    var img = frame && frame.querySelector('img');
     if (!canvas) return;
 
     if (frame) frame.classList.add('is-live');
     canvas.hidden = false;
     canvas.removeAttribute('aria-hidden');
-    if (img) {
-      img.hidden = true;
-      img.setAttribute('aria-hidden', 'true');
-    }
+    setPreviewPlaceholder(false);
 
     var metrics = getStageMetrics();
     if (!metrics.canvas) return;
@@ -527,9 +573,15 @@
     });
   }
 
+  function initExtensionExample() {
+    var pre = document.getElementById('starterExtensionCode');
+    if (pre) pre.textContent = EXTENSION_CODE;
+  }
+
   initSpotlight();
   initMissionChecklist();
   initVersionTabs();
   initPreviewPanel();
   initRun();
+  initExtensionExample();
 })();

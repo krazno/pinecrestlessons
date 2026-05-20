@@ -181,13 +181,17 @@
       label: 'Getting started',
       title: 'Getting started with turtle',
       tag: 'basics',
+      leadQuestion: 'What is turtle in Python?',
+      leadAnswer:
+        '<strong>Turtle</strong> is a built-in Python library for drawing on the screen. ' +
+        'You give a turtle simple commands — <code>forward()</code>, <code>right()</code>, <code>color()</code> — and it leaves lines and shapes behind like a pen.',
       whereToCode:
-        '<span class="turtle-ref-where-code-rest">Use <strong>any editor you like</strong> — Mu, ' +
-        '<a href="' +
+        '<a class="turtle-ref-ide-cta" href="' +
         PYTHON_SANDBOX_TURTLE +
-        '" target="_blank" rel="noopener">Python Sandbox (turtle)</a>, Trinket, Replit, or IDLE. ' +
+        '" target="_blank" rel="noopener">Open online IDE →</a>' +
+        '<span class="turtle-ref-where-code-rest">Or use <strong>Mu</strong> on your computer (or Trinket, Replit, or IDLE). ' +
         'Click <strong>Copy code</strong> on a program below, paste into your editor, and run it. ' +
-        'In the browser sandbox, press the green <strong>Play</strong> button; in Mu or IDLE, use <strong>Run</strong>.</span>',
+        'In the online IDE, press the green <strong>Play</strong> button; in Mu or IDLE, use <strong>Run</strong>.</span>',
       concepts: [
         {
           step: '1',
