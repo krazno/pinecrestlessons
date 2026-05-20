@@ -1,6 +1,20 @@
 {
   "cleanUrls": true,
   "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/pinecrest-student/:path*",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/pinecrest-teacher/:path*",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    }
+  ],
   "redirects": [
     { "source": "/pinecrest", "destination": "/pinecrest-teacher", "permanent": true },
     { "source": "/pinecrest/", "destination": "/pinecrest-teacher/", "permanent": true },

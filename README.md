@@ -10,6 +10,18 @@
 
 Old URLs (`/pinecrest/class/`, `/student/`, etc.) redirect to `/pinecrest-student/`.
 
+## Clone on another machine
+
+```bash
+git clone https://github.com/krazno/pinecrestlessons.git
+cd pinecrestlessons
+python3 -m http.server 8765
+```
+
+Then open http://localhost:8765/pinecrest-student/ (students) or http://localhost:8765/pinecrest-teacher/ (faculty).
+
+**Production:** [pinecrestlessons on Vercel](https://pinecrestlessons.vercel.app/) — if `codewithbrett.com` still shows an old student layout, hard-refresh (Shift+Reload) or confirm the domain points at this repo’s latest deploy.
+
 ## Local preview
 
 ```bash

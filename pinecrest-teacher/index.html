@@ -1819,6 +1819,17 @@ footer .dot-sep { color: var(--gold); margin: 0 8px; }
 .tool-btn.gamma-slides:hover { filter: brightness(0.98); }
 .tool-btn.gamma-slides .dot { background: var(--gold); }
 .builder-preview pre.has-blanks { opacity: 0.72; }
+.status-bar .logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.status-bar .logo img {
+  display: block;
+  border-radius: 50%;
+  background: var(--white);
+  padding: 2px;
+}
 </style>
 <link rel="stylesheet" href="../pinecrest-student/class-timer-bar.css" />
 </head>
@@ -1826,6 +1837,9 @@ footer .dot-sep { color: var(--gold); margin: 0 8px; }
 
 <header class="status-bar status-bar--faculty" id="classTimerBar" aria-label="Sprint timer">
   <div class="status-left">
+    <span class="logo">
+      <img src="/logo.png" alt="Pine Crest School" width="40" height="40">
+    </span>
     <span class="status-faculty-label">20-minute sprint</span>
   </div>
   <div class="status-center" aria-live="polite">
@@ -1904,9 +1918,6 @@ footer .dot-sep { color: var(--gold); margin: 0 8px; }
     <div class="safety">
       <strong>Safety note:</strong>&nbsp;Use general classroom examples only. Do not enter private student information.
     </div>
-    </div>
-    <div class="hero-visual">
-      <img src="../pinecrest-student/images/cs-week-quantum.webp" width="520" height="390" alt="Abstract quantum computing visualization — CS Week at Pine Crest" loading="lazy" decoding="async">
     </div>
   </div>
 </header>
