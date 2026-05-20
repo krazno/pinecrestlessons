@@ -126,18 +126,18 @@
     '    t.pendown()\n' +
     '    t.goto(-50, 100)\n' +
     '\n' +
-    '    # Top bump — half circle\n' +
+    '    # Top bump — half circle (opens to the right)\n' +
     '    t.color("cyan")\n' +
     '    t.penup()\n' +
-    '    t.goto(-50, 0)\n' +
+    '    t.goto(-50, 50)\n' +
     '    t.pendown()\n' +
-    '    t.setheading(90)\n' +
+    '    t.setheading(270)\n' +
     '    t.circle(50, 180)\n' +
     '\n' +
     '    # Bottom bump — half circle\n' +
     '    t.color("green")\n' +
     '    t.penup()\n' +
-    '    t.goto(-50, 0)\n' +
+    '    t.goto(-50, -50)\n' +
     '    t.pendown()\n' +
     '    t.setheading(270)\n' +
     '    t.circle(50, -180)\n' +
@@ -189,7 +189,7 @@
       code: STARTER_CODE_B_ROUND,
       segments: LETTER_B_ROUND,
       svg: '../examples/initials-letter-b-round.svg',
-      spotlight: { draw_B_round: [7, 38] },
+      spotlight: { draw_B_round: [7, 40] },
       defaultSpotlight: 'draw_B_round',
       runHint:
         'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with two half-circles.'
