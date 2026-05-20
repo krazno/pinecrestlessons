@@ -112,35 +112,38 @@
     'turtle.done()';
 
   var STARTER_CODE_B_ROUND =
-    '# Mission 2 · Initials — round letter B (half-circles)\n' +
+    '# Mission 2 · Initials\n' +
+    '# Round letter B using coordinates and turtle\n' +
+    '\n' +
     'import turtle\n' +
     '\n' +
     't = turtle.Turtle()\n' +
     't.speed(3)\n' +
+    't.width(5)\n' +
     '\n' +
     'def draw_B_round():\n' +
-    '    # Spine (left side)\n' +
+    '    # Start with the left side of the B\n' +
     '    t.color("blue")\n' +
     '    t.penup()\n' +
-    '    t.goto(-50, -100)\n' +
+    '    t.goto(-50, -100)   # bottom of the spine\n' +
     '    t.pendown()\n' +
-    '    t.goto(-50, 100)\n' +
+    '    t.goto(-50, 100)    # top of the spine\n' +
     '\n' +
-    '    # Top bump — half circle (opens to the right)\n' +
+    '    # Draw the top round part of the B\n' +
     '    t.color("cyan")\n' +
     '    t.penup()\n' +
-    '    t.goto(-50, 50)\n' +
+    '    t.goto(-50, 100)    # start at the top of the spine\n' +
+    '    t.setheading(0)     # face right\n' +
     '    t.pendown()\n' +
-    '    t.setheading(270)\n' +
-    '    t.circle(50, 180)\n' +
+    '    t.circle(-50, 180)  # half circle opening to the right\n' +
     '\n' +
-    '    # Bottom bump — half circle\n' +
+    '    # Draw the bottom round part of the B\n' +
     '    t.color("green")\n' +
     '    t.penup()\n' +
-    '    t.goto(-50, -50)\n' +
+    '    t.goto(-50, 0)      # start in the middle of the spine\n' +
+    '    t.setheading(0)     # face right\n' +
     '    t.pendown()\n' +
-    '    t.setheading(270)\n' +
-    '    t.circle(50, -180)\n' +
+    '    t.circle(-50, 180)  # half circle opening to the right\n' +
     '\n' +
     '\n' +
     'draw_B_round()\n' +
@@ -163,8 +166,8 @@
   ];
 
   var LETTER_B_ROUND = [{ x1: -50, y1: -100, x2: -50, y2: 100, color: '#3b82f6' }]
-    .concat(arcToLineSegments(0, 50, 50, Math.PI, -Math.PI / 2, false, 20, '#22d3ee'))
-    .concat(arcToLineSegments(0, -50, 50, Math.PI, Math.PI / 2, true, 20, '#22c55e'));
+    .concat(arcToLineSegments(0, 100, 50, Math.PI, 0, false, 22, '#22d3ee'))
+    .concat(arcToLineSegments(0, 0, 50, Math.PI, 0, false, 22, '#22c55e'));
 
   var LETTERS = {
     H: {
@@ -189,10 +192,10 @@
       code: STARTER_CODE_B_ROUND,
       segments: LETTER_B_ROUND,
       svg: '../examples/initials-letter-b-round.svg',
-      spotlight: { draw_B_round: [7, 40] },
+      spotlight: { draw_B_round: [10, 38] },
       defaultSpotlight: 'draw_B_round',
       runHint:
-        'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with two half-circles.'
+        'The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with <code>circle(-50, 180)</code> bumps.'
     }
   };
 
