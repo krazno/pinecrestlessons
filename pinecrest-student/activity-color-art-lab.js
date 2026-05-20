@@ -116,6 +116,45 @@
     't.hideturtle()\n' +
     'turtle.done()';
 
+  var EXTENSION_CODE_B_ROUND =
+    '# Mission 1 · Color Art Lab · extension\n' +
+    '# Round letter B using coordinates and turtle\n' +
+    '\n' +
+    'import turtle\n' +
+    '\n' +
+    't = turtle.Turtle()\n' +
+    't.speed(3)\n' +
+    't.width(5)\n' +
+    '\n' +
+    'def draw_B_round():\n' +
+    '    # Start with the left side of the B\n' +
+    '    t.color("blue")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, -100)   # bottom of the spine\n' +
+    '    t.pendown()\n' +
+    '    t.goto(-50, 100)    # top of the spine\n' +
+    '\n' +
+    '    # Draw the top round part of the B\n' +
+    '    t.color("cyan")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, 100)    # start at the top of the spine\n' +
+    '    t.setheading(0)     # face right\n' +
+    '    t.pendown()\n' +
+    '    t.circle(-50, 180)  # half circle opening to the right\n' +
+    '\n' +
+    '    # Draw the bottom round part of the B\n' +
+    '    t.color("green")\n' +
+    '    t.penup()\n' +
+    '    t.goto(-50, 0)      # start in the middle of the spine\n' +
+    '    t.setheading(0)     # face right\n' +
+    '    t.pendown()\n' +
+    '    t.circle(-50, 180)  # half circle opening to the right\n' +
+    '\n' +
+    '# Call the function\n' +
+    'draw_B_round()\n' +
+    '\n' +
+    'turtle.done()';
+
   var VERSIONS = {
     starter: {
       code: STARTER_SIMPLE_CODE,
@@ -574,8 +613,10 @@
   }
 
   function initExtensionExample() {
-    var pre = document.getElementById('starterExtensionCode');
-    if (pre) pre.textContent = EXTENSION_CODE;
+    var bubbles = document.getElementById('starterExtensionCode');
+    var roundB = document.getElementById('starterExtensionCodeRoundB');
+    if (bubbles) bubbles.textContent = EXTENSION_CODE;
+    if (roundB) roundB.textContent = EXTENSION_CODE_B_ROUND;
   }
 
   initSpotlight();
