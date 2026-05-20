@@ -3,29 +3,28 @@
   "trailingSlash": true,
   "headers": [
     {
-      "source": "/pinecrest-student/:path*",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
-    },
-    {
-      "source": "/pinecrest-teacher/:path*",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
-    },
-    {
       "source": "/",
       "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     }
   ],
   "redirects": [
-    { "source": "/pinecrest", "destination": "/pinecrest-teacher", "permanent": true },
-    { "source": "/pinecrest/", "destination": "/pinecrest-teacher/", "permanent": true },
-    { "source": "/pinecrest/class", "destination": "/pinecrest-student", "permanent": true },
-    { "source": "/pinecrest/class/", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/pinecrest-student", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/student", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/student/", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/class", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/class/", "destination": "/pinecrest-student/", "permanent": true },
-    { "source": "/pinecrest-teacher/activity-submissions", "destination": "/pinecrest-teacher/", "permanent": true },
-    { "source": "/pinecrest-teacher/activity-submissions/", "destination": "/pinecrest-teacher/", "permanent": true }
+    { "source": "/pinecrest", "destination": "/", "permanent": false },
+    { "source": "/pinecrest/", "destination": "/", "permanent": false },
+    { "source": "/pinecrest/class", "destination": "/", "permanent": false },
+    { "source": "/pinecrest/class/", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-student", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-student/", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-student/:path*", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-teacher", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-teacher/", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-teacher/:path*", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-teacher/activity-submissions", "destination": "/", "permanent": false },
+    { "source": "/pinecrest-teacher/activity-submissions/", "destination": "/", "permanent": false },
+    { "source": "/student", "destination": "/", "permanent": false },
+    { "source": "/student/", "destination": "/", "permanent": false },
+    { "source": "/student/:path*", "destination": "/", "permanent": false },
+    { "source": "/class", "destination": "/", "permanent": false },
+    { "source": "/class/", "destination": "/", "permanent": false },
+    { "source": "/class/:path*", "destination": "/", "permanent": false }
   ]
 }

@@ -3,44 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pinecrest CS · Code with Brett</title>
+  <title>Thank you · Brett Hannan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      /* Pinecrest forest greens (from pinecrest.edu palette) */
-      --pc-dark: #003b0f;
-      --pc-green: #004712;
-      --pc-mid: #0d5e21;
-      --pc-light: #1a7a34;
-      --white: #ffffff;
-      --cream: #f4f7f4;
-      --muted: #b5c9b8;
-      --border: rgba(255, 255, 255, 0.18);
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
       font-family: 'Space Grotesk', system-ui, sans-serif;
-      background: var(--pc-dark);
-      color: var(--cream);
+      background: #003b0f;
+      color: #f4f7f4;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-    .splash {
-      width: 100%;
-      max-width: 420px;
+    .page {
       text-align: center;
+      max-width: 420px;
     }
     .logo-mark {
       width: 72px;
       height: 72px;
-      margin: 0 auto 20px;
+      margin: 0 auto 28px;
       border-radius: 50%;
-      background: var(--white);
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -53,367 +41,20 @@
       object-fit: contain;
       display: block;
     }
-    .eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--white);
-    }
-    .sub {
-      color: var(--muted);
-      font-size: 1rem;
+    .thanks {
+      font-size: clamp(1.35rem, 4vw, 1.85rem);
+      font-weight: 500;
       line-height: 1.5;
-      margin-bottom: 32px;
-    }
-    .role-btns {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    .role-btn {
-      font-family: inherit;
-      font-size: 1.05rem;
-      font-weight: 600;
-      padding: 18px 20px;
-      border-radius: 12px;
-      border: 2px solid var(--border);
-      background: var(--pc-green);
-      color: var(--white);
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, transform 0.15s;
-    }
-    .role-btn:hover {
-      background: var(--pc-mid);
-      border-color: rgba(255, 255, 255, 0.35);
-      transform: translateY(-1px);
-    }
-    .role-btn.student {
-      background: var(--pc-mid);
-    }
-    .role-btn.student:hover {
-      background: var(--pc-light);
-    }
-    .passcode-panel {
-      display: none;
-      text-align: left;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px 22px;
-      background: rgba(0, 0, 0, 0.2);
-    }
-    .passcode-panel.show { display: block; }
-    .splash.roles-hidden .role-btns,
-    .splash.roles-hidden .sub.pick,
-    .splash.roles-hidden .thank-you { display: none; }
-    .passcode-panel h2 {
-      font-size: 1.15rem;
-      margin-bottom: 6px;
-      color: var(--white);
-    }
-    .passcode-panel p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 18px;
-    }
-    .passcode-form {
-      display: flex;
-      gap: 10px;
-    }
-    .passcode-input {
-      flex: 1;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
-      letter-spacing: 0.15em;
-      text-align: center;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(0, 0, 0, 0.25);
-      color: var(--white);
-      outline: none;
-    }
-    .passcode-input:focus {
-      border-color: rgba(255, 255, 255, 0.45);
-    }
-    .passcode-submit {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: none;
-      background: var(--white);
-      color: var(--pc-green);
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .passcode-submit:hover { opacity: 0.92; }
-    .passcode-error {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #ffb4b4;
-      min-height: 1.2em;
-    }
-    .back-btn {
-      margin-top: 16px;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 0;
-    }
-    .back-btn:hover { color: var(--white); }
-    .thank-you {
-      margin: 20px 0 8px;
-      padding: 16px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(0, 0, 0, 0.18);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      color: var(--cream);
-      text-align: center;
-    }
-    .thank-you p { margin: 0; }
-    .thank-you .sign {
-      display: block;
-      margin-top: 10px;
-      font-style: italic;
-      color: var(--muted);
-    }
-    .thank-you .not-a-robot {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      cursor: default;
-    }
-    .thank-you .not-a-robot input {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--pc-light);
-      cursor: default;
-      pointer-events: none;
-    }
-    footer {
-      margin-top: 28px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    footer a {
-      color: var(--pc-light);
-      text-decoration: none;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
-    .fun-fact {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: #8fd4a0;
-    }
-    .fun-fact strong { color: var(--cream); font-weight: 500; }
-    .load-screen {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: var(--pc-dark);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--cream);
-      place-items: center;
-      padding: 24px;
-    }
-    .load-screen.show {
-      display: grid;
-    }
-    .load-inner {
-      width: 100%;
-      max-width: 440px;
-    }
-    .load-line {
-      opacity: 0;
-      margin: 5px 0;
-      color: var(--muted);
-      animation: loadLine 0.45s forwards;
-    }
-    .load-line.ok { color: var(--cream); }
-    .load-line.ok::after {
-      content: " [OK]";
-      color: #8fd4a0;
-    }
-    @keyframes loadLine {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .load-bar {
-      margin-top: 18px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .load-bar span {
-      display: block;
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, #8fd4a0, var(--white));
-      animation: loadBar 2.4s ease forwards;
-    }
-    @keyframes loadBar {
-      to { width: 100%; }
-    }
-    .load-fact {
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      line-height: 1.55;
-      color: #8fd4a0;
-      min-height: 2.8em;
-    }
-    .load-fact-label {
-      display: block;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 6px;
+      letter-spacing: -0.01em;
     }
   </style>
 </head>
 <body>
-  <div class="splash" id="splash">
+  <main class="page">
     <div class="logo-mark">
       <img src="/logo.png" alt="Pinecrest School" width="56" height="56">
     </div>
-    <p class="eyebrow">Pinecrest · 6th grade CS</p>
-    <h1>Welcome</h1>
-    <p class="sub pick">Are you a teacher or a student?</p>
-
-    <div class="role-btns">
-      <button type="button" class="role-btn teacher" data-role="teacher">Pinecrest Teacher · Prompt Like a Pro</button>
-      <button type="button" class="role-btn student" data-role="student">Pinecrest Student</button>
-    </div>
-
-    <div class="thank-you">
-      <p>Thank you for having me today.</p>
-      <span class="sign">— Brett Hannan</span>
-      <label class="not-a-robot">
-        <input type="checkbox" checked disabled aria-hidden="true">
-        Not a robot
-      </label>
-    </div>
-
-    <div class="passcode-panel" id="passcodePanel">
-      <h2 id="passcodeTitle">Enter passcode</h2>
-      <p id="passcodeHint">Students: type <strong>67</strong> (the numbers 6 and 7).</p>
-      <form class="passcode-form" id="passcodeForm" autocomplete="off">
-        <input class="passcode-input" id="passcodeInput" type="password" inputmode="numeric" maxlength="8" placeholder="••••" aria-label="Passcode">
-        <button class="passcode-submit" type="submit">go</button>
-      </form>
-      <p class="passcode-error" id="passcodeError" role="alert" aria-live="polite"></p>
-      <button type="button" class="back-btn" id="backBtn">← choose again</button>
-    </div>
-
-    <footer>
-      codewithbrett.com
-      ·
-      <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a>
-      <p class="fun-fact" id="funFact">
-        <strong>Fun fact:</strong> this was built with Python — <span id="pythonLineCount">…</span> lines of Python code in today’s lesson.
-      </p>
-    </footer>
-  </div>
-
-  <script>
-    (function () {
-      const PASS = '67';
-      const ROUTES = {
-        teacher: '/pinecrest-teacher/',
-        student: '/pinecrest-student/'
-      };
-      /* Lines of Python in lesson snippets (pinecrest-student predict exercises) */
-      const PYTHON_LESSON_LINES = 112;
-
-      const pythonLineEl = document.getElementById('pythonLineCount');
-      if (pythonLineEl) pythonLineEl.textContent = String(PYTHON_LESSON_LINES);
-
-      const splash = document.getElementById('splash');
-      const panel = document.getElementById('passcodePanel');
-      const title = document.getElementById('passcodeTitle');
-      const hint = document.getElementById('passcodeHint');
-      const form = document.getElementById('passcodeForm');
-      const input = document.getElementById('passcodeInput');
-      const err = document.getElementById('passcodeError');
-      const backBtn = document.getElementById('backBtn');
-      let role = null;
-
-      function showPasscode(selected) {
-        role = selected;
-        splash.classList.add('roles-hidden');
-        panel.classList.add('show');
-        title.textContent = selected === 'teacher' ? 'Teacher passcode' : 'Student passcode';
-        hint.textContent = 'Type the code your teacher shared in class.';
-        err.textContent = '';
-        input.value = '';
-        input.focus();
-      }
-
-      function resetSplash() {
-        role = null;
-        splash.classList.remove('roles-hidden');
-        panel.classList.remove('show');
-        err.textContent = '';
-        input.value = '';
-      }
-
-      document.querySelectorAll('.role-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          showPasscode(btn.dataset.role);
-        });
-      });
-
-      backBtn.addEventListener('click', resetSplash);
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (input.value.trim() !== PASS) {
-          err.textContent = 'Wrong passcode — try again.';
-          input.value = '';
-          input.focus();
-          return;
-        }
-        sessionStorage.setItem('cwb_role', role);
-        sessionStorage.setItem('cwb_unlocked', '1');
-        if (role === 'student') {
-          window.location.href = ROUTES.student;
-          return;
-        }
-        window.location.href = ROUTES.teacher;
-      });
-    })();
-  </script>
+    <p class="thanks">Thank you for having me - Brett</p>
+  </main>
 </body>
 </html>
