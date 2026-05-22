@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" role="img" aria-label="Letter L drawn with cyan and magenta lines on black">
+  <rect width="200" height="240" fill="#0a0a0a"/>
+  <line x1="60" y1="200" x2="60" y2="40" stroke="#00ffff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="60" y1="200" x2="140" y2="200" stroke="#ff00ff" stroke-width="8" stroke-linecap="round"/>
+</svg>

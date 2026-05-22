@@ -1,0 +1,2885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prompt Like a Pro · Pine Crest Faculty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   DESIGN TOKENS
+=========================================================== */
+:root {
+  --deep-pine: #0B3D2E;
+  --pine-green: #145A3A;
+  --soft-cream: #F8F6EF;
+  --mist-green: #EAF4EE;
+  --charcoal: #17201C;
+  --gold: #C8A94F;
+  --gold-soft: #F4E9C8;
+  --weak: #C95D4B;
+  --weak-bg: #FBEFEC;
+  --improved: #1F7A4D;
+  --improved-bg: #E8F3EC;
+  --white: #FFFFFF;
+  --gray-100: #F2EFE6;
+  --gray-200: #E4E0D4;
+  --gray-300: #C9C5B8;
+  --gray-500: #6B7268;
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 3px rgba(11,61,46,0.06);
+  --shadow: 0 4px 14px rgba(11,61,46,0.08);
+  --shadow-lg: 0 12px 36px rgba(11,61,46,0.14);
+  --move-1: #145A3A;
+  --move-1-bg: #e8f3ec;
+  --move-2: #9a7b1a;
+  --move-2-bg: #f4e9c8;
+  --move-3: #6b5cff;
+  --move-3-bg: #ebe8f8;
+  --move-4: #3a7bc8;
+  --move-4-bg: #e8f0fa;
+  --move-5: #C95D4B;
+  --move-5-bg: #faeee8;
+}
+
+/* ===========================================================
+   RESET + BASE
+=========================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, p, ul, ol, figure { margin: 0; padding: 0; }
+ul { list-style: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+input, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+
+body {
+  font-family: var(--sans);
+  color: var(--charcoal);
+  background: var(--soft-cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* subtle academic-tech background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(20,90,58,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 88% 82%, rgba(200,169,79,0.04) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  color: var(--deep-pine);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+/* ===========================================================
+   HERO
+=========================================================== */
+.hero {
+  background: linear-gradient(180deg, var(--mist-green) 0%, var(--soft-cream) 100%);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 64px 0 56px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--pine-green) 50%, var(--gold) 100%);
+}
+.session-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  color: var(--pine-green);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.session-label::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  margin-bottom: 14px;
+}
+.hero .subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: var(--gray-500);
+  margin-bottom: 6px;
+}
+.hero .presenter {
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  margin-bottom: 28px;
+}
+.hero .presenter strong { color: var(--deep-pine); }
+.hero .intro {
+  max-width: 720px;
+  font-size: 1.05rem;
+  color: var(--charcoal);
+  margin-bottom: 22px;
+}
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr min(260px, 34%);
+  gap: 28px;
+  align-items: center;
+}
+@media (max-width: 880px) {
+  .hero-layout { grid-template-columns: 1fr; }
+  .hero-visual { order: -1; max-width: 320px; }
+}
+.hero-visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-md);
+}
+.built-with {
+  padding: 36px 0 44px;
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+}
+.built-with h3 {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--deep-pine);
+  margin: 0 0 14px;
+  text-align: center;
+}
+.built-with-stack {
+  max-width: 420px;
+  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.built-with-stack li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  padding: 10px 14px;
+  background: var(--soft-cream);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+}
+.built-with-stack strong {
+  color: var(--pine-green);
+  min-width: 5.5rem;
+}
+.built-with-note {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  margin-top: 14px;
+}
+.built-with-stack a {
+  color: var(--pine-green);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--gold);
+}
+.built-with-stack a:hover { color: var(--deep-pine); }
+.hero-goals {
+  max-width: 720px;
+  margin: 0 0 22px;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+.hero-goals li {
+  margin-bottom: 8px;
+  font-size: 1.02rem;
+  color: var(--charcoal);
+  line-height: 1.5;
+}
+.hero-goals li:last-child { margin-bottom: 0; }
+.entry-discuss {
+  max-width: 40rem;
+}
+.entry-discuss .question {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--deep-pine);
+  font-weight: 600;
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+.entry-discuss .prompt-list {
+  margin: 0 0 18px;
+  padding-left: 1.25rem;
+  list-style: disc;
+  font-size: 1.02rem;
+  color: var(--charcoal);
+  line-height: 1.55;
+}
+.entry-discuss .prompt-list li { margin-bottom: 6px; }
+.tool-btn.gemini-primary {
+  background: var(--deep-pine);
+  color: var(--soft-cream);
+  border-color: var(--deep-pine);
+  font-weight: 600;
+}
+.tool-btn.gemini-primary:hover {
+  background: var(--pine-green);
+  border-color: var(--pine-green);
+  color: var(--white);
+}
+.tool-btn.gemini-primary .dot { background: var(--gold); }
+.hero .tool-line {
+  max-width: 720px;
+  font-size: 0.95rem;
+  color: var(--gray-500);
+  margin-bottom: 24px;
+}
+.tool-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.tool-btn:hover {
+  border-color: var(--pine-green);
+  color: var(--pine-green);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.tool-btn.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  font-style: italic;
+  pointer-events: none;
+}
+.tool-btn.disabled:hover {
+  transform: none;
+  border-color: var(--gray-200);
+  color: var(--charcoal);
+  box-shadow: none;
+}
+.tool-btn .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--pine-green);
+}
+.tool-btn.template {
+  background: var(--deep-pine);
+  color: var(--soft-cream);
+  border-color: var(--deep-pine);
+}
+.tool-btn.template:hover {
+  background: var(--pine-green);
+  border-color: var(--pine-green);
+  color: var(--white);
+}
+.tool-btn.template .dot { background: var(--gold); }
+.safety {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--gold-soft);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--charcoal);
+  max-width: 640px;
+}
+.safety strong { color: var(--deep-pine); }
+
+/* ===========================================================
+   SECTIONS
+=========================================================== */
+section {
+  padding: 64px 0;
+  border-top: 1px solid var(--gray-200);
+}
+section.section-tinted {
+  background: var(--mist-green);
+}
+.section-head {
+  margin-bottom: 32px;
+}
+.section-head h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  margin-bottom: 8px;
+}
+.section-head .lede {
+  color: var(--gray-500);
+  font-size: 1.05rem;
+  max-width: 680px;
+}
+.eyebrow {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 12px;
+}
+
+/* ===========================================================
+   CARDS
+=========================================================== */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===========================================================
+   PROMPT BOXES
+=========================================================== */
+.prompt-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+@media (max-width: 760px) {
+  .prompt-pair { grid-template-columns: 1fr; }
+}
+.prompt-box {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--gray-300);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.prompt-box.weak { border-left-color: var(--weak); background: var(--weak-bg); }
+.prompt-box.improved { border-left-color: var(--improved); background: var(--improved-bg); }
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.prompt-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.prompt-box.weak .prompt-label { color: var(--weak); }
+.prompt-box.improved .prompt-label { color: var(--improved); }
+.prompt-text {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--charcoal);
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1;
+}
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--charcoal);
+  transition: all 0.15s ease;
+}
+.copy-btn:hover {
+  background: var(--pine-green);
+  color: var(--white);
+  border-color: var(--pine-green);
+}
+.copy-btn.copied {
+  background: var(--improved);
+  color: var(--white);
+  border-color: var(--improved);
+}
+.copy-btn .icon {
+  width: 12px; height: 12px;
+  display: inline-block;
+}
+
+/* ===========================================================
+   TRY IT BAND
+=========================================================== */
+.try-it {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--gold-soft);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.try-it-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+.try-it-text strong {
+  color: var(--deep-pine);
+  font-weight: 600;
+}
+.try-it code {
+  font-family: var(--mono);
+  background: var(--white);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  border: 1px solid var(--gray-200);
+}
+
+/* ===========================================================
+   TIMER
+=========================================================== */
+.timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 14px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 13px;
+}
+.timer.running {
+  border-color: var(--pine-green);
+  background: var(--mist-green);
+}
+.timer-display {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--deep-pine);
+  min-width: 42px;
+  font-variant-numeric: tabular-nums;
+}
+.timer-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pine-green);
+  border-radius: 999px;
+  transition: background 0.15s ease;
+}
+.timer-btn:hover { background: var(--mist-green); }
+.timer.running .timer-btn { color: var(--weak); }
+.timer-btn.reset { color: var(--gray-500); }
+
+/* ===========================================================
+   CHIPS
+=========================================================== */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+.chip.numbered { font-weight: 600; }
+.chip.numbered[data-move="1"] { background: var(--move-1-bg); border-color: var(--move-1); color: var(--deep-pine); }
+.chip.numbered[data-move="2"] { background: var(--move-2-bg); border-color: var(--move-2); color: var(--deep-pine); }
+.chip.numbered[data-move="3"] { background: var(--move-3-bg); border-color: var(--move-3); color: var(--deep-pine); }
+.chip.numbered[data-move="4"] { background: var(--move-4-bg); border-color: var(--move-4); color: var(--deep-pine); }
+.chip.numbered[data-move="5"] { background: var(--move-5-bg); border-color: var(--move-5); color: var(--deep-pine); }
+.chip .n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--pine-green);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+}
+.chip.numbered[data-move="1"] .n { background: var(--move-1); }
+.chip.numbered[data-move="2"] .n { background: var(--move-2); }
+.chip.numbered[data-move="3"] .n { background: var(--move-3); }
+.chip.numbered[data-move="4"] .n { background: var(--move-4); }
+.chip.numbered[data-move="5"] .n { background: var(--move-5); }
+.prompt-hl[data-move="1"] { background: var(--move-1-bg); border-bottom: 2px solid var(--move-1); box-decoration-break: clone; }
+.prompt-hl[data-move="2"] { background: var(--move-2-bg); border-bottom: 2px solid var(--move-2); box-decoration-break: clone; }
+.prompt-hl[data-move="3"] { background: var(--move-3-bg); border-bottom: 2px solid var(--move-3); box-decoration-break: clone; }
+.prompt-hl[data-move="4"] { background: var(--move-4-bg); border-bottom: 2px solid var(--move-4); box-decoration-break: clone; }
+.prompt-hl[data-move="5"] { background: var(--move-5-bg); border-bottom: 2px solid var(--move-5); box-decoration-break: clone; }
+.hl-legend-item[data-move="1"] .swatch { background: var(--move-1-bg); border-color: var(--move-1); }
+.hl-legend-item[data-move="2"] .swatch { background: var(--move-2-bg); border-color: var(--move-2); }
+.hl-legend-item[data-move="3"] .swatch { background: var(--move-3-bg); border-color: var(--move-3); }
+.hl-legend-item[data-move="4"] .swatch { background: var(--move-4-bg); border-color: var(--move-4); }
+.hl-legend-item[data-move="5"] .swatch { background: var(--move-5-bg); border-color: var(--move-5); }
+
+/* Faculty accordions */
+.faculty-flow { padding: 48px 0 64px; }
+.faculty-acc {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.faculty-acc[data-move] { border-left: 4px solid var(--pine-green); }
+.faculty-acc[data-move="1"] { border-left-color: var(--move-1); }
+.faculty-acc[data-move="2"] { border-left-color: var(--move-2); }
+.faculty-acc[data-move="3"] { border-left-color: var(--move-3); }
+.faculty-acc[data-move="4"] { border-left-color: var(--move-4); }
+.faculty-acc[data-move="5"] { border-left-color: var(--move-5); }
+.faculty-acc > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--deep-pine);
+  user-select: none;
+}
+.faculty-acc > summary::-webkit-details-marker { display: none; }
+.faculty-acc > summary::after {
+  content: '+';
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--mist-green);
+  color: var(--pine-green);
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.faculty-acc[open] > summary::after { content: '−'; background: var(--pine-green); color: var(--white); }
+.faculty-acc[open] > summary { border-bottom: 1px solid var(--gray-200); background: linear-gradient(180deg, var(--mist-green) 0%, var(--white) 100%); }
+.summary-icon { font-size: 1.5rem; line-height: 1; }
+.summary-tag {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  font-style: italic;
+  flex: 1 1 100%;
+  padding-left: 2.6rem;
+}
+.faculty-acc:not([data-move]) .summary-tag { padding-left: 0; flex: 1 1 auto; }
+.acc-panel { padding: 18px 20px 22px; }
+.faculty-acc.nested {
+  margin-top: 12px;
+  border-radius: var(--radius);
+  box-shadow: none;
+  border-left-width: 3px;
+}
+.faculty-acc.nested > summary {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 14px;
+}
+.faculty-acc.nested[open] > summary { background: var(--soft-cream); }
+.bullet-simple {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 12px 0;
+}
+.bullet-simple li { margin-bottom: 6px; font-size: 0.98rem; line-height: 1.5; }
+.glow-up .faculty-acc { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
+.glow-up .faculty-acc > summary { color: var(--soft-cream); }
+.glow-up .faculty-acc[open] > summary { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); }
+.glow-up .faculty-acc > summary::after { background: rgba(255,255,255,0.12); color: var(--soft-cream); }
+.glow-up .faculty-acc[open] > summary::after { background: var(--gold); color: var(--deep-pine); }
+.faculty-acc.glow-acc .acc-panel {
+  background: var(--deep-pine);
+  color: var(--soft-cream);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+.faculty-acc.glow-acc .prompt-text,
+.faculty-acc.glow-acc .prompt-label { color: var(--soft-cream); }
+.faculty-acc.glow-acc .copy-btn {
+  background: rgba(255,255,255,0.1);
+  color: var(--soft-cream);
+  border-color: rgba(255,255,255,0.2);
+}
+.faculty-acc.glow-acc .power-desc { color: rgba(248,246,239,0.75); }
+.faculty-acc.glow-acc .power-meter { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+.faculty-acc.glow-acc .power-label { color: var(--gold); }
+.faculty-acc.glow-acc .power-score { color: var(--soft-cream); }
+.faculty-acc.glow-acc .glow-up-labels .chip {
+  color: var(--deep-pine);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+  border-width: 1.5px;
+}
+.faculty-acc.glow-acc .glow-up-labels .chip[data-move="1"] { background: var(--move-1-bg); border-color: var(--move-1); color: var(--deep-pine); }
+.faculty-acc.glow-acc .glow-up-labels .chip[data-move="2"] { background: var(--move-2-bg); border-color: var(--move-2); color: var(--deep-pine); }
+.faculty-acc.glow-acc .glow-up-labels .chip[data-move="3"] { background: var(--move-3-bg); border-color: var(--move-3); color: var(--deep-pine); }
+.faculty-acc.glow-acc .glow-up-labels .chip[data-move="4"] { background: var(--move-4-bg); border-color: var(--move-4); color: var(--deep-pine); }
+.faculty-acc.glow-acc .glow-up-labels .chip[data-move="5"] { background: var(--move-5-bg); border-color: var(--move-5); color: var(--deep-pine); }
+.faculty-acc.glow-acc .prompt-box.weak { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+.faculty-acc.glow-acc .prompt-box.improved { background: rgba(255,255,255,0.1); border-color: var(--gold); }
+.tech-list-wrap { margin: 4px 0 14px; }
+.tech-list { gap: 0; }
+.tech-acc { scroll-margin-top: 132px; }
+.faculty-jump-nav {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 2px 12px rgba(20, 50, 35, 0.06);
+  backdrop-filter: blur(8px);
+}
+.faculty-jump-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.faculty-jump-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-right: 4px;
+}
+.faculty-jump-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--deep-pine);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  font-family: var(--sans);
+}
+.faculty-jump-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.faculty-jump-pill .n {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+}
+.faculty-jump-pill[data-move="1"] { background: var(--move-1-bg); border-color: var(--move-1); }
+.faculty-jump-pill[data-move="1"] .n { background: var(--move-1); }
+.faculty-jump-pill[data-move="2"] { background: var(--move-2-bg); border-color: var(--move-2); }
+.faculty-jump-pill[data-move="2"] .n { background: var(--move-2); }
+.faculty-jump-pill[data-move="3"] { background: var(--move-3-bg); border-color: var(--move-3); }
+.faculty-jump-pill[data-move="3"] .n { background: var(--move-3); }
+.faculty-jump-pill[data-move="4"] { background: var(--move-4-bg); border-color: var(--move-4); }
+.faculty-jump-pill[data-move="4"] .n { background: var(--move-4); }
+.faculty-jump-pill[data-move="5"] { background: var(--move-5-bg); border-color: var(--move-5); }
+.faculty-jump-pill[data-move="5"] .n { background: var(--move-5); }
+.faculty-jump-pill.is-active.jump-section,
+.chip.numbered.faculty-jump-link.is-active.jump-section {
+  background: var(--pine-green);
+  border-color: var(--pine-green);
+  color: var(--white);
+}
+.faculty-jump-pill.is-active[data-move="1"],
+.chip.numbered.faculty-jump-link.is-active[data-move="1"] {
+  background: var(--move-1);
+  border-color: var(--move-1);
+  color: var(--white);
+}
+.faculty-jump-pill.is-active[data-move="1"] .n,
+.chip.numbered.faculty-jump-link.is-active[data-move="1"] .n { background: rgba(255,255,255,0.35); color: var(--white); }
+.faculty-jump-pill.is-active[data-move="2"],
+.chip.numbered.faculty-jump-link.is-active[data-move="2"] {
+  background: var(--move-2);
+  border-color: var(--move-2);
+  color: var(--deep-pine);
+}
+.faculty-jump-pill.is-active[data-move="2"] .n,
+.chip.numbered.faculty-jump-link.is-active[data-move="2"] .n { background: rgba(0,0,0,0.12); color: var(--deep-pine); }
+.faculty-jump-pill.is-active[data-move="3"],
+.chip.numbered.faculty-jump-link.is-active[data-move="3"] {
+  background: var(--move-3);
+  border-color: var(--move-3);
+  color: var(--white);
+}
+.faculty-jump-pill.is-active[data-move="3"] .n,
+.chip.numbered.faculty-jump-link.is-active[data-move="3"] .n { background: rgba(255,255,255,0.35); color: var(--white); }
+.faculty-jump-pill.is-active[data-move="4"],
+.chip.numbered.faculty-jump-link.is-active[data-move="4"] {
+  background: var(--move-4);
+  border-color: var(--move-4);
+  color: var(--white);
+}
+.faculty-jump-pill.is-active[data-move="4"] .n,
+.chip.numbered.faculty-jump-link.is-active[data-move="4"] .n { background: rgba(255,255,255,0.35); color: var(--white); }
+.faculty-jump-pill.is-active[data-move="5"],
+.chip.numbered.faculty-jump-link.is-active[data-move="5"] {
+  background: var(--move-5);
+  border-color: var(--move-5);
+  color: var(--white);
+}
+.faculty-jump-pill.is-active[data-move="5"] .n,
+.chip.numbered.faculty-jump-link.is-active[data-move="5"] .n { background: rgba(255,255,255,0.35); color: var(--white); }
+.faculty-jump-pill.jump-section {
+  background: var(--soft-cream);
+  border-color: var(--pine-green);
+}
+.faculty-jump-pill.jump-gamma {
+  background: linear-gradient(135deg, #f4e9c8 0%, #fff8e8 100%);
+  border-color: var(--gold);
+  color: var(--deep-pine);
+}
+.faculty-jump-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--gray-200);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+.faculty-acc[id],
+#techniques { scroll-margin-top: 132px; }
+.tech-acc .summary-num {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+.tech-acc[data-move="1"] .summary-num { background: var(--move-1-bg); border-color: var(--move-1); color: var(--move-1); }
+.tech-acc[data-move="2"] .summary-num { background: var(--move-2-bg); border-color: var(--move-2); color: var(--move-2); }
+.tech-acc[data-move="3"] .summary-num { background: var(--move-3-bg); border-color: var(--move-3); color: var(--move-3); }
+.tech-acc[data-move="4"] .summary-num { background: var(--move-4-bg); border-color: var(--move-4); color: var(--move-4); }
+.tech-acc[data-move="5"] .summary-num { background: var(--move-5-bg); border-color: var(--move-5); color: var(--move-5); }
+.tech-acc[data-move="1"][open] > summary { background: linear-gradient(180deg, var(--move-1-bg) 0%, var(--white) 100%); }
+.tech-acc[data-move="2"][open] > summary { background: linear-gradient(180deg, var(--move-2-bg) 0%, var(--white) 100%); }
+.tech-acc[data-move="3"][open] > summary { background: linear-gradient(180deg, var(--move-3-bg) 0%, var(--white) 100%); }
+.tech-acc[data-move="4"][open] > summary { background: linear-gradient(180deg, var(--move-4-bg) 0%, var(--white) 100%); }
+.tech-acc[data-move="5"][open] > summary { background: linear-gradient(180deg, var(--move-5-bg) 0%, var(--white) 100%); }
+.tech-panel .humor-line {
+  margin-top: 14px;
+  font-size: 0.92rem;
+  color: var(--gray-500);
+  font-style: italic;
+}
+.try-tip {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.try-tip code {
+  font-size: 0.85rem;
+  background: var(--soft-cream);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ===========================================================
+   ENTRY TICKET
+=========================================================== */
+.entry-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 760px) { .entry-grid { grid-template-columns: 1fr; } }
+.entry-prompt-block .question {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  color: var(--deep-pine);
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.entry-prompt-block .directions {
+  color: var(--gray-500);
+  margin-bottom: 18px;
+}
+.entry-input-block label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 8px;
+}
+.entry-input-block input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: border-color 0.15s ease;
+}
+.entry-input-block input:focus {
+  outline: none;
+  border-color: var(--pine-green);
+  box-shadow: 0 0 0 3px rgba(20,90,58,0.1);
+}
+.share-out {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--gray-500);
+  margin-top: 16px;
+}
+.share-out::before {
+  content: '→';
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* ===========================================================
+   POWER METER
+=========================================================== */
+.power-meter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+}
+.power-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  white-space: nowrap;
+}
+.power-dots {
+  display: flex;
+  gap: 5px;
+}
+.power-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  transition: background 0.3s ease;
+}
+.power-dot.filled { background: var(--gold); }
+.power-score {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--deep-pine);
+  font-size: 15px;
+}
+.power-desc {
+  font-size: 13px;
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+/* ===========================================================
+   TECHNIQUE CARDS
+=========================================================== */
+.tech-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.tech-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  scroll-margin-top: 88px;
+}
+.tech-card::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: 0;
+  width: 4px; height: 48px;
+  background: var(--pine-green);
+  border-radius: 0 4px 4px 0;
+}
+.tech-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 20px;
+  padding-left: 8px;
+}
+.tech-number {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: var(--mist-green);
+  color: var(--deep-pine);
+  border-radius: 50%;
+  border: 2px solid var(--pine-green);
+}
+.tech-title-block { flex: 1; min-width: 0; }
+.tech-title {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+.tech-definition {
+  font-size: 1rem;
+  color: var(--pine-green);
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+.tech-explanation {
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  line-height: 1.55;
+}
+
+.technique-context {
+  margin: 20px 0 24px;
+  padding: 20px 22px;
+  background: var(--soft-cream);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+}
+.context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+@media (max-width: 760px) { .context-grid { grid-template-columns: 1fr; } }
+.context-block h4 {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 8px;
+}
+.context-block p {
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  line-height: 1.55;
+}
+.why-important {
+  padding: 14px 16px;
+  background: var(--mist-green);
+  border-left: 3px solid var(--pine-green);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  color: var(--deep-pine);
+  line-height: 1.55;
+}
+.why-important strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 6px;
+}
+.highlight-block {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--gray-200);
+}
+.highlight-block h4 {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--deep-pine);
+  margin-bottom: 10px;
+}
+.prompt-text.highlighted {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--pine-green);
+}
+.prompt-hl {
+  background: var(--gold-soft);
+  color: var(--deep-pine);
+  padding: 1px 4px;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.hl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.hl-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--charcoal);
+  padding: 5px 10px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+}
+.hl-legend-item .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+}
+
+.try-studio {
+  margin-top: 22px;
+  padding: 22px;
+  background: var(--mist-green);
+  border: 1px solid #c5ddd0;
+  border-radius: var(--radius);
+}
+.try-studio-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--deep-pine);
+  margin-bottom: 6px;
+}
+.try-studio-lede {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  margin-bottom: 16px;
+}
+.try-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) { .try-fields-grid { grid-template-columns: 1fr; } }
+.try-field { display: flex; flex-direction: column; }
+.try-field.full { grid-column: 1 / -1; }
+.try-field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 5px;
+}
+.try-field input,
+.try-field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 14px;
+  font-family: var(--sans);
+}
+.try-field input:focus,
+.try-field textarea:focus {
+  outline: none;
+  border-color: var(--pine-green);
+  box-shadow: 0 0 0 3px rgba(20,90,58,0.1);
+}
+.try-output label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 8px;
+}
+.try-prompt-out {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--charcoal);
+  resize: vertical;
+}
+.try-studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+.try-studio-actions .copy-btn.primary {
+  background: var(--pine-green);
+  color: var(--white);
+  border-color: var(--pine-green);
+  padding: 9px 16px;
+  font-size: 13px;
+}
+.try-studio-actions .copy-btn.primary:hover {
+  background: var(--deep-pine);
+  border-color: var(--deep-pine);
+}
+.try-studio-actions .llm-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.try-studio-actions .llm-link:hover {
+  border-color: var(--pine-green);
+  color: var(--pine-green);
+}
+.overview-map {
+  margin: 20px 0 8px;
+  padding: 20px 22px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.overview-map h3 {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.overview-map .map-prompt {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--charcoal);
+  white-space: pre-wrap;
+}
+.overview-map .map-note {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  margin-top: 12px;
+}
+.overview-map .prompt-hl { font-weight: 500; }
+.overview-map .prompt-hl[data-move="1"] { background: #e8f3ec; border-bottom: 2px solid var(--pine-green); }
+.overview-map .prompt-hl[data-move="2"] { background: #f4e9c8; border-bottom: 2px solid var(--gold); }
+.overview-map .prompt-hl[data-move="3"] { background: #ebe8f8; border-bottom: 2px solid #6b5cff; }
+.overview-map .prompt-hl[data-move="4"] { background: #e8f0fa; border-bottom: 2px solid #3a7bc8; }
+.overview-map .prompt-hl[data-move="5"] { background: #faeee8; border-bottom: 2px solid var(--weak); }
+.chip-link {
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.chip-link:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.tech-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (max-width: 760px) { .tech-bottom { grid-template-columns: 1fr; } }
+.use-cases {
+  padding: 14px 16px;
+  background: var(--soft-cream);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+}
+.use-cases .label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 8px;
+}
+.use-cases .items {
+  font-size: 13.5px;
+  color: var(--charcoal);
+}
+.educator-note {
+  padding: 14px 16px;
+  background: var(--mist-green);
+  border-left: 3px solid var(--pine-green);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--deep-pine);
+}
+.humor-line {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--gray-200);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--gray-500);
+}
+.humor-line::before {
+  content: '😉 ';
+  font-style: normal;
+}
+details.more-examples {
+  margin-top: 14px;
+  border-top: 1px dashed var(--gray-200);
+  padding-top: 14px;
+}
+details.more-examples summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pine-green);
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+details.more-examples summary::-webkit-details-marker { display: none; }
+details.more-examples summary::before {
+  content: '+';
+  display: inline-block;
+  width: 16px; height: 16px;
+  background: var(--mist-green);
+  color: var(--pine-green);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 16px;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+details.more-examples[open] summary::before {
+  content: '−';
+  background: var(--pine-green);
+  color: var(--white);
+}
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.example-box {
+  background: var(--soft-cream);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  position: relative;
+}
+.example-box .ex-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 6px;
+}
+.example-box .ex-text {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--charcoal);
+  line-height: 1.55;
+  padding-right: 56px;
+}
+.example-box .copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* ===========================================================
+   GLOW-UP SECTION
+=========================================================== */
+.glow-up {
+  background: var(--deep-pine);
+  color: var(--soft-cream);
+}
+.glow-up h2 { color: var(--soft-cream); }
+.glow-up .lede { color: rgba(248,246,239,0.75); }
+.glow-up .eyebrow { color: var(--gold); }
+.glow-up .prompt-box.weak {
+  background: rgba(201,93,75,0.15);
+  border-color: rgba(255,255,255,0.1);
+  border-left-color: var(--weak);
+}
+.glow-up .prompt-box.improved {
+  background: rgba(31,122,77,0.18);
+  border-color: rgba(255,255,255,0.1);
+  border-left-color: var(--improved);
+}
+.glow-up .prompt-text { color: var(--soft-cream); }
+.glow-up .prompt-label { color: var(--soft-cream); }
+.glow-up .copy-btn {
+  background: rgba(255,255,255,0.1);
+  color: var(--soft-cream);
+  border-color: rgba(255,255,255,0.2);
+}
+.glow-up .copy-btn:hover {
+  background: var(--gold);
+  color: var(--deep-pine);
+  border-color: var(--gold);
+}
+.glow-up-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.glow-up-labels .chip {
+  background: rgba(248,246,239,0.1);
+  border-color: rgba(248,246,239,0.2);
+  color: var(--soft-cream);
+  font-size: 12px;
+}
+.glow-up .power-meter {
+  background: rgba(248,246,239,0.08);
+  border-color: rgba(248,246,239,0.15);
+  margin-top: 18px;
+}
+.glow-up .power-label { color: var(--gold); }
+.glow-up .power-score { color: var(--soft-cream); }
+.glow-up .power-desc { color: rgba(248,246,239,0.7); }
+.glow-up .copy-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.glow-up .copy-row .copy-btn {
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+/* ===========================================================
+   BUILD ONE PROMPT
+=========================================================== */
+.builder {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+@media (max-width: 900px) { .builder { grid-template-columns: 1fr; } }
+.builder-form {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.builder-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 540px) { .builder-fields { grid-template-columns: 1fr; } }
+.builder-field { display: flex; flex-direction: column; }
+.builder-field.full { grid-column: 1 / -1; }
+.builder-field label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pine-green);
+  margin-bottom: 6px;
+}
+.builder-field input,
+.builder-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--soft-cream);
+  font-size: 14px;
+  font-family: var(--sans);
+  transition: border-color 0.15s ease;
+}
+.builder-field textarea { resize: vertical; min-height: 60px; font-family: var(--mono); font-size: 13px; }
+.builder-field input:focus,
+.builder-field textarea:focus {
+  outline: none;
+  border-color: var(--pine-green);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(20,90,58,0.1);
+}
+.builder-preview {
+  background: var(--deep-pine);
+  color: var(--soft-cream);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.builder-preview .preview-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.builder-preview pre {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--soft-cream);
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1;
+  margin-bottom: 16px;
+}
+.builder-preview .placeholder { opacity: 0.5; }
+.builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.builder-actions .copy-btn {
+  background: var(--gold);
+  color: var(--deep-pine);
+  border-color: var(--gold);
+  padding: 10px 16px;
+  font-size: 13px;
+}
+.builder-actions .copy-btn:hover {
+  background: var(--soft-cream);
+  color: var(--deep-pine);
+  border-color: var(--soft-cream);
+}
+
+/* ===========================================================
+   BEYOND TODAY
+=========================================================== */
+.beyond-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.beyond-strip .chip {
+  background: var(--white);
+  border: 1px dashed var(--gray-300);
+}
+.beyond-note {
+  font-size: 14px;
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+/* ===========================================================
+   EXIT TICKET
+=========================================================== */
+.exit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+@media (max-width: 760px) { .exit-grid { grid-template-columns: 1fr; } }
+.exit-field { display: flex; flex-direction: column; }
+.exit-field label {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--deep-pine);
+  margin-bottom: 10px;
+}
+.exit-field textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 14px;
+  font-family: var(--sans);
+  resize: vertical;
+}
+.exit-field textarea:focus {
+  outline: none;
+  border-color: var(--pine-green);
+  box-shadow: 0 0 0 3px rgba(20,90,58,0.1);
+}
+.exit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.exit-actions .copy-btn {
+  padding: 10px 18px;
+  font-size: 13px;
+  background: var(--pine-green);
+  color: var(--white);
+  border-color: var(--pine-green);
+}
+.exit-actions .copy-btn:hover {
+  background: var(--deep-pine);
+  border-color: var(--deep-pine);
+}
+.closing-line {
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  color: var(--deep-pine);
+  padding: 24px;
+  border-top: 1px solid var(--gray-200);
+}
+.closing-line strong { color: var(--gold); font-weight: 600; font-style: italic; }
+
+/* ===========================================================
+   FOOTER
+=========================================================== */
+.faculty-signoff {
+  padding: 40px 0 48px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--soft-cream) 0%, var(--mist-green) 100%);
+  border-top: 1px solid var(--gray-200);
+}
+.faculty-signoff .signoff-card {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px 32px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.faculty-signoff .signoff-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: 0.15em;
+}
+.faculty-signoff .signoff-title {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  color: var(--deep-pine);
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+.faculty-signoff .signoff-gamma {
+  font-size: 0.98rem;
+  color: var(--gray-500);
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+.faculty-signoff .signoff-gamma a {
+  color: var(--pine-green);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--gold);
+}
+.faculty-signoff .signoff-gamma a:hover {
+  color: var(--deep-pine);
+  border-bottom-style: solid;
+}
+.faculty-signoff .signoff-jokes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  font-style: italic;
+}
+.faculty-signoff .signoff-jokes li {
+  margin-bottom: 8px;
+}
+.faculty-signoff .signoff-jokes li::before {
+  content: '✦ ';
+  color: var(--gold);
+  font-style: normal;
+}
+.faculty-signoff .signoff-outro {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--pine-green);
+  margin: 0;
+}
+.faculty-signoff .signoff-outro strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+footer {
+  padding: 28px 0;
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-500);
+}
+footer .dot-sep { color: var(--gold); margin: 0 8px; }
+
+/* ===========================================================
+   INSTRUCTION CARD
+=========================================================== */
+.instruction-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--gold-soft);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  margin-top: 20px;
+  font-size: 14px;
+}
+.instruction-card .icon {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+/* ===========================================================
+   UTILITY
+=========================================================== */
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.flex-wrap-gap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Site chrome — single faculty page */
+.site-top {
+  background: var(--deep-pine);
+  color: var(--white);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  z-index: 10;
+}
+.site-top a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; font-family: var(--sans); }
+.site-top a:hover { color: var(--white); }
+.site-top-brand { display: flex; align-items: center; gap: 12px; }
+.site-top-brand img { width: 36px; height: 36px; border-radius: 4px; display: block; }
+.site-top-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.site-top-badge {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-family: var(--sans);
+}
+.site-top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--soft-cream) !important;
+}
+.site-top-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--white) !important;
+}
+.tool-btn.gamma-slides {
+  background: linear-gradient(135deg, #f4e9c8 0%, #fff8e8 100%);
+  border-color: var(--gold);
+  color: var(--deep-pine);
+  font-weight: 600;
+}
+.tool-btn.gamma-slides:hover { filter: brightness(0.98); }
+.tool-btn.gamma-slides .dot { background: var(--gold); }
+.builder-preview pre.has-blanks { opacity: 0.72; }
+.status-bar .logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.status-bar .logo img {
+  display: block;
+  border-radius: 50%;
+  background: var(--white);
+  padding: 2px;
+}
+</style>
+<link rel="stylesheet" href="../pinecrest-student/class-timer-bar.css" />
+</head>
+<body class="has-class-timer faculty-page">
+
+<header class="status-bar status-bar--faculty" id="classTimerBar" aria-label="Sprint timer">
+  <div class="status-left">
+    <span class="logo">
+      <img src="/logo.png" alt="Pine Crest School" width="40" height="40">
+    </span>
+    <span class="status-faculty-label">20-minute sprint</span>
+  </div>
+  <div class="status-center" aria-live="polite">
+    <div class="class-timer-remaining" id="classTimerRemaining">20:00</div>
+    <div class="class-timer-sublabel" id="classTimerSublabel">Sprint time remaining</div>
+  </div>
+  <div class="status-right">
+    <div class="status-clock-wrap">
+      <span class="status-item bright" id="clock">--:-- -- ET</span>
+      <span class="status-clock-label">Now</span>
+    </div>
+    <button type="button" class="class-timer-btn primary" id="classTimerStart" aria-label="Start class timer">▶ Start</button>
+    <button type="button" class="class-timer-btn" id="classTimerReset" aria-label="Reset class timer">↺ Reset</button>
+  </div>
+</header>
+
+<header class="site-top">
+  <div class="site-top-brand">
+    <a href="/" title="Pine Crest School — home"><img src="/logo.png" alt="Pine Crest School" width="36" height="36"></a>
+    <a href="/">← Home</a>
+  </div>
+  <div class="site-top-nav">
+    <a class="site-top-link" href="https://gamma.app/docs/Prompt-Like-a-Pro-eszo4c2s35dclqf" target="_blank" rel="noopener">📊 Gamma slides ↗</a>
+    <span class="site-top-badge">Faculty sprint · Pine Crest</span>
+  </div>
+</header>
+
+<nav class="faculty-jump-nav" aria-label="Jump to section">
+  <div class="faculty-jump-inner">
+    <span class="faculty-jump-label">Jump to</span>
+    <a class="faculty-jump-pill jump-section faculty-jump-link" href="#overview">🎯 Overview</a>
+    <span class="faculty-jump-divider" aria-hidden="true"></span>
+    <a class="faculty-jump-pill faculty-jump-link" data-move="1" href="#tech-1"><span class="n">1</span>🎭 Role</a>
+    <a class="faculty-jump-pill faculty-jump-link" data-move="2" href="#tech-2"><span class="n">2</span>✨ Few-Shot</a>
+    <a class="faculty-jump-pill faculty-jump-link" data-move="3" href="#tech-3"><span class="n">3</span>🧠 Chain-of-Thought</a>
+    <a class="faculty-jump-pill faculty-jump-link" data-move="4" href="#tech-4"><span class="n">4</span>💬 Clarifying</a>
+    <a class="faculty-jump-pill faculty-jump-link" data-move="5" href="#tech-5"><span class="n">5</span>🎪 Role-Play</a>
+    <span class="faculty-jump-divider" aria-hidden="true"></span>
+    <a class="faculty-jump-pill jump-section faculty-jump-link" href="#glow-up">✨ Glow-up</a>
+    <a class="faculty-jump-pill jump-section faculty-jump-link" href="#builder-section">🛠️ Try it</a>
+    <span class="faculty-jump-divider" aria-hidden="true"></span>
+    <a class="faculty-jump-pill jump-gamma" href="https://gamma.app/docs/Prompt-Like-a-Pro-eszo4c2s35dclqf" target="_blank" rel="noopener">📊 Gamma ↗</a>
+  </div>
+</nav>
+
+<!-- ==========================================================
+     HERO
+========================================================== -->
+<header class="hero" id="hero">
+  <div class="container hero-layout">
+    <div class="hero-main">
+    <div class="session-label">20-Minute Faculty Sprint · Pine Crest School</div>
+    <h1>Prompt Like a Pro</h1>
+    <p class="subtitle">Five AI moves teachers can use tomorrow</p>
+    <p class="presenter">Presented by <strong>Brett Hannan</strong></p>
+
+    <p class="intro">A hands-on sprint for Pine Crest faculty: compare notes, learn five prompting moves, and leave with one prompt you can use this week.</p>
+
+    <ul class="hero-goals">
+      <li>Share what you already know about prompting.</li>
+      <li>Practice five techniques on real classroom tasks.</li>
+      <li>Try one improved prompt in Gemini before you go.</li>
+    </ul>
+
+    <p class="tool-line">For this sprint, use <strong>Google Gemini</strong> (Pine Crest–approved).</p>
+
+    <div class="tool-buttons">
+      <span class="tool-btn disabled" aria-disabled="true"><span class="dot"></span>ChatGPT</span>
+      <a class="tool-btn gemini-primary" href="https://gemini.google.com" target="_blank" rel="noopener"><span class="dot"></span>Open Gemini</a>
+      <a class="tool-btn gamma-slides" href="https://gamma.app/docs/Prompt-Like-a-Pro-eszo4c2s35dclqf" target="_blank" rel="noopener"><span class="dot"></span>Gamma slides ↗</a>
+      <span class="tool-btn disabled" aria-disabled="true"><span class="dot"></span>Claude</span>
+      <span class="tool-btn disabled" aria-disabled="true"><span class="dot"></span>Copilot</span>
+      <span class="tool-btn disabled" aria-disabled="true"><span class="dot"></span>FlintK12</span>
+    </div>
+
+    <div class="safety">
+      <strong>Safety note:</strong>&nbsp;Use general classroom examples only. Do not enter private student information.
+    </div>
+    </div>
+  </div>
+</header>
+
+<!-- ==========================================================
+     FACULTY FLOW (accordions)
+========================================================== -->
+<section class="faculty-flow">
+  <div class="container">
+
+    <details class="faculty-acc" id="entry-ticket" open>
+      <summary><span class="summary-icon" aria-hidden="true">💬</span><span class="summary-text">Step 1 · Entry Ticket</span><span class="summary-tag">Turn and talk first</span></summary>
+      <div class="acc-panel entry-discuss">
+        <p class="question">Discuss together:</p>
+        <ul class="bullet-simple">
+          <li>What prompting techniques do you already know?</li>
+          <li>Why are prompting techniques important?</li>
+        </ul>
+        <div class="timer" data-duration="120">
+          <span class="timer-display">2:00</span>
+          <button class="timer-btn start" type="button">Start</button>
+          <button class="timer-btn reset" type="button">Reset</button>
+        </div>
+        <p class="share-out">Share out a few ideas, then open the next section.</p>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="weak-prompt">
+      <summary><span class="summary-icon" aria-hidden="true">🔍</span><span class="summary-text">Step 2 · Start With a Weak Prompt</span><span class="summary-tag">What is missing?</span></summary>
+      <div class="acc-panel">
+        <div class="prompt-box weak" style="margin-bottom:16px;">
+          <div class="prompt-header">
+            <span class="prompt-label">❌ Weak Prompt</span>
+            <button class="copy-btn" data-copy-text="Make a review activity for my students.">Copy</button>
+          </div>
+          <p class="prompt-text">Make a review activity for my students.</p>
+        </div>
+        <p style="font-weight:600;color:var(--deep-pine);margin-bottom:8px;">What&apos;s missing?</p>
+        <ul class="bullet-simple">
+          <li>Subject or skill?</li>
+          <li>Grade or course?</li>
+          <li>Time limit?</li>
+          <li>Output format?</li>
+        </ul>
+        <div class="row-between" style="margin-top:14px;">
+          <div class="power-meter">
+            <span class="power-label">Prompt Power</span>
+            <div class="power-dots" data-power="1">
+              <span class="power-dot"></span><span class="power-dot"></span><span class="power-dot"></span><span class="power-dot"></span><span class="power-dot"></span>
+            </div>
+            <span class="power-score">1/5</span>
+            <span class="power-desc">Generic. The AI is guessing.</span>
+          </div>
+          <div class="timer" data-duration="45">
+            <span class="timer-display">0:45</span>
+            <button class="timer-btn start" type="button">Start</button>
+            <button class="timer-btn reset" type="button">Reset</button>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="overview" open>
+      <summary><span class="summary-icon" aria-hidden="true">🎯</span><span class="summary-text">The Five Moves</span><span class="summary-tag">Today&apos;s techniques</span></summary>
+      <div class="acc-panel">
+        <p class="acc-lede" style="margin-bottom:14px;color:var(--gray-500);">Five moves you can use tomorrow. Pill colors match the highlights in the example.</p>
+        <div class="chip-row" style="margin-bottom:16px;">
+          <a class="chip numbered chip-link faculty-jump-link" data-move="1" href="#tech-1"><span class="n">1</span>🎭 Role</a>
+          <a class="chip numbered chip-link faculty-jump-link" data-move="2" href="#tech-2"><span class="n">2</span>✨ Few-Shot</a>
+          <a class="chip numbered chip-link faculty-jump-link" data-move="3" href="#tech-3"><span class="n">3</span>🧠 Chain-of-Thought</a>
+          <a class="chip numbered chip-link faculty-jump-link" data-move="4" href="#tech-4"><span class="n">4</span>💬 Clarifying</a>
+          <a class="chip numbered chip-link faculty-jump-link" data-move="5" href="#tech-5"><span class="n">5</span>🎪 Role-Play</a>
+        </div>
+        <details class="faculty-acc nested">
+          <summary><span class="summary-icon" aria-hidden="true">📝</span> All five moves in one prompt</summary>
+          <div class="acc-panel">
+            <p class="map-prompt" id="overview-map-prompt"></p>
+            <p class="map-note" style="font-size:0.88rem;color:var(--gray-500);margin-top:12px;">Colored highlights show where each move appears. Tap a pill above to jump to that card.</p>
+          </div>
+        </details>
+        <p style="margin-top:16px;font-size:0.95rem;">📋 Open each move below for a <strong>weak vs. improved</strong> pair and a <strong>try it on your own</strong> studio.</p>
+        <button class="copy-btn" id="copy-all-five" style="margin-top:12px;padding:10px 18px;font-size:13px;background:var(--pine-green);color:var(--white);border-color:var(--pine-green);">Copy all five improved prompts</button>
+      </div>
+    </details>
+
+    <div id="techniques" class="tech-list-wrap">
+      <div class="tech-list" id="tech-list"></div>
+    </div>
+
+    <details class="faculty-acc glow-acc" id="glow-up">
+      <summary><span class="summary-icon" aria-hidden="true">✨</span><span class="summary-text">The Full Prompt Glow-Up</span><span class="summary-tag">All five moves combined</span></summary>
+      <div class="acc-panel glow-up-panel">
+        <div class="prompt-pair">
+          <div class="prompt-box weak">
+            <div class="prompt-header">
+              <span class="prompt-label">❌ Weak</span>
+              <button class="copy-btn" data-copy-text="Make a review activity for my students.">Copy</button>
+            </div>
+            <p class="prompt-text">Make a review activity for my students.</p>
+          </div>
+          <div class="prompt-box improved">
+            <div class="prompt-header">
+              <span class="prompt-label">✅ Improved</span>
+              <button class="copy-btn" data-copy-target="#glow-up-improved">Copy</button>
+            </div>
+            <p class="prompt-text" id="glow-up-improved">Act as an experienced Pine Crest teacher.
+
+Before answering, ask me 3 clarifying questions about my class, topic, and goal.
+
+Then create a 10-minute review activity using this format:
+1. Warm-up
+2. Partner task
+3. Exit ticket
+
+First identify the skill the activity builds and explain why the activity supports that skill.
+
+Then roleplay as a student who might be confused and ask me one question.</p>
+          </div>
+        </div>
+        <div class="glow-up-labels" style="margin-top:12px;">
+          <span class="chip" data-move="1">🎭 Role</span>
+          <span class="chip" data-move="4">💬 Clarifying</span>
+          <span class="chip" data-move="2">✨ Format</span>
+          <span class="chip" data-move="3">🧠 Criteria</span>
+          <span class="chip" data-move="5">🎪 Role-Play</span>
+        </div>
+        <div class="power-meter" style="margin-top:14px;">
+          <span class="power-label">Prompt Power</span>
+          <div class="power-dots" data-power="5">
+            <span class="power-dot filled"></span><span class="power-dot filled"></span><span class="power-dot filled"></span><span class="power-dot filled"></span><span class="power-dot filled"></span>
+          </div>
+          <span class="power-score">5/5</span>
+          <span class="power-desc">Teacher-directed. Specific, structured, and ready to adapt.</span>
+        </div>
+        <div class="copy-row" style="margin-top:14px;">
+          <button class="copy-btn" data-copy-text="Make a review activity for my students.">Copy weak</button>
+          <button class="copy-btn" data-copy-target="#glow-up-improved">Copy improved</button>
+          <button class="copy-btn" id="copy-full-glow">Copy both</button>
+        </div>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="builder-section">
+      <summary><span class="summary-icon" aria-hidden="true">🛠️</span><span class="summary-text">Try It on Your Own</span><span class="summary-tag">Build one full prompt</span></summary>
+      <div class="acc-panel">
+        <p style="margin-bottom:14px;color:var(--gray-500);">Fill in the blanks → copy → paste into Gemini.</p>
+        <div class="builder">
+          <div class="builder-form">
+            <div class="builder-fields">
+              <div class="builder-field"><label for="b-role">Role</label><input id="b-role" data-builder placeholder="experienced Pine Crest teacher"></div>
+              <div class="builder-field"><label for="b-subject">Subject</label><input id="b-subject" data-builder placeholder="AP English Literature"></div>
+              <div class="builder-field full"><label for="b-skill">Student skill</label><input id="b-skill" data-builder placeholder="analyzing tone in poetry"></div>
+              <div class="builder-field full"><label for="b-questions">Clarifying questions about</label><input id="b-questions" data-builder placeholder="my class, topic, and goal"></div>
+              <div class="builder-field full"><label for="b-task">Task</label><input id="b-task" data-builder placeholder="a 10-minute warm-up review"></div>
+              <div class="builder-field"><label for="b-format1">Step 1</label><input id="b-format1" data-builder placeholder="Warm-up"></div>
+              <div class="builder-field"><label for="b-format2">Step 2</label><input id="b-format2" data-builder placeholder="Partner task"></div>
+              <div class="builder-field full"><label for="b-format3">Step 3</label><input id="b-format3" data-builder placeholder="Exit ticket"></div>
+              <div class="builder-field full"><label for="b-roleplay">Role-play as</label><input id="b-roleplay" data-builder placeholder="a confused student"></div>
+            </div>
+          </div>
+          <div class="builder-preview">
+            <div class="preview-label">Live preview</div>
+            <pre id="builder-preview-text"></pre>
+            <div class="builder-actions">
+              <button class="copy-btn" data-copy-target="#builder-preview-text">Copy my prompt</button>
+              <a class="llm-link" href="https://gemini.google.com" target="_blank" rel="noopener">Open Gemini ↗</a>
+              <div class="timer" data-duration="120">
+                <span class="timer-display">2:00</span>
+                <button class="timer-btn start" type="button">Start</button>
+                <button class="timer-btn reset" type="button">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="weekly-prompt">
+      <summary><span class="summary-icon" aria-hidden="true">📅</span><span class="summary-text">This Week&apos;s Prompt</span><span class="summary-tag">Enhance a real prompt</span></summary>
+      <div class="acc-panel">
+        <div class="prompt-box weak" style="margin-bottom:14px;">
+          <div class="prompt-header">
+            <span class="prompt-label">Starting point</span>
+            <button class="copy-btn" data-copy-text="Make a review activity for my students.">Copy</button>
+          </div>
+          <p class="prompt-text">Make a review activity for my students.</p>
+        </div>
+        <p style="margin-bottom:10px;">Rewrite in Gemini using today&apos;s moves:</p>
+        <ul class="bullet-simple">
+          <li>🎭 <strong>Role</strong> — who is the AI?</li>
+          <li>✨ <strong>Example</strong> — show what good looks like</li>
+          <li>🧠 <strong>Criteria first</strong> — name the skill before the answer</li>
+          <li>💬 <strong>Clarifying questions</strong> — interview you first</li>
+          <li>🎪 <strong>Role-play</strong> — practice with a student voice</li>
+        </ul>
+        <p class="share-out" style="margin-top:12px;">Compare your version to the full glow-up. What did you add?</p>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="beyond-today">
+      <summary><span class="summary-icon" aria-hidden="true">🚀</span><span class="summary-text">Beyond Today</span><span class="summary-tag">For later</span></summary>
+      <div class="acc-panel">
+        <ul class="bullet-simple">
+          <li>Iterative Refinement</li>
+          <li>Prompt Decomposition</li>
+          <li>Socratic Prompting</li>
+          <li>Retrieval-Augmented Generation</li>
+          <li>Zero-Shot Prompting</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="faculty-acc" id="exit-ticket">
+      <summary><span class="summary-icon" aria-hidden="true">🎟️</span><span class="summary-text">Exit Ticket</span><span class="summary-tag">Before you go</span></summary>
+      <div class="acc-panel">
+        <div class="exit-grid">
+          <div class="exit-field">
+            <label for="exit-1">One prompt I can use tomorrow:</label>
+            <textarea id="exit-1" placeholder="Type your prompt here…"></textarea>
+          </div>
+          <div class="exit-field">
+            <label for="exit-2">One workflow I can improve this week:</label>
+            <textarea id="exit-2" placeholder="Planning, feedback, review…"></textarea>
+          </div>
+        </div>
+        <div class="exit-actions" style="margin-top:14px;">
+          <button class="copy-btn" id="copy-exit-ticket">Copy exit ticket</button>
+          <button class="copy-btn" id="copy-all-prompts">Copy all page prompts</button>
+        </div>
+        <p class="closing-line" style="margin-top:18px;"><strong>AI drafts.</strong> Teachers decide.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section class="faculty-signoff" aria-label="Session sign-off">
+  <div class="container">
+    <div class="signoff-card">
+      <p class="signoff-emoji" aria-hidden="true">🌲 ✨ 📝</p>
+      <h2 class="signoff-title">Happy prompting!</h2>
+      <p class="signoff-gamma">
+        Want the slide deck from today&apos;s sprint?
+        <a href="https://gamma.app/docs/Prompt-Like-a-Pro-eszo4c2s35dclqf" target="_blank" rel="noopener">Open the Gamma presentation ↗</a>
+        — same five moves, ready to share with your team.
+      </p>
+      <ul class="signoff-jokes">
+        <li>If the AI says &ldquo;Certainly!&rdquo; three times, you&apos;re still on draft one.</li>
+        <li>A vague prompt is like a sub plan that says &ldquo;students will learn.&rdquo;</li>
+        <li>Role-play prompting: finally, a student who asks exactly one question at a time.</li>
+      </ul>
+      <p class="signoff-outro"><strong>AI drafts.</strong> Teachers decide. Now go prompt like a pro. 🎭</p>
+    </div>
+  </div>
+</section>
+
+<section class="built-with" aria-label="How this page was made">
+  <div class="container">
+    <h3>How this page was made</h3>
+    <ul class="built-with-stack">
+      <li><strong>Cursor</strong> IDE for editing, layout, and live preview</li>
+      <li><strong>Codex</strong> for structure, copy, and polish</li>
+      <li><strong>Gemini</strong> the tool teachers try prompts in during the sprint</li>
+      <li><strong>Gamma</strong> <a href="https://gamma.app/docs/Prompt-Like-a-Pro-eszo4c2s35dclqf" target="_blank" rel="noopener">faculty slide deck ↗</a></li>
+    </ul>
+    <p class="built-with-note">Built for Pine Crest faculty · Prompt Like a Pro · Brett Hannan</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Pine Crest School <span class="dot-sep">·</span> Faculty professional development
+  </div>
+</footer>
+
+<script>
+/* ===========================================================
+   TECHNIQUE DATA
+=========================================================== */
+const GLOW_UP_PROMPT = `Act as an experienced Pine Crest teacher.
+
+Before answering, ask me 3 clarifying questions about my class, topic, and goal.
+
+Then create a 10-minute review activity using this format:
+1. Warm-up
+2. Partner task
+3. Exit ticket
+
+First identify the skill the activity builds and explain why the activity supports that skill.
+
+Then roleplay as a student who might be confused and ask me one question.`;
+
+const OVERVIEW_HIGHLIGHTS = [
+  { phrase: 'Act as an experienced Pine Crest teacher', label: '1 · Role', move: '1' },
+  { phrase: 'ask me 3 clarifying questions about my class, topic, and goal', label: '4 · Clarifying', move: '4' },
+  { phrase: 'using this format:\n1. Warm-up\n2. Partner task\n3. Exit ticket', label: '2 · Format (Few-Shot)', move: '2' },
+  { phrase: 'First identify the skill the activity builds', label: '3 · Criteria first', move: '3' },
+  { phrase: 'roleplay as a student who might be confused', label: '5 · Role-Play', move: '5' }
+];
+
+const techniques = [
+  {
+    number: 1,
+    icon: '🎭',
+    title: 'Role Prompting',
+    definition: 'Tell the AI who to act like — job title, expertise, and point of view.',
+    explanation: 'A role gives the AI a useful lens: teacher, coach, tutor, department chair, debate partner, or rubric designer.',
+    whyImportant: 'Without a role, the AI defaults to generic “helpful assistant” tone. Naming the role sets rigor, vocabulary, and what “good” looks like before it drafts anything.',
+    weak: 'Make a review activity.',
+    improved: "Act as an experienced Pine Crest teacher. Create a 10-minute review activity for students who need practice with today's main skill. Keep it clear, active, and easy to run tomorrow.",
+    highlights: [
+      { phrase: 'Act as an experienced Pine Crest teacher', label: 'Role phrase', move: '1' },
+      { phrase: '10-minute review activity', label: 'Specific task', move: '1' },
+      { phrase: "today's main skill", label: 'Your classroom context', move: '1' }
+    ],
+    tryFields: [
+      { key: 'role', label: 'Who should the AI act as?', placeholder: 'experienced AP English teacher', default: 'experienced Pine Crest teacher' },
+      { key: 'task', label: 'What should it create?', placeholder: 'a 10-minute review activity', default: 'a 10-minute review activity' },
+      { key: 'skill', label: 'Skill or topic students are practicing', placeholder: "today's main skill", default: "today's main skill" },
+      { key: 'constraint', label: 'How should it feel in class?', placeholder: 'clear, active, and easy to run tomorrow', default: 'clear, active, and easy to run tomorrow' }
+    ],
+    tryTemplate: 'Act as a {role}. Create {task} for students who need practice with {skill}. Keep it {constraint}.',
+    tryIt: 'Act as a ________.',
+    duration: 60,
+    useCases: 'Lesson planning · Feedback · Rubrics · Emails · Review activities',
+    educatorNote: 'Useful for quickly shaping tone, depth, and expectations before the AI drafts.',
+    humor: 'If the AI sounds generic, give it a job title.',
+    examples: [
+      'Act as an AP English Literature teacher. Create five discussion questions that move students from comprehension to interpretation.',
+      'Act as a world language teacher. Create a 5-minute partner speaking activity that helps students practice past-tense storytelling.',
+      'Act as a social science teacher. Create a quick source-analysis warm-up that helps students identify point of view and evidence.'
+    ]
+  },
+  {
+    number: 2,
+    icon: '✨',
+    title: 'Few-Shot Prompting',
+    definition: 'Show the AI one or more examples of the output you want.',
+    explanation: 'Few-shot means you paste a sample — feedback comment, thesis, email, or activity structure — so the AI matches your style and format.',
+    whyImportant: 'Examples beat adjectives. One real sample from your classroom teaches tone, length, and rigor better than “make it rigorous but friendly.”',
+    weak: 'Write feedback comments.',
+    improved: 'Here is one example of my feedback style:\n"You made a clear point. Your next step is to explain your evidence more fully."\nNow write 5 comments in this same style. Keep them warm, specific, and useful for revision.',
+    highlights: [
+      { phrase: 'Here is one example of my feedback style:', label: 'You provide the shot', move: '2' },
+      { phrase: '"You made a clear point. Your next step is to explain your evidence more fully."', label: 'Model example', move: '2' },
+      { phrase: 'in this same style', label: 'Match instruction', move: '2' }
+    ],
+    tryFields: [
+      { key: 'artifact', label: 'What are you creating?', placeholder: 'feedback comments', default: 'feedback comments' },
+      { key: 'example', label: 'Paste one real example', placeholder: 'You made a clear point…', default: 'You made a clear point. Your next step is to explain your evidence more fully.', full: true },
+      { key: 'count', label: 'How many outputs?', placeholder: '5', default: '5' },
+      { key: 'tone', label: 'Tone or constraints', placeholder: 'warm, specific, useful for revision', default: 'warm, specific, and useful for revision' }
+    ],
+    tryTemplate: 'Here is one example of my {artifact} style:\n"{example}"\nNow write {count} {artifact} in this same style. Keep them {tone}.',
+    tryIt: 'Paste one example you already use.',
+    duration: 60,
+    useCases: 'Feedback style · Model answers · Rubric comments · Email tone · Quiz format',
+    educatorNote: 'Useful when you want the AI to sound like you, not like a generic internet worksheet.',
+    humor: 'One good example beats ten vague instructions.',
+    examples: [
+      'Here is one model thesis sentence. Create five more at the same level of complexity.',
+      'Here is one model lab conclusion. Create three practice conclusions in the same structure.',
+      'Here is one sample parent update. Draft two more in the same warm and professional tone.'
+    ]
+  },
+  {
+    number: 3,
+    icon: '🧠',
+    title: 'Chain-of-Thought Prompting',
+    definition: 'Ask the AI to name the criteria or skill before it completes the task.',
+    explanation: 'You are not asking for hidden “thinking.” You want a brief, visible step: identify the standard, then respond using that standard.',
+    whyImportant: 'This slows the model down so feedback, activities, and recommendations align to your rubric or learning goal — not a confident generic paragraph.',
+    weak: 'Grade this response.',
+    improved: 'First identify the main skill being assessed. Then give one strength, one area to improve, and one next step. Keep the feedback clear enough for a student to act on immediately.',
+    highlights: [
+      { phrase: 'First identify the main skill being assessed', label: 'Criteria first', move: '3' },
+      { phrase: 'Then give one strength, one area to improve, and one next step', label: 'Structured response', move: '3' },
+      { phrase: 'clear enough for a student to act on immediately', label: 'Student-ready output', move: '3' }
+    ],
+    tryFields: [
+      { key: 'criteria', label: 'What should it identify first?', placeholder: 'the main skill being assessed', default: 'the main skill being assessed' },
+      { key: 'output', label: 'Then what should it produce?', placeholder: 'one strength, one area to improve, and one next step', default: 'one strength, one area to improve, and one next step' },
+      { key: 'standard', label: 'Quality bar', placeholder: 'clear enough for a student to act on immediately', default: 'clear enough for a student to act on immediately' }
+    ],
+    tryTemplate: 'First identify {criteria}. Then give {output}. Keep the feedback {standard}.',
+    tryIt: 'First identify the criteria. Then complete the task.',
+    duration: 60,
+    useCases: 'Feedback · Rubrics · Misconceptions · Assessment review · Revision help',
+    educatorNote: 'Use this when the answer needs to be aligned to a skill, rubric, standard, or learning goal.',
+    humor: 'Make it slow down before it writes a confident paragraph.',
+    examples: [
+      'First identify the learning target and success criteria. Then create a 5-minute exit ticket.',
+      'First identify the misconception in this explanation. Then write a short reteaching prompt.',
+      'First identify the historical thinking skill being practiced. Then create one discussion question and one exit ticket.'
+    ]
+  },
+  {
+    number: 4,
+    icon: '💬',
+    title: 'Clarifying Question Prompting',
+    definition: 'Tell the AI to interview you before it drafts.',
+    explanation: 'Instead of a one-shot lesson plan, the AI asks about students, time, format, and goal — then builds from your answers.',
+    whyImportant: 'Stops the “nine-page lesson you never asked for.” You supply context once; the first draft is closer to your real class.',
+    weak: 'Make me a lesson.',
+    improved: 'Before creating the lesson, ask me 3 clarifying questions about my students, the topic, and the goal. After I answer, create a focused lesson I can actually use.',
+    highlights: [
+      { phrase: 'ask me 3 clarifying questions', label: 'Interview step', move: '4' },
+      { phrase: 'about my students, the topic, and the goal', label: 'What to ask about', move: '4' },
+      { phrase: 'After I answer, create a focused lesson', label: 'Draft only after context', move: '4' }
+    ],
+    tryFields: [
+      { key: 'artifact', label: 'What should it create after asking?', placeholder: 'the lesson', default: 'the lesson' },
+      { key: 'count', label: 'How many questions?', placeholder: '3', default: '3' },
+      { key: 'topics', label: 'Questions should cover', placeholder: 'my students, the topic, and the goal', default: 'my students, the topic, and the goal' },
+      { key: 'quality', label: 'Final output should be', placeholder: 'focused and classroom-ready', default: 'focused and something I can actually use' }
+    ],
+    tryTemplate: 'Before creating {artifact}, ask me {count} clarifying questions about {topics}. After I answer, create {artifact} that is {quality}.',
+    tryIt: 'Ask me 3 clarifying questions first.',
+    duration: 60,
+    useCases: 'Lesson planning · Differentiation · Projects · Parent communication · Department planning',
+    educatorNote: 'Useful when the AI needs more context before producing something classroom-ready.',
+    humor: 'This prevents the 9-page lesson plan you never asked for.',
+    examples: [
+      'Before creating the review, ask me about the course, time available, and assessment format.',
+      'Before drafting the parent email, ask me about the audience, tone, and desired outcome.',
+      'Before designing the speaking activity, ask me about proficiency level, vocabulary theme, and grammar target.'
+    ]
+  },
+  {
+    number: 5,
+    icon: '🎪',
+    title: 'Role-Play Prompting',
+    definition: 'Ask the AI to play a person so you can practice a conversation or explanation.',
+    explanation: 'The AI can be a confused student, parent, historical figure, debate opponent, or oral-exam partner — one turn at a time.',
+    whyImportant: 'Low-stakes rehearsal before a hard discussion, conference, or assessment. You practice explaining; the AI stays in character.',
+    weak: 'Help students practice.',
+    improved: 'Roleplay as a student who is confused. Ask me one question at a time so I can practice explaining the concept clearly. After each response, tell me whether my explanation was clear.',
+    highlights: [
+      { phrase: 'Roleplay as a student who is confused', label: 'Character', move: '5' },
+      { phrase: 'one question at a time', label: 'Pacing', move: '5' },
+      { phrase: 'tell me whether my explanation was clear', label: 'Feedback loop', move: '5' }
+    ],
+    tryFields: [
+      { key: 'character', label: 'Who should the AI play?', placeholder: 'a student who is confused about fractions', default: 'a student who is confused' },
+      { key: 'goal', label: 'What are you practicing?', placeholder: 'explaining the concept clearly', default: 'explaining the concept clearly' },
+      { key: 'pacing', label: 'How should it interact?', placeholder: 'one question at a time', default: 'one question at a time' },
+      { key: 'feedback', label: 'After each reply it should', placeholder: 'tell me if my explanation was clear', default: 'tell me whether my explanation was clear' }
+    ],
+    tryTemplate: 'Roleplay as {character}. Ask me questions {pacing} so I can practice {goal}. After each response, {feedback}.',
+    tryIt: 'Roleplay as ________.',
+    duration: 60,
+    useCases: 'Student misconceptions · World language speaking · Debate prep · Parent conversations · Discussion practice',
+    educatorNote: 'Useful for low-stakes rehearsal before a live discussion, assessment, conference, or classroom explanation.',
+    humor: 'Practice the hard conversation before it walks into your room.',
+    examples: [
+      'Roleplay as a middle school student who does not understand fractions. Ask simple questions one at a time.',
+      'Roleplay as a nervous Spanish student preparing for an oral exam. Respond with short answers and let me practice prompting and correcting.',
+      'Roleplay as a delegate at the Constitutional Convention. Challenge my argument with one historically plausible counterpoint.'
+    ]
+  }
+];
+
+/* ===========================================================
+   RENDER TECHNIQUE CARDS
+=========================================================== */
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escapeAttr(s) {
+  return escapeHtml(s).replace(/\n/g, '&#10;');
+}
+
+function highlightPrompt(text, highlights) {
+  let html = escapeHtml(text);
+  const sorted = (highlights || []).slice().sort((a, b) => b.phrase.length - a.phrase.length);
+  sorted.forEach(function (h) {
+    const escaped = escapeHtml(h.phrase);
+    const moveAttr = h.move ? ' data-move="' + escapeAttr(String(h.move)) + '"' : '';
+    const mark = '<mark class="prompt-hl"' + moveAttr + ' title="' + escapeAttr(h.label) + '">' + escaped + '</mark>';
+    html = html.split(escaped).join(mark);
+  });
+  return html;
+}
+
+function renderHighlightLegend(highlights) {
+  return (highlights || []).map(function (h) {
+    const short = h.phrase.length > 42 ? h.phrase.slice(0, 40) + '…' : h.phrase;
+    const moveAttr = h.move ? ' data-move="' + escapeAttr(String(h.move)) + '"' : '';
+    return '<span class="hl-legend-item"' + moveAttr + '><span class="swatch" aria-hidden="true"></span>' +
+      escapeHtml(h.label) + ': “' + escapeHtml(short) + '”</span>';
+  }).join('');
+}
+
+function renderTryFields(t) {
+  return (t.tryFields || []).map(function (f) {
+    const full = f.full ? ' full' : '';
+    const id = 'try-' + t.number + '-' + f.key;
+    return '<div class="try-field' + full + '">' +
+      '<label for="' + id + '">' + escapeHtml(f.label) + '</label>' +
+      '<input type="text" id="' + id + '" class="try-studio-input" data-tech="' + t.number + '" data-key="' + f.key + '" ' +
+      'placeholder="' + escapeAttr(f.placeholder || '') + '" value="' + escapeAttr(f.default || '') + '">' +
+      '</div>';
+  }).join('');
+}
+
+function buildTryPrompt(t) {
+  const vals = {};
+  (t.tryFields || []).forEach(function (f) {
+    const el = document.getElementById('try-' + t.number + '-' + f.key);
+    const v = (el && el.value.trim()) || f.default || '________';
+    vals[f.key] = v;
+  });
+  let out = t.tryTemplate;
+  Object.keys(vals).forEach(function (key) {
+    out = out.split('{' + key + '}').join(vals[key]);
+  });
+  return out;
+}
+
+function renderTechnique(t) {
+  const n = t.number;
+  const icon = t.icon || '✨';
+  const move = String(n);
+  const examplesHtml = t.examples.map((ex, i) => `
+    <div class="example-box">
+      <div class="ex-label">Example ${String.fromCharCode(65 + i)}</div>
+      <p class="ex-text">${escapeHtml(ex)}</p>
+      <button class="copy-btn" data-copy-text="${escapeAttr(ex)}">Copy</button>
+    </div>
+  `).join('');
+
+  const highlightedImproved = highlightPrompt(t.improved, t.highlights);
+  const legendHtml = renderHighlightLegend(t.highlights);
+
+  return `
+    <details class="faculty-acc tech-acc" id="tech-${n}" data-move="${move}">
+      <summary>
+        <span class="summary-icon" aria-hidden="true">${icon}</span>
+        <span class="summary-num">${n}</span>
+        <span class="summary-text">${escapeHtml(t.title)}</span>
+        <span class="summary-tag">${escapeHtml(t.definition)}</span>
+      </summary>
+      <div class="acc-panel tech-panel">
+        <ul class="bullet-simple">
+          <li><strong>Good for:</strong> ${escapeHtml(t.useCases)}</li>
+          <li>${escapeHtml(t.educatorNote)}</li>
+        </ul>
+
+        <details class="faculty-acc nested">
+          <summary><span class="summary-icon" aria-hidden="true">📖</span> What it is &amp; why it matters</summary>
+          <div class="acc-panel">
+            <ul class="bullet-simple">
+              <li>${escapeHtml(t.definition)}</li>
+              <li>${escapeHtml(t.whyImportant)}</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="faculty-acc nested">
+          <summary><span class="summary-icon" aria-hidden="true">⚡</span> Weak vs improved prompt</summary>
+          <div class="acc-panel">
+            <div class="prompt-pair">
+              <div class="prompt-box weak">
+                <div class="prompt-header">
+                  <span class="prompt-label">❌ Weak</span>
+                  <button class="copy-btn" data-copy-text="${escapeAttr(t.weak)}">Copy</button>
+                </div>
+                <p class="prompt-text">${escapeHtml(t.weak)}</p>
+              </div>
+              <div class="prompt-box improved">
+                <div class="prompt-header">
+                  <span class="prompt-label">✅ Improved</span>
+                  <button class="copy-btn" data-copy-text="${escapeAttr(t.improved)}">Copy</button>
+                </div>
+                <p class="prompt-text">${escapeHtml(t.improved)}</p>
+              </div>
+            </div>
+            <details class="faculty-acc nested">
+              <summary><span class="summary-icon" aria-hidden="true">🎨</span> Where this move shows up (color-coded)</summary>
+              <div class="acc-panel">
+                <p class="prompt-text highlighted">${highlightedImproved}</p>
+                <div class="hl-legend">${legendHtml}</div>
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <details class="faculty-acc nested">
+          <summary><span class="summary-icon" aria-hidden="true">🛠️</span> Try it on your own</summary>
+          <div class="acc-panel try-studio" data-tech="${n}">
+            <p style="margin-bottom:12px;color:var(--gray-500);font-size:0.95rem;">Fill in your class → copy → paste into Gemini.</p>
+            <div class="try-fields-grid">${renderTryFields(t)}</div>
+            <div class="try-output">
+              <label for="try-out-${n}">Your prompt</label>
+              <textarea class="try-prompt-out" id="try-out-${n}" rows="6" readonly></textarea>
+            </div>
+            <div class="try-studio-actions">
+              <button type="button" class="copy-btn primary" data-copy-target="#try-out-${n}">Copy my prompt</button>
+              <a class="llm-link" href="https://gemini.google.com" target="_blank" rel="noopener">Open Gemini ↗</a>
+              <div class="timer" data-duration="${t.duration}">
+                <span class="timer-display">${formatTime(t.duration)}</span>
+                <button class="timer-btn start" type="button">Start</button>
+                <button class="timer-btn reset" type="button">Reset</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="faculty-acc nested">
+          <summary><span class="summary-icon" aria-hidden="true">📎</span> More examples</summary>
+          <div class="acc-panel examples-grid">${examplesHtml}</div>
+        </details>
+
+        <p class="try-tip"><strong>Quick line:</strong> <code>${escapeHtml(t.tryIt)}</code>
+          <button class="copy-btn" data-copy-text="${escapeAttr(t.tryIt)}">Copy</button></p>
+        <p class="humor-line">${escapeHtml(t.humor)}</p>
+      </div>
+    </details>
+  `;
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+document.getElementById('tech-list').innerHTML = techniques.map(renderTechnique).join('');
+
+function initTryStudios() {
+  techniques.forEach(function (t) {
+    const out = document.getElementById('try-out-' + t.number);
+    if (out) out.value = buildTryPrompt(t);
+  });
+}
+
+function initOverviewMap() {
+  const el = document.getElementById('overview-map-prompt');
+  if (!el) return;
+  el.innerHTML = highlightPrompt(GLOW_UP_PROMPT, OVERVIEW_HIGHLIGHTS.map(function (h) {
+    return { phrase: h.phrase, label: h.label, move: h.move };
+  }));
+}
+
+initTryStudios();
+initOverviewMap();
+
+function openAncestorDetails(el) {
+  let node = el;
+  while (node && node !== document.body) {
+    if (node.tagName === 'DETAILS') node.open = true;
+    node = node.parentElement;
+  }
+}
+
+function jumpToSection(id, opts) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  openAncestorDetails(target);
+  if (target.tagName === 'DETAILS') target.open = true;
+  if (!opts || opts.scroll !== false) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (!opts || opts.updateHash !== false) {
+    history.pushState(null, '', '#' + id);
+  }
+  setActiveSection(id);
+}
+
+const NAV_SECTION_IDS = ['overview', 'tech-1', 'tech-2', 'tech-3', 'tech-4', 'tech-5', 'glow-up', 'builder-section'];
+
+function setActiveSection(id) {
+  document.querySelectorAll('.faculty-jump-link').forEach(function (pill) {
+    const on = pill.getAttribute('href') === '#' + id;
+    pill.classList.toggle('is-active', on);
+    if (on) pill.setAttribute('aria-current', 'location');
+    else pill.removeAttribute('aria-current');
+  });
+}
+
+if ('IntersectionObserver' in window) {
+  const navTargets = NAV_SECTION_IDS.map(function (sid) {
+    return document.getElementById(sid);
+  }).filter(Boolean);
+  if (navTargets.length) {
+    const navObserver = new IntersectionObserver(
+      function (entries) {
+        let best = null;
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          if (!best || entry.intersectionRatio > best.ratio) {
+            best = { id: entry.target.id, ratio: entry.intersectionRatio };
+          }
+        });
+        if (best) setActiveSection(best.id);
+      },
+      { rootMargin: '-32% 0px -58% 0px', threshold: [0, 0.15, 0.35, 0.55, 0.75] }
+    );
+    navTargets.forEach(function (el) { navObserver.observe(el); });
+  }
+}
+
+if (!location.hash && document.getElementById('overview')) {
+  setActiveSection('overview');
+}
+
+document.addEventListener('click', function (e) {
+  const link = e.target.closest('.faculty-jump-link');
+  if (!link || !link.getAttribute('href') || link.getAttribute('href').charAt(0) !== '#') return;
+  const id = link.getAttribute('href').slice(1);
+  if (!document.getElementById(id)) return;
+  e.preventDefault();
+  jumpToSection(id);
+});
+
+if (location.hash) {
+  const id = location.hash.slice(1);
+  if (document.getElementById(id)) {
+    requestAnimationFrame(function () { jumpToSection(id, { scroll: false }); });
+  }
+}
+
+document.getElementById('tech-list').addEventListener('input', function (e) {
+  if (!e.target.classList.contains('try-studio-input')) return;
+  const num = parseInt(e.target.getAttribute('data-tech'), 10);
+  const tech = techniques.find(function (t) { return t.number === num; });
+  if (!tech) return;
+  const out = document.getElementById('try-out-' + num);
+  if (out) out.value = buildTryPrompt(tech);
+});
+
+/* ===========================================================
+   COPY BUTTONS (event delegation)
+=========================================================== */
+async function copyToClipboard(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+function flashCopied(btn) {
+  const original = btn.innerHTML;
+  btn.classList.add('copied');
+  btn.innerHTML = '✓ Copied!';
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = original;
+  }, 1500);
+}
+
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+
+  let text = '';
+
+  if (btn.dataset.copyText) {
+    text = btn.dataset.copyText;
+  } else if (btn.dataset.copyTarget) {
+    const el = document.querySelector(btn.dataset.copyTarget);
+    if (el) text = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ? el.value : (el.textContent || '').trim();
+  } else if (btn.dataset.copyFrom) {
+    const el = document.querySelector(btn.dataset.copyFrom);
+    if (el) text = el.value || el.textContent;
+  } else if (btn.id === 'copy-all-five') {
+    text = techniques.map(t => `${t.number}. ${t.title}\n${t.improved}`).join('\n\n---\n\n');
+  } else if (btn.id === 'copy-full-glow') {
+    const weak = 'WEAK PROMPT:\nMake a review activity for my students.';
+    const improved = 'IMPROVED PROMPT:\n' + document.getElementById('glow-up-improved').textContent;
+    text = weak + '\n\n' + improved;
+  } else if (btn.id === 'copy-exit-ticket') {
+    const q1 = document.getElementById('exit-1').value;
+    const q2 = document.getElementById('exit-2').value;
+    text = `Exit Ticket — Prompt Like a Pro\n\n` +
+           `One prompt I can use tomorrow is:\n${q1 || '(blank)'}\n\n` +
+           `One workflow I can improve this week is:\n${q2 || '(blank)'}`;
+  } else if (btn.id === 'copy-all-prompts') {
+    const parts = [];
+    parts.push('PROMPT LIKE A PRO — ALL PROMPTS\n');
+    parts.push('WEAK STARTER PROMPT:\nMake a review activity for my students.\n');
+    techniques.forEach(t => {
+      parts.push(`${t.number}. ${t.title.toUpperCase()}\nWeak: ${t.weak}\nImproved: ${t.improved}\nTry It: ${t.tryIt}\n`);
+    });
+    parts.push('FULL GLOW-UP PROMPT:\n' + document.getElementById('glow-up-improved').textContent);
+    text = parts.join('\n');
+  }
+
+  if (!text) return;
+  const ok = await copyToClipboard(text);
+  if (ok) flashCopied(btn);
+});
+
+/* ===========================================================
+   TIMERS (event delegation)
+=========================================================== */
+const timerStates = new WeakMap();
+
+document.addEventListener('click', (e) => {
+  const startBtn = e.target.closest('.timer-btn.start');
+  const resetBtn = e.target.closest('.timer-btn.reset');
+
+  if (startBtn) {
+    const timer = startBtn.closest('.timer');
+    toggleTimer(timer);
+  } else if (resetBtn) {
+    const timer = resetBtn.closest('.timer');
+    resetTimer(timer);
+  }
+});
+
+function toggleTimer(timer) {
+  let state = timerStates.get(timer);
+  if (!state) {
+    state = {
+      duration: parseInt(timer.dataset.duration, 10),
+      remaining: parseInt(timer.dataset.duration, 10),
+      intervalId: null,
+      running: false
+    };
+    timerStates.set(timer, state);
+  }
+  const display = timer.querySelector('.timer-display');
+  const startBtn = timer.querySelector('.timer-btn.start');
+
+  if (state.running) {
+    // pause
+    clearInterval(state.intervalId);
+    state.intervalId = null;
+    state.running = false;
+    timer.classList.remove('running');
+    startBtn.textContent = 'Resume';
+  } else {
+    // start or resume
+    state.running = true;
+    timer.classList.add('running');
+    startBtn.textContent = 'Pause';
+    state.intervalId = setInterval(() => {
+      state.remaining--;
+      display.textContent = formatTime(state.remaining);
+      if (state.remaining <= 0) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+        state.running = false;
+        timer.classList.remove('running');
+        startBtn.textContent = 'Done';
+        flashTimerDone(timer);
+      }
+    }, 1000);
+  }
+}
+
+function resetTimer(timer) {
+  const state = timerStates.get(timer);
+  const duration = parseInt(timer.dataset.duration, 10);
+  if (state) {
+    clearInterval(state.intervalId);
+    state.intervalId = null;
+    state.running = false;
+    state.remaining = duration;
+  }
+  const display = timer.querySelector('.timer-display');
+  const startBtn = timer.querySelector('.timer-btn.start');
+  display.textContent = formatTime(duration);
+  startBtn.textContent = 'Start';
+  timer.classList.remove('running');
+}
+
+function flashTimerDone(timer) {
+  timer.style.transition = 'background 0.3s ease, border-color 0.3s ease';
+  timer.style.background = 'var(--gold-soft)';
+  timer.style.borderColor = 'var(--gold)';
+  setTimeout(() => {
+    timer.style.background = '';
+    timer.style.borderColor = '';
+  }, 2000);
+}
+
+/* ===========================================================
+   BUILD ONE PROMPT — live preview
+=========================================================== */
+const builderInputs = document.querySelectorAll('[data-builder]');
+const previewEl = document.getElementById('builder-preview-text');
+
+function getVal(id, fallback) {
+  const el = document.getElementById(id);
+  const v = (el && el.value || '').trim();
+  return v || fallback;
+}
+
+function renderBuilderPreview() {
+  const role = getVal('b-role', '________');
+  const subject = getVal('b-subject', '________');
+  const skill = getVal('b-skill', '________');
+  const questions = getVal('b-questions', '________');
+  const task = getVal('b-task', '________');
+  const f1 = getVal('b-format1', '________');
+  const f2 = getVal('b-format2', '________');
+  const f3 = getVal('b-format3', '________');
+  const roleplay = getVal('b-roleplay', '________');
+
+  const text =
+`Act as a ${role}.
+
+I teach ${subject}.
+
+My students are working on ${skill}.
+
+Before answering, ask me 3 clarifying questions about ${questions}.
+
+Then create ${task}.
+
+Use this format:
+1. ${f1}
+2. ${f2}
+3. ${f3}
+
+First identify the criteria or skill being practiced.
+
+Afterward, roleplay as ${roleplay} and ask me one realistic question.`;
+
+  previewEl.textContent = text;
+
+  // mark placeholders visually
+  if (text.includes('________')) {
+    previewEl.classList.add('has-blanks');
+  } else {
+    previewEl.classList.remove('has-blanks');
+  }
+}
+
+builderInputs.forEach(input => {
+  input.addEventListener('input', renderBuilderPreview);
+});
+
+renderBuilderPreview();
+
+/* Prompt Power dots (weak prompt starts at 1/5) */
+document.querySelectorAll('.power-dots[data-power]').forEach(function (container) {
+  if (container.querySelector('.power-dot.filled')) return;
+  var n = parseInt(container.getAttribute('data-power'), 10) || 0;
+  container.querySelectorAll('.power-dot').forEach(function (dot, i) {
+    if (i < n) dot.classList.add('filled');
+  });
+});
+</script>
+<script src="../pinecrest-student/class-timer.js"></script>
+
+</body>
+</html>

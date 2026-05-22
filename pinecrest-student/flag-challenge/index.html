@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>⚡ Mission 3 · Poké Ball-inspired Flag · Pinecrest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../class-timer-bar.css" />
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <div class="activity-top-left">
+      <a class="site-brand" href="../" title="Pinecrest School">
+        <img src="../logo.png" alt="Pinecrest School" width="40" height="40">
+      </a>
+      <a class="back" href="../#activity">← Back to missions</a>
+    </div>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/">🪙 Mission 1</a>
+      <a href="../initials-grid/">🎯 Mission 2</a>
+      <a href="../flag-challenge/" class="is-current">⚡ Mission 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">⚡ Mission 3 · 🚩 Poké Ball-inspired Flag</p>
+      <h1>Poké Ball-inspired Flag</h1>
+      <p class="activity-meta"><span>⏱ 10–15 min</span><span>⚡ Mission 3 · bonus</span></p>
+      <p class="mission-hero-unlock">⚡ Bonus challenge — layers, a loop &amp; shapes</p>
+      <p class="mission-hero-note">You can <strong>copy my Poké Ball-inspired example</strong> or <strong>create your own flag</strong> — your choice. Either way, use <strong>functions</strong>, a <strong>loop</strong>, <strong>rectangles</strong>, and <strong>circles</strong>.</p>
+    </header>
+
+    <details class="mission-panel mission-panel--mission">
+      <summary>🎯 Your mission</summary>
+      <div class="mission-panel-body">
+        <p class="mission-lead"><strong>Copy my example</strong> or <strong>design your own flag</strong> — both count. Build in <strong>layers</strong>: background first, details on top. Use <code>move_to()</code> for <code>penup()</code> → <code>goto()</code> → <code>pendown()</code> jumps without drawing.</p>
+        <p>Check each item when it is in your project:</p>
+        <ul class="mission-checklist" id="missionChecklist">
+          <li>
+            <label class="mission-check-item" data-check-id="colors">
+              <input type="checkbox" />
+              <span>🎨 <strong>3 colors</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="function">
+              <input type="checkbox" />
+              <span>⚙️ <strong>1 function</strong> you define with <code>def</code></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="loop">
+              <input type="checkbox" />
+              <span>🔁 <strong>1 loop</strong> (<code>for</code>)</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="circle">
+              <input type="checkbox" />
+              <span>⭕ <strong>1 circle</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="rectangle">
+              <input type="checkbox" />
+              <span>▭ <strong>1 stripe or rectangle</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="comments">
+              <input type="checkbox" />
+              <span>💬 <strong>2 comments</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="screenshot">
+              <input type="checkbox" />
+              <span>📸 <strong>Screenshot</strong> of your flag</span>
+            </label>
+          </li>
+        </ul>
+        <p>When you can explain your layers in your own words, you are done — for example: &ldquo;I drew the background first and the center button last so everything stacks in the right order.&rdquo;</p>
+      </div>
+    </details>
+
+    <details class="mission-panel">
+      <summary>🕹️ What to do</summary>
+      <div class="mission-panel-body">
+        <ol class="mission-step-list">
+          <li><strong>Choose your path</strong> — copy my starter example below, or create your own flag from scratch.</li>
+          <li><strong>Run</strong> your code in your editor.</li>
+          <li>If you copied mine: notice the <strong>drawing order</strong> (background first, center button last) and change at least one <strong>color</strong> or <strong>size</strong>.</li>
+          <li>If you made your own: use <strong>layers</strong> and include the checklist items (function, loop, circle, rectangle).</li>
+          <li>Add a small <strong>design detail</strong> if you want (initials, border, stars, title).</li>
+          <li>Take a <strong>screenshot</strong> when your flag looks right.</li>
+          <li><strong>Upload</strong> your <code>.py</code> file and screenshot to the class shared folder.</li>
+        </ol>
+        <div class="editor-encourage">
+          <p>🧪 <strong>Open your editor</strong> — <a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle)</a>, Trinket, Replit, or IDLE. Paste my starter code <em>or</em> write your own flag — then run and adjust until it looks right.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--starter">
+      <summary>📋 Starter example · copy mine</summary>
+      <div class="mission-panel-body">
+        <p>Want a head start? <strong>Copy this whole program</strong> — or skip it and build your own flag. <code>draw_rectangle</code> uses a <strong>loop</strong> for the four sides; <code>draw_circle</code> fills the center button. Whatever you draw <strong>last</strong> appears on top.</p>
+        <div class="starter-example-stage">
+          <div class="starter-example-code">
+            <div class="starter-example-head"><span>Python code</span></div>
+            <pre class="starter-example-body"># Layer 3 · Flag Challenge — rectangles and circles
+import turtle
+
+t = turtle.Turtle()
+t.speed(0)
+t.width(3)
+
+# pen up → jump → pen down
+def move_to(x, y):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+
+def draw_rectangle(x, y, width, height, color):
+    t.color("black", color)
+    move_to(x, y)
+    t.begin_fill()
+
+    for side in range(2):
+        t.forward(width)
+        t.left(90)
+        t.forward(height)
+        t.left(90)
+
+    t.end_fill()
+
+def draw_circle(x, y, radius, color):
+    t.color("black", color)
+    move_to(x, y - radius)
+    t.begin_fill()
+    t.circle(radius)
+    t.end_fill()
+
+# Background first, details last
+draw_rectangle(-250, 0, 500, 140, "red")
+draw_rectangle(-250, -140, 500, 140, "white")
+draw_rectangle(-250, -15, 500, 30, "black")
+
+draw_circle(0, 0, 55, "black")
+draw_circle(0, 0, 35, "white")
+draw_circle(0, 0, 12, "lightgray")
+
+t.hideturtle()
+turtle.done()</pre>
+          </div>
+          <div class="starter-example-visual">
+            <div class="starter-example-head"><span>Output</span></div>
+            <div class="starter-output-frame" aria-label="Starter example output">
+              <img src="../examples/pokemon-flag.svg" alt="Poké Ball-inspired flag with red and white halves, black stripe, and center button" width="400" height="260">
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel">
+      <summary>🔧 Try changing</summary>
+      <div class="mission-panel-body">
+        <p>Copied mine or building your own? Good places to experiment:</p>
+        <ul class="req-list">
+          <li>Change the <strong>red</strong> to another color</li>
+          <li>Change the <strong>center button</strong> colors</li>
+          <li>Add a <strong>border</strong></li>
+          <li>Add <strong>initials</strong> somewhere on the flag</li>
+          <li>Add <strong>dots or stars</strong></li>
+          <li>Add a title using <code>t.write()</code></li>
+          <li>Make a different <strong>game-inspired flag</strong></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--submit">
+      <summary>📤 Submit your work</summary>
+      <div class="mission-panel-body submit-panel" style="border:none;padding:0;background:transparent;">
+        <p>Upload your <strong>Python code</strong> and <strong>screenshot</strong> to the class shared folder.</p>
+        <ol class="submit-checklist">
+          <li>Submit your <strong>Python code</strong> (.py file)</li>
+          <li>Submit a <strong>screenshot</strong> of your flag</li>
+          <li>Rename your screenshot to your <strong>first name</strong> (example: <code>alex.png</code>)</li>
+        </ol>
+        <a class="btn primary submit-folder-link" id="submitFolderLink" data-class-folder href="https://drive.google.com/drive/folders/1Ba48ZTAtgJGDwemyXqB7CkK3HM2h_6tN" target="_blank" rel="noopener noreferrer">📁 Open shared folder</a>
+        <p class="submit-folder-hint">Upload both files, then check the gallery on the main lesson page.</p>
+      </div>
+    </details>
+  </main>
+
+  <footer class="site-foot">Pinecrest · 6th grade CS · codewithbrett.com · <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a></footer>
+
+  <script src="../lesson-return.js"></script>
+  <script src="../class-timer.js"></script>
+  <script src="../activity-config.js"></script>
+  <script src="../activity-flag-challenge.js"></script>
+</body>
+</html>

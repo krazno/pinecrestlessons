@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="Three colorful circles on a dark blue background">
+  <rect width="400" height="240" fill="#191970"/>
+  <circle cx="100" cy="130" r="28" fill="#ff4500"/>
+  <circle cx="200" cy="100" r="28" fill="#ffd700"/>
+  <circle cx="300" cy="130" r="28" fill="#00bfff"/>
+</svg>

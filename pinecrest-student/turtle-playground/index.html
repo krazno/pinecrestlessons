@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playground · Pinecrest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../class-timer-bar.css" />
+  <link rel="stylesheet" href="../activity-shared.css" />
+  <link rel="stylesheet" href="../turtle-commands-reference.css" />
+  <link rel="stylesheet" href="../turtle-playground.css" />
+</head>
+<body class="turtle-playground">
+  <header class="playground-top">
+    <div class="playground-top-left">
+      <a class="site-brand" href="../" title="Pinecrest School">
+        <img src="../logo.png" alt="Pinecrest School" width="40" height="40">
+      </a>
+      <a class="back" href="../">← Back to lesson</a>
+    </div>
+    <h1>Playground</h1>
+  </header>
+
+  <main class="playground-wrap">
+    <p class="playground-intro">
+      Click a shape to see the <strong>Python code</strong> and a <strong>live preview</strong>.
+      Move your mouse on the grid to see <code>x</code> and <code>y</code> for <code>goto(x, y)</code> — <strong>(0, 0)</strong> is the center.
+    </p>
+
+    <div class="playground-stage">
+      <div class="playground-visual">
+        <div class="turtle-canvas-wrap" id="turtleCanvasWrap">
+          <canvas id="turtleGridCanvas" aria-hidden="true"></canvas>
+          <canvas id="turtleCanvas"></canvas>
+          <div class="turtle-crosshair" id="turtleCrosshair" aria-hidden="true"></div>
+          <div class="turtle-overlay">playground · live</div>
+          <div class="turtle-grid-hint">(0, 0) = center · x right · y up · move mouse for coordinates</div>
+          <div class="turtle-coords-hud" id="turtleCoordsHud" aria-live="polite">
+            <span class="coord-label">turtle coordinates</span>
+            <span id="turtleCoordsText">x: 0, y: 0</span>
+          </div>
+        </div>
+        <p class="turtle-controls-label">Drawing patterns</p>
+        <div class="turtle-controls" role="toolbar" aria-label="Drawing patterns">
+          <button type="button" class="chip" data-pattern="hex">hexagon</button>
+          <button type="button" class="chip" data-pattern="star">star</button>
+          <button type="button" class="chip" data-pattern="spiral">spiral</button>
+          <button type="button" class="chip" data-pattern="flower">flower</button>
+          <button type="button" class="chip" data-pattern="star">star</button>
+          <button type="button" class="chip" data-pattern="clear">↺ clear</button>
+        </div>
+        <p class="turtle-controls-label">Pinecrest · <span class="turtle-controls-spell">P I N E C R E S T</span></p>
+        <div class="turtle-controls turtle-controls--letters" role="toolbar" aria-label="Pinecrest letters">
+          <button type="button" class="chip chip-letter" data-pattern="letter_p">P</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_i">I</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_n">N</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_e">E</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_c">C</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_r">R</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_e2">E</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_s">S</button>
+          <button type="button" class="chip chip-letter" data-pattern="letter_t">T</button>
+        </div>
+        <p class="turtle-controls-label">Turtle shapes · <code>t.shape()</code> library</p>
+        <div class="turtle-controls turtle-controls--lib-shapes" id="turtleLibShapes" role="toolbar" aria-label="Turtle library shapes"></div>
+      </div>
+
+      <div class="playground-code-panel">
+        <div class="playground-code-head">
+          <span>Python code</span>
+          <div class="playground-code-head-actions">
+            <button type="button" class="code-optimize-btn" id="codeOptimizeBtn" hidden>
+              Use a loop →
+            </button>
+            <span class="pattern-name" id="playgroundPatternName">Choose below</span>
+          </div>
+        </div>
+        <pre class="playground-code-body" id="playgroundCode"></pre>
+      </div>
+    </div>
+
+    <section class="playground-resources" id="playgroundResources" aria-labelledby="playgroundResourcesTitle">
+      <h2 id="playgroundResourcesTitle">Resources</h2>
+      <p class="playground-resources-lead">Run turtle code in the <a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle)</a>, or use Trinket / Replit · look up more commands in the official docs.</p>
+      <ul class="playground-resources-links">
+        <li><a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle)</a></li>
+        <li><a href="https://trinket.io/python" target="_blank" rel="noopener">Trinket</a></li>
+        <li><a href="https://replit.com/languages/python3" target="_blank" rel="noopener">Replit</a></li>
+        <li><a href="https://docs.python.org/3/library/turtle.html" target="_blank" rel="noopener">turtle docs</a></li>
+        <li><a href="../python-syntax-guide/">If / else &amp; loops guide</a></li>
+        <li><a href="../">← Back to lesson</a></li>
+      </ul>
+
+      <div class="turtle-commands-card" data-turtle-commands-card id="turtleCommandsRef" aria-labelledby="playgroundCommandRefTitle">
+        <p class="turtle-cmd-ref-lead" id="playgroundCommandRefTitle" style="margin:16px 0;color:var(--muted);font-size:14px;line-height:1.5;">
+          <strong style="color:var(--text)">turtle_commands.py</strong> — command card and quick reminders for the turtle library.
+        </p>
+        <div class="turtle-commands-card-grid">
+          <div class="turtle-commands-card-main">
+            <h2>Simple command card</h2>
+            <div class="turtle-cmd-table-wrap">
+              <table class="turtle-cmd-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Meaning</th>
+                  </tr>
+                </thead>
+                <tbody data-turtle-commands-table></tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="turtle-commands-card-shorthand">
+            <p class="turtle-commands-card-shorthand-label">Quick notes</p>
+            <h2>Quick reminders</h2>
+            <div class="turtle-commands-reminders" data-turtle-commands-reminders></div>
+          </aside>
+        </div>
+        <div class="turtle-commands-samples">
+          <div class="turtle-commands-samples-head">
+            <h3>Sample commands</h3>
+            <button type="button" class="turtle-ref-copy-btn" data-turtle-sample-copy hidden>Copy code</button>
+          </div>
+          <pre class="turtle-cmd-sample-pre" data-turtle-commands-sample></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../lesson-return.js"></script>
+  <script src="../class-timer.js"></script>
+  <script src="../turtle-commands-data.js"></script>
+  <script src="../turtle-commands-card.js"></script>
+  <script src="../turtle-playground.js"></script>
+</body>
+</html>

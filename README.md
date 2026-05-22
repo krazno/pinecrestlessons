@@ -8,18 +8,19 @@
 
 | URL | Page |
 |-----|------|
-| `/` | Blank (single neutral color — no school branding) |
-| `/ursuline-ai/` | Ursuline — *AI, the Brain, and Serviam* (student lesson + lab) |
+| `/` | Redirects to `/ursuline-ai/` |
+| `/ursuline-ai/` | Ursuline — *AI, the Brain, and Serviam* (student lesson + labs) |
 | `/ursuline/` | Redirects to `/ursuline-ai/` |
 | `/pinecrest-teacher/` | Faculty PD (*Prompt Like a Pro*) |
-| `/pinecrest-student/` | **6th grade CS student lesson (only student page)** |
+| `/pinecrest-student/` | 6th grade CS student lesson |
 
 Old URLs (`/pinecrest/class/`, `/student/`, etc.) redirect to `/pinecrest-student/`.
+
+**Production:** [www.codewithbrett.com](https://www.codewithbrett.com/ursuline-ai/) — deployed via Vercel (`pinecrestlessons` project).
 
 ## Local preview
 
 ```bash
-cd codewithbrett
 npm install
 ./serve.sh
 ```
@@ -32,26 +33,13 @@ Opens Next.js on **http://127.0.0.1:3000/**
 
 Production build: `npm run build` (static export to `out/`).
 
-**One student page only:** `/pinecrest-student/` is the full interactive lesson. The old minimal green landing page has been removed.
+## Editing Pine Crest student lesson
 
-## Editing the student lesson
+Source files live in `public/pinecrest-student/`. Main files:
 
-Source of truth is usually `pinecrest_lessons`; sync with:
-
-```bash
-rsync -a --delete ../pinecrest_lessons/pinecrest-student/ public/pinecrest-student/
-```
-
-Main files:
-
-- `pinecrest-student/index.html`
-- `pinecrest-student/logo.png`
+- `public/pinecrest-student/index.html`
 - activity folders (`color-art-lab/`, `initials-grid/`, `flag-challenge/`, `turtle-playground/`)
 
-Form links are set in the `CLASS_LINKS` object near the bottom of `index.html`.
+## Editing Ursuline AI lesson
 
-### Activity turn-ins (3 levels)
-
-The student page includes **Level one / two / three** placeholders and a **Turn in work** block (screenshot + code + name) above the exit ticket.
-
-To receive submissions for review, set `ACTIVITY_SUBMIT.formspreeId` in `pinecrest-student/index.html` (see `pinecrest-teacher/activity-submissions.html`).
+Next.js app route: `app/ursuline-ai/`. Student handouts in `public/artifacts/`. Faculty materials in `public/artifacts/team/`.

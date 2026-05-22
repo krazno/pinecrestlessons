@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Python Syntax Guide · Pinecrest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../class-timer-bar.css" />
+  <link rel="stylesheet" href="../activity-shared.css" />
+  <link rel="stylesheet" href="../python-syntax-guide.css" />
+</head>
+<body class="python-syntax-guide">
+  <header class="syntax-top">
+    <div class="syntax-top-left">
+      <a class="site-brand" href="../" title="Pinecrest School">
+        <img src="../logo.png" alt="Pinecrest School" width="40" height="40">
+      </a>
+      <a class="back" href="../">← Back to lesson</a>
+    </div>
+    <h1>Python Syntax Guide</h1>
+  </header>
+
+  <main class="syntax-wrap">
+    <p class="syntax-intro">
+      Click a topic to see the <strong>syntax pattern</strong>, a <strong>code example</strong>, and what it <strong>prints</strong>.
+      Use this page when you forget how <code>if</code>, <code>else</code>, <code>elif</code>, or loops are written in Python.
+    </p>
+
+    <p class="syntax-topics-label">Pick a topic</p>
+    <div class="syntax-topics" id="syntaxTopics" role="toolbar" aria-label="Python syntax topics"></div>
+
+    <article class="syntax-panel" aria-live="polite">
+      <header class="syntax-panel-head">
+        <h2 id="syntaxTitle">if — run code when a test is true</h2>
+        <span class="syntax-panel-tag" id="syntaxTag">conditionals</span>
+      </header>
+      <div class="syntax-panel-body">
+        <div class="syntax-pattern">
+          <p class="syntax-pattern-label">Syntax pattern</p>
+          <pre id="syntaxPattern"></pre>
+        </div>
+        <p class="syntax-meaning" id="syntaxMeaning"></p>
+        <div class="syntax-grid">
+          <div>
+            <p class="syntax-code-label">Example code</p>
+            <div class="syntax-ide">
+              <div class="syntax-ide-titlebar">
+                <span class="syntax-ide-dot r"></span>
+                <span class="syntax-ide-dot y"></span>
+                <span class="syntax-ide-dot g"></span>
+                <span class="syntax-ide-fname" id="syntaxFilename">example.py</span>
+              </div>
+              <div class="syntax-ide-body" id="syntaxCode"></div>
+            </div>
+          </div>
+          <div>
+            <p class="syntax-output-label">Output</p>
+            <div class="syntax-output" id="syntaxOutput"></div>
+          </div>
+        </div>
+        <p class="syntax-reminder" id="syntaxReminder"></p>
+      </div>
+    </article>
+
+    <section class="syntax-resources" aria-labelledby="syntaxResourcesTitle">
+      <h2 id="syntaxResourcesTitle">Resources</h2>
+      <ul class="syntax-resources-links">
+        <li><a href="../">← Back to lesson</a></li>
+        <li><a href="../#resources">Turtle command card</a></li>
+        <li><a href="../turtle-playground/">Turtle Playground</a></li>
+        <li><a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle)</a></li>
+        <li><a href="https://trinket.io/python" target="_blank" rel="noopener">Trinket</a></li>
+        <li><a href="https://replit.com/languages/python3" target="_blank" rel="noopener">Replit</a></li>
+      </ul>
+      <section class="syntax-quick" aria-labelledby="syntaxQuickTitle">
+        <h3 id="syntaxQuickTitle">Quick reminders</h3>
+        <div class="syntax-quick-grid">
+          <span><strong>if</strong> → test once</span>
+          <span><strong>else</strong> → otherwise</span>
+          <span><strong>elif</strong> → another test</span>
+          <span><strong>for</strong> → repeat</span>
+          <span><strong>while</strong> → repeat while true</span>
+          <span><strong>==</strong> compare</span>
+          <span><strong>=</strong> store value</span>
+          <span><strong>:</strong> + indent</span>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="../lesson-return.js"></script>
+  <script src="../class-timer.js"></script>
+  <script src="../python-syntax-guide.js"></script>
+</body>
+</html>

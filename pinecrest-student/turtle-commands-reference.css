@@ -1,0 +1,880 @@
+/* Turtle command reference — shared by lesson + playground */
+.turtle-cmd-ref {
+  border: 1px solid var(--border-bright);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 20px 18px 22px;
+}
+
+.turtle-cmd-ref-head h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(18px, 2.2vw, 24px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 6px;
+}
+
+.turtle-cmd-ref-lead {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+  max-width: 640px;
+}
+
+.turtle-cmd-topics-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.turtle-cmd-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.turtle-cmd-chip {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(155, 92, 255, 0.3);
+  background: rgba(155, 92, 255, 0.08);
+  color: var(--violet);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.turtle-cmd-chip:hover {
+  color: #fff;
+  background: rgba(155, 92, 255, 0.18);
+}
+
+.turtle-cmd-chip.is-active {
+  border-color: var(--lime);
+  color: var(--lime);
+  background: rgba(212, 255, 58, 0.1);
+}
+
+.turtle-cmd-panel-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+
+.turtle-cmd-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+
+.turtle-cmd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.turtle-cmd-table th,
+.turtle-cmd-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.turtle-cmd-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lime);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.turtle-cmd-table td code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+.turtle-cmd-table tr:last-child td {
+  border-bottom: none;
+}
+
+.turtle-cmd-samples h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 8px;
+}
+
+.turtle-cmd-sample-pre {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.45);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #d8d8e0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* Simple command card + quick reminders (resources) */
+.turtle-commands-card {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.turtle-commands-card-grid {
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .turtle-commands-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.turtle-commands-card-main h2,
+.turtle-commands-card-shorthand h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(20px, 2.5vw, 26px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.turtle-commands-card-main h2 {
+  color: var(--cyan);
+}
+
+.turtle-commands-card-shorthand-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.turtle-commands-card-shorthand h2 {
+  color: var(--lime);
+}
+
+.turtle-commands-reminders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.turtle-commands-reminders span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text, var(--cream));
+}
+
+.turtle-commands-reminders strong {
+  color: var(--lime);
+}
+
+.turtle-commands-samples {
+  margin-top: 20px;
+}
+
+.turtle-commands-samples h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 8px;
+}
+
+/* Turtle ref panel — three sections on lesson page */
+.turtle-ref .turtle-cmd-topics-label {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.turtle-ref .turtle-cmd-topics {
+  justify-content: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.turtle-ref-panel {
+  max-width: 820px;
+  margin: 0 auto 28px;
+  border: 1px solid var(--border-bright);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+}
+
+.turtle-ref-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.turtle-ref-panel-head h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(18px, 2.4vw, 24px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0;
+  text-align: left;
+}
+
+.turtle-ref-panel-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lime);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 255, 58, 0.35);
+  background: rgba(212, 255, 58, 0.08);
+}
+
+.turtle-ref-panel-body {
+  padding: 18px 18px 22px;
+}
+
+.turtle-ref-panel-intro {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+.turtle-ref-panel-intro strong {
+  color: var(--text);
+}
+
+.turtle-ref-concepts {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.turtle-ref-concept {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.turtle-ref-concept-step {
+  font-family: 'Anton', sans-serif;
+  font-size: 22px;
+  color: var(--violet);
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.turtle-ref-concept-cmd {
+  margin: 0 0 6px;
+}
+
+.turtle-ref-concept-cmd code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--cyan);
+}
+
+.turtle-ref-concept-body h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.turtle-ref-concept-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.turtle-ref-concept-body code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em;
+  color: var(--cyan);
+}
+
+/* IDE code windows — line-number gutter + syntax colors (turtle-ref, lesson panels) */
+.ide-window {
+  border-radius: 14px;
+  border: 1px solid var(--border-bright);
+  overflow: hidden;
+  background: #0a0c12;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
+}
+
+.ide-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.ide-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ide-dot.r { background: #ff5f57; }
+.ide-dot.y { background: #febc2e; }
+.ide-dot.g { background: #28c840; }
+
+.ide-fname {
+  margin-left: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ide-body {
+  padding: 14px 0 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #d8d8e0;
+  overflow-x: auto;
+}
+
+.ide-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 1.55em;
+  padding: 0 14px 0 0;
+}
+
+.ide-ln {
+  width: 2.5em;
+  flex-shrink: 0;
+  padding: 0 10px 0 12px;
+  text-align: right;
+  color: var(--dim);
+  user-select: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ide-txt {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hl-kw { color: #c792ea; }
+.hl-fn { color: #82aaff; }
+.hl-name { color: #ffcb6b; }
+.hl-num { color: #f78c6c; }
+.hl-str { color: #c3e88d; }
+.hl-com { color: #546e7a; font-style: italic; }
+
+.turtle-ref-ide {
+  max-width: 640px;
+  margin: 0 auto 16px;
+}
+
+.turtle-ref-ide .ide-line {
+  display: flex;
+}
+
+.turtle-ref-playground-link {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 12px;
+}
+
+.turtle-ref-playground-link a {
+  color: var(--cyan);
+}
+
+.turtle-ref-reminders-wrap {
+  margin-top: 20px;
+}
+
+.turtle-ref-reminders-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.turtle-ref-demo-wrap {
+  max-width: 480px;
+  margin: 0 auto 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border-bright);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.turtle-ref-demo-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 240px;
+  aspect-ratio: 5 / 4;
+}
+
+/* —— Redesigned getting-started / example panels —— */
+
+.turtle-ref-callout {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 224, 0.22);
+  background: linear-gradient(135deg, rgba(0, 255, 224, 0.06), rgba(155, 92, 255, 0.05));
+  margin-bottom: 20px;
+}
+
+.turtle-ref-where-code {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 255, 58, 0.28);
+  background: rgba(212, 255, 58, 0.05);
+}
+
+.turtle-ref-lead-question {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.turtle-ref-lead-answer {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.turtle-ref-lead-answer strong {
+  color: var(--text);
+}
+
+.turtle-ref-where-code-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 10px;
+}
+
+.turtle-ref-where-code-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.turtle-ref-where-code-text strong {
+  color: var(--text);
+}
+
+.turtle-ref-where-code-text code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em;
+  color: var(--cyan);
+}
+
+.turtle-ref-ide-cta {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 224, 0.45);
+  background: linear-gradient(145deg, rgba(0, 255, 224, 0.14), rgba(155, 92, 255, 0.12));
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.turtle-ref-ide-cta:hover {
+  color: var(--text);
+  background: rgba(0, 255, 224, 0.22);
+  transform: translateY(-1px);
+}
+
+.turtle-ref-where-code-text .turtle-ref-ide-cta {
+  margin-bottom: 10px;
+}
+
+.turtle-ref-where-code-rest {
+  display: block;
+}
+
+.turtle-ref-steps {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.turtle-step-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px 16px;
+  align-items: start;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border-bright);
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.38), rgba(26, 29, 38, 0.55));
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+.turtle-step-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 52px;
+}
+
+.turtle-step-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.turtle-step-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 20px;
+  color: var(--lime);
+  letter-spacing: 0.04em;
+}
+
+.turtle-step-main {
+  min-width: 0;
+}
+
+.turtle-step-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+
+.turtle-step-text {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.turtle-step-text strong {
+  color: var(--text);
+}
+
+.turtle-step-text code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em;
+  color: var(--cyan);
+}
+
+.turtle-step-code.ide-window {
+  min-height: 0;
+  flex: none;
+  max-width: 100%;
+  margin: 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.turtle-step-code .ide-titlebar {
+  padding: 8px 12px;
+  font-size: 11px;
+}
+
+.turtle-step-code-body {
+  padding: 12px 14px 14px 8px !important;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.turtle-step-code .ide-line {
+  min-height: 1.5em;
+}
+
+.turtle-step-code .ide-ln {
+  display: none;
+}
+
+.turtle-ref-starter-block {
+  margin: 8px 0 18px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 255, 58, 0.22);
+  background: rgba(212, 255, 58, 0.04);
+}
+
+.turtle-ref-starter-block .turtle-ref-starter-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+  text-align: left;
+  margin: 0 0 12px;
+}
+
+.turtle-ref-panel-body .turtle-ref-ide.ide-window {
+  min-height: 0;
+  flex: none;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.turtle-ref-ide--full .ide-body {
+  max-height: 320px;
+}
+
+.turtle-ref-ide--example {
+  margin: 0;
+}
+
+.turtle-ref-ide .ide-titlebar .ide-fname {
+  flex: 1;
+  min-width: 0;
+}
+
+.turtle-ref-copy-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 255, 224, 0.45);
+  background: rgba(0, 255, 224, 0.12);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.turtle-ref-copy-btn:hover {
+  color: var(--text);
+  background: rgba(0, 255, 224, 0.22);
+}
+
+.turtle-ref-copy-btn.is-copied {
+  border-color: rgba(212, 255, 58, 0.55);
+  background: rgba(212, 255, 58, 0.15);
+  color: var(--lime);
+}
+
+.turtle-commands-samples-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.turtle-commands-samples-head h3 {
+  margin: 0;
+}
+
+/* Command table — pill style */
+.turtle-cmd-cell {
+  white-space: nowrap;
+}
+
+.turtle-cmd-emoji {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.turtle-cmd-pill {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 224, 0.25);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--cyan) !important;
+  white-space: nowrap;
+}
+
+.turtle-cmd-meaning {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.turtle-ref-table-wrap .turtle-cmd-table tr:hover td {
+  background: rgba(155, 92, 255, 0.06);
+}
+
+/* Corner table — math example */
+.turtle-ref-math-hint {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(155, 92, 255, 0.28);
+  background: rgba(155, 92, 255, 0.08);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.turtle-ref-math-hint strong {
+  color: var(--text);
+}
+
+.turtle-ref-math-hint code {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan);
+}
+
+.turtle-ref-corners-wrap {
+  margin-bottom: 16px;
+}
+
+.turtle-ref-corners-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin: 0 0 8px;
+}
+
+.turtle-ref-corners-table td:first-child {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.turtle-ref-corners-table code {
+  color: var(--lime);
+  font-size: 12px;
+}
+
+/* Simple / math example — code + preview side by side */
+.turtle-ref-example-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(200px, 0.9fr);
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 8px;
+}
+
+.turtle-ref-example-output {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  border: 1px solid var(--border-bright);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.turtle-ref-example-output-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lime);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.turtle-ref-demo-wrap--inline {
+  max-width: none;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: #0a0c10;
+}
+
+.turtle-ref-demo-wrap--inline .turtle-ref-demo-canvas {
+  min-height: 200px;
+  max-height: 280px;
+}
+
+@media (max-width: 768px) {
+  .turtle-step-card {
+    grid-template-columns: 1fr;
+  }
+
+  .turtle-step-badge {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .turtle-ref-example-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .turtle-ref-panel {
+    max-width: none;
+  }
+}

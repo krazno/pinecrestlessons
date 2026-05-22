@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280" role="img" aria-label="Round letter B on a coordinate plane">
+  <rect width="320" height="280" fill="#03040a"/>
+  <line x1="160" y1="20" x2="160" y2="260" stroke="rgba(0,255,224,0.35)" stroke-width="1"/>
+  <line x1="20" y1="148" x2="300" y2="148" stroke="rgba(0,255,224,0.35)" stroke-width="1"/>
+  <line x1="132" y1="203" x2="132" y2="93" stroke="#3b82f6" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 132 93 A 28 28 0 0 1 188 93" fill="none" stroke="#22d3ee" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 132 148 A 28 28 0 0 1 188 148" fill="none" stroke="#22c55e" stroke-width="7" stroke-linecap="round"/>
+</svg>

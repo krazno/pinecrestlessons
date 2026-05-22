@@ -1,0 +1,299 @@
+/* Class timer bar + fixed site header — student lesson, activities, and faculty site */
+:root {
+  --class-timer-h: 64px;
+  --page-subnav-h: 69px;
+  --faculty-jump-h: 52px;
+}
+
+html:has(body > #classTimerBar) {
+  scroll-padding-top: var(--class-timer-h);
+}
+
+@media (min-width: 901px) {
+  html:has(body.has-class-timer > .faculty-jump-nav) {
+    scroll-padding-top: calc(var(--class-timer-h) + var(--faculty-jump-h));
+  }
+}
+
+.status-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 10px 20px;
+  min-height: var(--class-timer-h);
+  background: rgba(7, 8, 13, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.status-bar.is-flashing {
+  animation: classTimerWarnFlash 0.45s ease-in-out 5;
+}
+
+@keyframes classTimerWarnFlash {
+  0%, 100% {
+    background: rgba(7, 8, 13, 0.92);
+    border-bottom-color: var(--border);
+    box-shadow: none;
+  }
+  50% {
+    background: rgba(255, 184, 0, 0.42);
+    border-bottom-color: var(--amber);
+    box-shadow: 0 0 28px rgba(255, 184, 0, 0.35);
+  }
+}
+
+.status-bar.is-final {
+  background: rgba(48, 8, 22, 0.96);
+  border-bottom-color: var(--pink);
+  box-shadow: 0 4px 28px rgba(255, 46, 147, 0.28);
+}
+
+.status-bar.is-final .class-timer-remaining {
+  color: var(--pink);
+  font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+  text-shadow: 0 0 22px rgba(255, 46, 147, 0.45);
+}
+
+.status-bar.is-final .class-timer-sublabel {
+  color: var(--pink);
+}
+
+.status-left,
+.status-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.status-left { justify-content: flex-start; }
+.status-right { justify-content: flex-end; }
+
+.status-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.class-timer-remaining {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: var(--lime);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s, font-size 0.2s;
+}
+
+.class-timer-sublabel {
+  margin-top: 4px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.status-clock-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-right: 4px;
+}
+
+.status-clock-wrap .status-item.bright {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.status-clock-label {
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+.class-timer-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-bright);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.class-timer-btn:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 255, 224, 0.1);
+}
+
+.class-timer-btn.primary {
+  background: linear-gradient(135deg, var(--lime), #b8e62e);
+  color: #0a1200;
+  border: none;
+  font-weight: 700;
+}
+
+.class-timer-btn.primary:hover { filter: brightness(1.08); }
+
+.status-bar--activity .status-lesson-link {
+  font-size: 11px;
+  text-decoration: none;
+  color: var(--cyan);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 224, 0.35);
+  background: rgba(0, 255, 224, 0.06);
+}
+
+.status-bar--activity .status-lesson-link:hover {
+  background: rgba(0, 255, 224, 0.12);
+  color: var(--text);
+}
+
+/* Faculty site timer bar (not used on student pages) */
+.status-bar--faculty {
+  background: rgba(11, 61, 46, 0.97);
+  border-bottom-color: rgba(200, 169, 79, 0.35);
+  color: var(--soft-cream, #f8f6ef);
+}
+
+.status-bar--faculty .class-timer-remaining {
+  font-family: var(--serif, 'Fraunces', Georgia, serif);
+  color: var(--gold, #c8a94f);
+}
+
+.status-bar--faculty .class-timer-sublabel {
+  color: rgba(248, 246, 239, 0.72);
+}
+
+.status-bar--faculty.is-final {
+  background: rgba(72, 18, 28, 0.97);
+  border-bottom-color: #c95d4b;
+}
+
+.status-bar--faculty.is-final .class-timer-remaining,
+.status-bar--faculty.is-final .class-timer-sublabel {
+  color: #f4c4bc;
+  text-shadow: none;
+}
+
+.status-bar--faculty .class-timer-btn {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--soft-cream, #f8f6ef);
+}
+
+.status-bar--faculty .class-timer-btn:hover {
+  border-color: var(--gold, #c8a94f);
+  background: rgba(200, 169, 79, 0.16);
+}
+
+.status-bar--faculty .class-timer-btn.primary {
+  background: linear-gradient(135deg, var(--gold, #c8a94f), #e8d48a);
+  color: var(--deep-pine, #0b3d2e);
+}
+
+.status-bar--faculty .status-faculty-label {
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold, #c8a94f);
+}
+
+.status-bar--faculty .status-clock-wrap .status-item.bright {
+  color: var(--soft-cream, #f8f6ef);
+}
+
+body.has-class-timer .faculty-jump-nav {
+  top: var(--class-timer-h);
+}
+
+body.has-class-timer .tech-acc {
+  scroll-margin-top: calc(var(--class-timer-h) + var(--faculty-jump-h) + 12px);
+}
+
+/* Mobile: timer + page nav stack with sticky */
+body.has-class-timer .activity-top,
+body.has-class-timer .playground-top,
+body.has-class-timer .syntax-top {
+  top: var(--class-timer-h);
+}
+
+/* Desktop: float timer + page nav; reserve space so content does not jump */
+@media (min-width: 901px) {
+  .status-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  body:has(> #classTimerBar) {
+    padding-top: var(--class-timer-h);
+  }
+
+  body:has(> #classTimerBar) > .activity-top,
+  body:has(> #classTimerBar) > .playground-top,
+  body:has(> #classTimerBar) > .syntax-top {
+    position: fixed;
+    top: var(--class-timer-h);
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 90;
+  }
+
+  body:has(> #classTimerBar):has(> .activity-top),
+  body:has(> #classTimerBar):has(> .playground-top),
+  body:has(> #classTimerBar):has(> .syntax-top) {
+    padding-top: calc(var(--class-timer-h) + var(--page-subnav-h));
+  }
+
+  body.has-class-timer:has(> .faculty-jump-nav) {
+    padding-top: calc(var(--class-timer-h) + var(--faculty-jump-h));
+  }
+
+  body.has-class-timer .faculty-jump-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 90;
+  }
+}
+
+@media (max-width: 900px) {
+  :root { --class-timer-h: 118px; }
+
+  .status-bar {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 10px 14px;
+  }
+
+  .status-center { order: -1; }
+  .status-left,
+  .status-right { justify-content: center; }
+}

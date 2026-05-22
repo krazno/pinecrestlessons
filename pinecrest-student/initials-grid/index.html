@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎯 Mission 2 · Initials on a Grid · Pinecrest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../class-timer-bar.css" />
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <div class="activity-top-left">
+      <a class="site-brand" href="../" title="Pinecrest School">
+        <img src="../logo.png" alt="Pinecrest School" width="40" height="40">
+      </a>
+      <a class="back" href="../#activity">← Back to missions</a>
+    </div>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/">🪙 Mission 1</a>
+      <a href="../initials-grid/" class="is-current">🎯 Mission 2</a>
+      <a href="../flag-challenge/">⚡ Mission 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">🎯 Mission 2 · 📐 Initials on a Grid</p>
+      <h1>Initials on a Grid</h1>
+      <p class="activity-meta"><span>⏱ 10–15 min</span><span>🎯 Mission 2 · bonus</span></p>
+      <p class="mission-hero-unlock">🎯 Bonus mission — graph paper → coordinates → code</p>
+      <p class="mission-hero-note">Sketch on <strong>graph paper</strong>, write each line as <strong>(x, y)</strong> points, then put those numbers in a letter function like <code>draw_H()</code> — each line is <code>penup</code> → <code>goto</code> → <code>pendown</code> → <code>goto</code>.</p>
+    </header>
+
+    <details class="mission-panel mission-panel--mission">
+      <summary>🎯 Your goal</summary>
+      <div class="mission-panel-body">
+        <p class="mission-lead">Draw <strong>one letter</strong> from your initials in three steps: plan on <strong>graph paper</strong>, write the <strong>coordinates</strong> for each line, then code a function like <code>draw_H()</code>.</p>
+        <p>Each line is the same pattern: <strong>pen up</strong> → <code>goto(start x, start y)</code> → <strong>pen down</strong> → <code>goto(end x, end y)</code>. In turtle, <strong>(0, 0)</strong> is the <strong>center</strong> of the screen and <strong>y</strong> goes up.</p>
+        <p>Check each item when it is in your project — checked items fade and strike through:</p>
+        <ul class="mission-checklist" id="missionChecklist">
+          <li>
+            <label class="mission-check-item" data-check-id="initial">
+              <input type="checkbox" />
+              <span>🔤 <strong>1 initial</strong> from your name</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="segments">
+              <input type="checkbox" />
+              <span>📏 <strong>3 line segments</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="function">
+              <input type="checkbox" />
+              <span>⚙️ Letter function (like <code>draw_H()</code>)</span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="colors">
+              <input type="checkbox" />
+              <span>🎨 <strong>2 colors</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="comments">
+              <input type="checkbox" />
+              <span>💬 <strong>2 comments</strong></span>
+            </label>
+          </li>
+          <li>
+            <label class="mission-check-item" data-check-id="screenshot">
+              <input type="checkbox" />
+              <span>📸 <strong>Screenshot</strong> of your drawing</span>
+            </label>
+          </li>
+        </ul>
+        <p>When every box is checked, upload your <strong>code</strong> and <strong>screenshot</strong> to the class shared folder.</p>
+      </div>
+    </details>
+
+    <details class="mission-panel">
+      <summary>🕹️ What to do</summary>
+      <div class="mission-panel-body">
+        <ol class="mission-step-list">
+          <li>Pick <strong>one initial</strong> from your name (first or last letter).</li>
+          <li><strong>Graph paper:</strong> sketch your letter. Mark a dot where each line <strong>starts</strong> and <strong>ends</strong>.</li>
+          <li><strong>Write coordinates:</strong> for every line, fill in <strong>x1, y1</strong> (start) and <strong>x2, y2</strong> (end) in a table — use the H example below.</li>
+          <li><strong>Code it:</strong> copy <code>draw_H()</code>, rename to <code>draw_Y()</code> (or your letter), and replace each <code>goto</code> with <strong>your</strong> numbers.</li>
+          <li><strong>Run</strong> the starter example here, then run in your editor and fix anything that looks wrong.</li>
+          <li>Add <strong>2 colors</strong> and <strong>2 comments</strong>.</li>
+          <li><strong>Upload</strong> your <code>.py</code> file and screenshot to the class shared folder.</li>
+        </ol>
+        <div class="editor-encourage">
+          <p>🧪 <strong>Open your editor</strong> — <a href="https://pythonsandbox.com/turtle" target="_blank" rel="noopener">Python Sandbox (turtle)</a>, Trinket, Replit, or IDLE. One <code>def draw_…():</code> with a pen-up / goto / pen-down block for each line is all you need.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--grid" id="gridPlanPanel">
+      <summary>📐 Step 2 · write your coordinates</summary>
+      <div class="mission-panel-body planning-grid-section">
+        <p class="planning-grid-intro">
+          <strong>Step 1 — graph paper:</strong> sketch your letter any size you like.
+          <strong>Step 2 — table:</strong> for each line segment, write turtle coordinates (same system as the preview on the right).
+        </p>
+        <p class="planning-grid-intro">
+          In Python turtle, <strong>(0, 0)</strong> is the <strong>center</strong> of the screen.
+          <strong>x</strong> goes left (−) and right (+).
+          <strong>y</strong> goes down (−) and up (+).
+        </p>
+        <p class="planning-grid-intro"><strong>Each line:</strong> start <strong>(x1, y1)</strong> → end <strong>(x2, y2)</strong>. Those four numbers become two <code>goto</code> lines in your function.</p>
+        <p class="planning-grid-note">Example tables — plan on graph paper, then use these numbers in <code>draw_H()</code> or <code>draw_B()</code>:</p>
+        <div class="planning-grid-example">
+          <p class="planning-grid-letter-label"><strong>H</strong> — 3 lines</p>
+          <table class="segment-plan-table">
+            <thead>
+              <tr>
+                <th scope="col">Line</th>
+                <th scope="col">x1</th>
+                <th scope="col">y1</th>
+                <th scope="col">x2</th>
+                <th scope="col">y2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>left</td><td>-50</td><td>-100</td><td>-50</td><td>100</td></tr>
+              <tr><td>middle</td><td>-50</td><td>0</td><td>50</td><td>0</td></tr>
+              <tr><td>right</td><td>50</td><td>-100</td><td>50</td><td>100</td></tr>
+            </tbody>
+          </table>
+          <p class="planning-grid-letter-label"><strong>B (block)</strong> — 6 lines</p>
+          <table class="segment-plan-table">
+            <thead>
+              <tr>
+                <th scope="col">Line</th>
+                <th scope="col">x1</th>
+                <th scope="col">y1</th>
+                <th scope="col">x2</th>
+                <th scope="col">y2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>spine</td><td>-50</td><td>-100</td><td>-50</td><td>100</td></tr>
+              <tr><td>top bar</td><td>-50</td><td>100</td><td>40</td><td>100</td></tr>
+              <tr><td>top right</td><td>40</td><td>100</td><td>40</td><td>0</td></tr>
+              <tr><td>middle</td><td>-50</td><td>0</td><td>40</td><td>0</td></tr>
+              <tr><td>bottom bar</td><td>-50</td><td>-100</td><td>40</td><td>-100</td></tr>
+              <tr><td>bottom right</td><td>40</td><td>-100</td><td>40</td><td>0</td></tr>
+            </tbody>
+          </table>
+          <p class="planning-grid-letter-label"><strong>B (round)</strong> — spine + 2 half-circles</p>
+          <p class="planning-grid-note" style="margin-top:8px">At the top: <code>goto(-50, 100)</code>, face right, <code>circle(-50, 180)</code>. At the middle: <code>goto(-50, 0)</code>, same circle command for the bottom bump.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--starter">
+      <summary>📋 Starter example</summary>
+      <div class="mission-panel-body">
+        <p>Start with <strong>draw_B_round()</strong> below (round B), or pick <strong>H</strong> / block <strong>B</strong> for other patterns. Each step: <strong>pen up</strong> → <code>goto</code> → <strong>pen down</strong> → <code>goto</code> or <code>circle()</code>.</p>
+
+        <div class="fn-spotlight" role="toolbar" aria-label="Starter example">
+          <button type="button" class="fn-spotlight-btn" data-spotlight="draw_H" data-letter="H">
+            <span class="fn-icon">🔤</span>
+            <span class="fn-name">draw_H()</span>
+            <span class="fn-desc">Three lines — left, middle, right.</span>
+          </button>
+          <button type="button" class="fn-spotlight-btn" data-spotlight="draw_B" data-letter="B">
+            <span class="fn-icon">🔤</span>
+            <span class="fn-name">draw_B()</span>
+            <span class="fn-desc">Six lines — block B with two bumps.</span>
+          </button>
+          <button type="button" class="fn-spotlight-btn is-active" data-spotlight="draw_B_round" data-letter="R">
+            <span class="fn-icon">⭕</span>
+            <span class="fn-name">draw_B_round()</span>
+            <span class="fn-desc">Spine plus two <code>circle(-50, 180)</code> bumps (round B).</span>
+          </button>
+        </div>
+
+        <div class="starter-run-row">
+          <button type="button" class="btn-run-example" id="runStarterExample">▶ Run example</button>
+          <p class="starter-run-hint" id="starterRunHint">The coordinate plane matches Python turtle. Click <strong>Run example</strong> to draw a <strong>round B</strong> with <code>circle(-50, 180)</code> bumps.</p>
+        </div>
+
+        <div class="starter-example-stage">
+          <div class="starter-example-code">
+            <div class="starter-example-head"><span>Python code</span></div>
+            <pre class="starter-example-body" id="starterExampleCode" aria-label="Starter example Python code"></pre>
+          </div>
+          <div class="starter-example-visual">
+            <div class="starter-example-head"><span>Coordinate plane</span></div>
+            <div class="starter-output-frame has-plane" id="starterOutputFrame" aria-label="Turtle coordinate plane — round letter B preview">
+              <img id="starterPreviewImg" src="../examples/initials-letter-b-round.svg" alt="" width="320" height="280" hidden aria-hidden="true">
+              <canvas class="starter-live-canvas" id="starterLiveCanvas" role="img" aria-label="Coordinate plane; run the example to draw round letter B"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="mission-panel">
+      <summary>🔧 Try changing</summary>
+      <div class="mission-panel-body">
+        <ul class="req-list">
+          <li>Change <strong>H</strong> to <strong>your initial</strong></li>
+          <li>Change the <strong>colors</strong></li>
+          <li>Add a <strong>second initial</strong> next to the first</li>
+          <li>Add a <strong>dot</strong>, border, or title</li>
+          <li>Make lines <strong>thicker</strong> or <strong>thinner</strong> with <code>t.width()</code></li>
+          <li>Try a <strong>diagonal</strong> line</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="mission-panel mission-panel--submit">
+      <summary>📤 Submit your work</summary>
+      <div class="mission-panel-body submit-panel" style="border:none;padding:0;background:transparent;">
+        <p>Upload your <strong>Python code</strong> and <strong>screenshot</strong> to the class shared folder.</p>
+        <ol class="submit-checklist">
+          <li>Submit your <strong>Python code</strong> (.py file)</li>
+          <li>Submit a <strong>screenshot</strong> of your drawing</li>
+          <li>Rename your screenshot to your <strong>first name</strong> (example: <code>alex.png</code>)</li>
+        </ol>
+        <a class="btn primary submit-folder-link" id="submitFolderLink" data-class-folder href="https://drive.google.com/drive/folders/1Ba48ZTAtgJGDwemyXqB7CkK3HM2h_6tN" target="_blank" rel="noopener noreferrer">📁 Open shared folder</a>
+        <p class="submit-folder-hint">Upload both files, then check the gallery on the main lesson page.</p>
+      </div>
+    </details>
+  </main>
+
+  <footer class="site-foot">Pinecrest · 6th grade CS · codewithbrett.com · <a href="https://github.com/krazno/pinecrestlessons" target="_blank" rel="noopener noreferrer">GitHub @krazno</a></footer>
+
+  <script src="../lesson-return.js"></script>
+  <script src="../class-timer.js"></script>
+  <script src="../activity-config.js"></script>
+  <script src="../activity-initials-grid.js?v=20260520c"></script>
+</body>
+</html>
