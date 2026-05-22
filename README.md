@@ -8,8 +8,8 @@
 
 | URL | Page |
 |-----|------|
-| `/` | Redirects to `/ursuline-ai/` |
-| `/ursuline-ai/` | Ursuline — *AI, the Brain, and Serviam* (student lesson + labs) |
+| `/` | Blank neutral page (no school branding) |
+| `/ursuline-ai/` | Ursuline — *AI, the Brain, and Serviam* (direct link only) |
 | `/ursuline/` | Redirects to `/ursuline-ai/` |
 | `/pinecrest-teacher/` | Faculty PD (*Prompt Like a Pro*) |
 | `/pinecrest-student/` | 6th grade CS student lesson |

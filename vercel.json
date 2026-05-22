@@ -4,7 +4,6 @@
   "cleanUrls": true,
   "trailingSlash": true,
   "redirects": [
-    { "source": "/", "destination": "/ursuline-ai/", "permanent": false },
     { "source": "/pinecrest", "destination": "/pinecrest-teacher", "permanent": true },
     { "source": "/pinecrest/", "destination": "/pinecrest-teacher/", "permanent": true },
     { "source": "/pinecrest/class", "destination": "/pinecrest-student", "permanent": true },
