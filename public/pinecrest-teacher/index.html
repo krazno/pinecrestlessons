@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prompting Techniques 101 · Pine Crest Faculty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep: #003b0f;
+      --green: #004712;
+      --green-soft: #e8f2eb;
+      --white: #ffffff;
+      --charcoal: #2a3230;
+      --muted: #5a6d63;
+      --gold: #c9a227;
+      --weak-bg: #faf6f6;
+      --weak-border: #e8d4d4;
+      --better-bg: #f4faf5;
+      --better-border: #b8d9c0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--green-soft);
+      color: var(--charcoal);
+      line-height: 1.55;
+      font-size: 17px;
+    }
+    .top {
+      background: var(--green-deep);
+      color: var(--white);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .top a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; }
+    .top a:hover { color: var(--white); }
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+    .hero {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 28px;
+      border-left: 5px solid var(--gold);
+      box-shadow: 0 4px 24px rgba(0, 59, 15, 0.08);
+    }
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2rem);
+      font-weight: 700;
+      color: var(--green-deep);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .hero-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 22px;
+    }
+    .quick-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 520px) {
+      .quick-links { grid-template-columns: 1fr; }
+    }
+    .quick-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .quick-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 59, 15, 0.12);
+    }
+    .quick-link.slides {
+      background: var(--green);
+      color: var(--white);
+    }
+    .quick-link.gemini {
+      background: var(--white);
+      color: var(--green-deep);
+      border: 2px solid var(--green);
+    }
+    .gamma-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .gamma-note a {
+      color: var(--green);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .gamma-note a:hover { text-decoration: underline; }
+    section.block {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 16px rgba(0, 59, 15, 0.06);
+    }
+    section.block h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+    section.block .explain {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 640px) {
+      .compare { grid-template-columns: 1fr; }
+    }
+    .prompt-card {
+      border-radius: 12px;
+      padding: 16px 18px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+    .prompt-card h3 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .prompt-card .text {
+      flex: 1;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      user-select: all;
+    }
+    .prompt-card button.copy {
+      align-self: flex-start;
+      margin-top: 12px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+    }
+    .weak {
+      background: var(--weak-bg);
+      border: 1px solid var(--weak-border);
+    }
+    .weak h3 { color: #9b2c2c; }
+    .weak button.copy { color: #9b2c2c; border-color: var(--weak-border); }
+    .better {
+      background: var(--better-bg);
+      border: 1px solid var(--better-border);
+    }
+    .better h3 { color: var(--green); }
+    .better button.copy { color: var(--green); border-color: var(--better-border); }
+    .try-it {
+      background: #fffbeb;
+      border: 1px solid #f0e4b8;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+    .try-it strong { color: #8a6914; }
+    .subject-note {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .glow-up .better .text { white-space: pre-line; }
+    .builder {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      background: var(--charcoal);
+      color: #e8f0ea;
+      padding: 20px 22px;
+      border-radius: 12px;
+      user-select: all;
+      white-space: pre-wrap;
+    }
+    .exit-fields label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin: 16px 0 8px;
+      color: var(--green-deep);
+    }
+    .exit-fields label:first-child { margin-top: 0; }
+    .exit-fields input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dde5df;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a href="/">← Home</a>
+    <span class="badge">20-minute faculty sprint · Pine Crest</span>
+  </header>
+
+  <main class="wrap">
+    <header class="hero">
+      <h1>Welcome to Prompting Techniques 101</h1>
+      <p class="hero-sub">A 20-minute professional development session</p>
+      <p class="hero-name">Brett Hanen</p>
+      <div class="quick-links">
+        <a class="quick-link slides" href="https://gamma.app/docs/REPLACE_WITH_YOUR_SLIDES" target="_blank" rel="noopener">Open Gamma slides →</a>
+        <a class="quick-link gemini" href="https://gemini.google.com/" target="_blank" rel="noopener">Open Google Gemini →</a>
+      </div>
+      <p class="gamma-note">Today&apos;s deck is built with <a href="https://gamma.app/" target="_blank" rel="noopener">Gamma</a> — AI slides you can edit and share.</p>
+    </header>
+
+    <section class="block" id="t1">
+      <h2>1. Give It a Role</h2>
+      <p class="explain">Tell the AI what kind of expert or teacher lens to use.</p>
+      <div class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="t1-weak">Make a review activity.</p>
+          <button type="button" class="copy" data-copy="t1-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="t1-better">Act as an experienced teacher. Create a 10-minute review activity for students who need practice with the main skill from today’s lesson.</p>
+          <button type="button" class="copy" data-copy="t1-better">Copy</button>
+        </div>
+      </div>
+      <div class="try-it"><strong>Try It:</strong> Act as a ________.</motion>
+      <p class="subject-note">Works for any subject</p>
+    </section>
+
+    <section class="block" id="t2">
+      <h2>2. Show an Example</h2>
+      <p class="explain">Show the AI what good looks like before asking for more.</p>
+      <div class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="t2-weak">Write feedback comments.</p>
+          <button type="button" class="copy" data-copy="t2-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="t2-better">Here is one example of my feedback style: “You made a clear point. Your next step is to explain your evidence more fully.” Now write 5 comments in this same style.</p>
+          <button type="button" class="copy" data-copy="t2-better">Copy</button>
+        </div>
+      </div>
+      <div class="try-it"><strong>Try It:</strong> Add one example you already use.</div>
+      <p class="subject-note">Works for any subject</p>
+    </section>
+
+    <section class="block" id="t3">
+      <h2>3. Ask for Step-by-Step Thinking</h2>
+      <p class="explain">Ask the AI to identify criteria or skills before giving the final answer.</p>
+      <div class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="t3-weak">Grade this response.</p>
+          <button type="button" class="copy" data-copy="t3-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="t3-better">First identify the main skill being assessed. Then give one strength, one area to improve, and one next step.</p>
+          <button type="button" class="copy" data-copy="t3-better">Copy</button>
+        </div>
+      </div>
+      <motion class="try-it"><strong>Try It:</strong> First identify the criteria. Then complete the task.</div>
+      <p class="subject-note">Works for any subject</p>
+    </section>
+
+    <section class="block" id="t4">
+      <h2>4. Ask It to Ask You Questions</h2>
+      <p class="explain">Have the AI ask you questions before it builds the final product.</p>
+      <div class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="t4-weak">Make me a lesson.</p>
+          <button type="button" class="copy" data-copy="t4-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="t4-better">Before creating the lesson, ask me 3 questions about my students, the topic, and the goal.</p>
+          <button type="button" class="copy" data-copy="t4-better">Copy</button>
+        </div>
+      </div>
+      <div class="try-it"><strong>Try It:</strong> Ask me 3 questions first.</div>
+      <p class="subject-note">Works for any subject</p>
+    </section>
+
+    <section class="block" id="t5">
+      <h2>5. Roleplay a Scenario</h2>
+      <p class="explain">Turn the AI into a practice partner — student, parent, or confused learner.</p>
+      <motion class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="t5-weak">Help students practice.</p>
+          <button type="button" class="copy" data-copy="t5-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="t5-better">Roleplay as a student who is confused. Ask me one question at a time so I can practice explaining the concept clearly.</p>
+          <button type="button" class="copy" data-copy="t5-better">Copy</button>
+        </div>
+      </div>
+      <div class="try-it"><strong>Try It:</strong> Roleplay as ________.</div>
+      <p class="subject-note">Works for any subject</p>
+    </section>
+
+    <section class="block glow-up" id="glow-up">
+      <h2>Full Prompt Glow-Up</h2>
+      <p class="explain">Combine all five moves in one prompt.</p>
+      <div class="compare">
+        <div class="prompt-card weak">
+          <h3>Weak Prompt</h3>
+          <p class="text" id="glow-weak">Make a review activity for my students.</p>
+          <button type="button" class="copy" data-copy="glow-weak">Copy</button>
+        </div>
+        <div class="prompt-card better">
+          <h3>Better Prompt</h3>
+          <p class="text" id="glow-better">Act as an experienced teacher.
+Before answering, ask me 3 questions about my class, topic, and goal.
+Then create a 10-minute review activity.
+Use this format:
+1. Warm-up
+2. Partner task
+3. Exit ticket
+First explain what skill the activity builds.
+Then roleplay as a student who might be confused and ask me one question.</p>
+          <button type="button" class="copy" data-copy="glow-better">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="builder">
+      <h2>Build One Prompt</h2>
+      <p class="explain">Fill in the blanks and paste into your LLM.</p>
+      <div class="builder" id="builder-text">Act as a ________.
+I teach ________.
+My students are working on ________.
+Before answering, ask me 3 questions.
+Then create ________.
+Use this format: ________.
+Afterward, roleplay as ________.</div>
+      <button type="button" class="copy" data-copy="builder-text" style="margin-top:12px;padding:8px 14px;font-family:inherit;font-weight:600;border-radius:8px;border:1px solid var(--green);background:var(--green-soft);color:var(--green);cursor:pointer">Copy template</button>
+    </section>
+
+    <section class="block" id="exit">
+      <h2>Exit Ticket</h2>
+      <motion class="exit-fields">
+        <label for="exit1">One prompt I can use tomorrow is:</label>
+        <input type="text" id="exit1" placeholder="Your prompt…">
+        <label for="exit2">One workflow I can improve this week is:</label>
+        <input type="text" id="exit2" placeholder="Planning, feedback, review…">
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    AI drafts. Teachers decide.
+  </footer>
+
+  <script>
+    document.querySelectorAll('button.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-copy');
+        var el = document.getElementById(id);
+        if (!el) return;
+        var text = el.textContent.trim();
+        navigator.clipboard.writeText(text).then(function () {
+          var prev = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = prev; }, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

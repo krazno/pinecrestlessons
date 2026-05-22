@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layer 2 · Initials on a Grid · Pine Crest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <a class="back" href="../">← Back to lesson</a>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/">Layer 1</a>
+      <a href="../initials-grid/" class="is-current">Layer 2</a>
+      <a href="../flag-challenge/">Layer 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">Layer 2 · Extension</p>
+      <h1>Initials on a Grid</h1>
+      <div class="activity-meta">
+        <span>Difficulty: middle · core academic task</span>
+        <span>Time: 10–15 minutes</span>
+      </div>
+      <p class="activity-goal"><strong>Main goal:</strong> Use coordinates and decomposition to create one or two initials drawn with turtle using line segments and grid points.</p>
+    </header>
+
+    <section class="activity-section">
+      <h2>Your directions</h2>
+      <ol>
+        <li><strong>Step 1:</strong> Choose one initial.</li>
+        <li><strong>Step 2:</strong> Sketch it on the 4 by 6 grid (paper or use the interactive grid below).</li>
+        <li><strong>Step 3:</strong> Write each line segment as a start point and end point.</li>
+        <li><strong>Step 4:</strong> Code one segment.</li>
+        <li><strong>Step 5:</strong> Run and check.</li>
+        <li><strong>Step 6:</strong> Add the next segment.</li>
+        <li><strong>Step 7:</strong> Add your second initial if time allows.</li>
+      </ol>
+      <p><strong>Minimum:</strong> at least 2 colors, 2 comments, one reusable function (e.g. <code>draw_grid_line()</code>), test one segment at a time, screenshot + code turn-in below.</p>
+    </section>
+
+    <section class="activity-section">
+      <h2>Grid explanation</h2>
+      <p>The <strong>x-value</strong> moves <strong>left and right</strong>. The <strong>y-value</strong> moves <strong>up and down</strong>.</p>
+      <p>Each line needs a <strong>start point</strong> and an <strong>end point</strong>.</p>
+      <p><strong>Example — letter H</strong></p>
+      <ul>
+        <li>Left line: <code>(0, 0)</code> to <code>(0, 6)</code></li>
+        <li>Right line: <code>(4, 0)</code> to <code>(4, 6)</code></li>
+        <li>Middle line: <code>(0, 3)</code> to <code>(4, 3)</code></li>
+      </ul>
+      <pre class="code-block">draw_grid_line(0, 0, 0, 6, color="blue")
+draw_grid_line(4, 0, 4, 6, color="blue")
+draw_grid_line(0, 3, 4, 3, color="blue")</pre>
+    </section>
+
+    <section class="activity-section">
+      <h2>Interactive grid · plan your initials</h2>
+      <p>Click cells to explore coordinates. Click once for <strong style="color:var(--cyan)">start</strong>, again for <strong style="color:var(--pink)">end</strong> — the segment is logged below. Purple cells show the sample letter <strong>H</strong>.</p>
+      <div class="grid-lab">
+        <div class="coord-grid-wrap">
+          <h3>4 × 6 coordinate grid</h3>
+          <p class="coord-readout" id="coordReadout">Click a cell to see (x, y)</p>
+          <div class="coord-grid" id="coordGrid" role="grid" aria-label="4 by 6 planning grid"></div>
+          <p class="grid-legend"><button type="button" class="btn" id="gridResetBtn" style="margin-top:10px">Reset clicks</button></p>
+        </div>
+        <dl class="grid-legend">
+          <dt>Axes</dt>
+          <dd><strong>x</strong> = columns 0–3 (left → right)<br><strong>y</strong> = rows 0–5 (bottom → top)</dd>
+          <dt>Planning tip</dt>
+          <dd>List each segment before you code: start (x₁, y₁) → end (x₂, y₂).</dd>
+          <dt>Testing tip</dt>
+          <dd>Code and run <em>one</em> <code>draw_grid_line(...)</code> at a time.</dd>
+        </dl>
+      </div>
+      <table class="req-table segment-log" id="segmentLog">
+        <thead>
+          <tr><th>#</th><th>Start</th><th>End</th><th>Sample code</th></tr>
+        </thead>
+        <tbody id="segmentLogBody">
+          <tr><td colspan="4" style="color:var(--dim)">Segments you click will appear here.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="activity-section">
+      <h2>Required concepts</h2>
+      <table class="req-table">
+        <thead>
+          <tr><th>Concept</th><th>Requirement</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Grid planning</td><td>Sketch at least one initial on a 4×6 grid</td></tr>
+          <tr><td>Coordinates</td><td>Record start and end points for each line segment</td></tr>
+          <tr><td>Function</td><td>Use <code>draw_grid_line()</code> or similar reusable function</td></tr>
+          <tr><td>Turtle commands</td><td><code>goto()</code>, <code>penup()</code>, <code>pendown()</code> through the function</td></tr>
+          <tr><td>Testing</td><td>Test one segment at a time</td></tr>
+          <tr><td>Color</td><td>Use at least 2 colors</td></tr>
+          <tr><td>Commenting</td><td>Add at least 2 comments</td></tr>
+          <tr><td>Submission</td><td>Screenshot and code</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="activity-section teacher-example">
+      <h2>Teacher example · code</h2>
+      <pre class="code-block">import turtle
+
+SCALE = 40  # pixels per grid unit
+OFFSET_X = -80
+OFFSET_Y = -120
+
+def to_screen(gx, gy):
+    return OFFSET_X + gx * SCALE, OFFSET_Y + gy * SCALE
+
+def draw_grid_line(x1, y1, x2, y2, color="white"):
+    t.penup()
+    t.goto(*to_screen(x1, y1))
+    t.pendown()
+    t.color(color)
+    t.goto(*to_screen(x2, y2))
+
+t = turtle.Turtle()
+t.speed(0)
+screen = turtle.Screen()
+screen.bgcolor("black")
+
+# Letter H on the 4x6 grid
+draw_grid_line(0, 0, 0, 6, color="cyan")
+draw_grid_line(4, 0, 4, 6, color="cyan")
+draw_grid_line(0, 3, 4, 3, color="magenta")
+
+turtle.done()</pre>
+      <p class="teacher-output-label">Teacher example · output</p>
+      <div class="teacher-output-frame" aria-label="Teacher example output">
+        <p class="placeholder">Teacher: add a screenshot of the sample initial(s) here before class.</p>
+      </div>
+    </section>
+
+    <section class="activity-section turnin-panel" id="submitSection">
+      <h2>Turn in · Layer 2</h2>
+      <p style="color:var(--muted);margin-bottom:16px;">Enter your name, upload a screenshot and your code (.py file or paste below).</p>
+      <p class="turnin-level-fixed" id="turninLevelFixed"></p>
+      <select id="turninLevel" name="level" hidden aria-hidden="true"><option value="2" selected>Layer 2</option></select>
+      <div class="turnin-name-row">
+        <div class="turnin-field">
+          <label for="turninName">Your name</label>
+          <input type="text" id="turninName" name="student_name" placeholder="First and last name" autocomplete="name" required>
+        </div>
+      </div>
+      <div class="turnin-uploads">
+        <label class="turnin-upload-box" id="turninScreenshotBox" for="turninScreenshot">
+          <strong>Screenshot</strong>
+          <span>PNG, JPG, or photo of your screen</span>
+          <span class="file-name" id="turninScreenshotName"></span>
+        </label>
+        <input type="file" id="turninScreenshot" accept="image/*,.png,.jpg,.jpeg,.gif,.webp" hidden>
+        <label class="turnin-upload-box" id="turninCodeBox" for="turninCodeFile">
+          <strong>Python file</strong>
+          <span>.py or .txt code file</span>
+          <span class="file-name" id="turninCodeFileName"></span>
+        </label>
+        <input type="file" id="turninCodeFile" accept=".py,.txt,text/plain,text/x-python" hidden>
+      </div>
+      <div class="turnin-code-paste">
+        <label for="turninCodePaste">Or paste your code here</label>
+        <textarea id="turninCodePaste" name="code_text" placeholder="# paste your Python code here…"></textarea>
+      </div>
+      <div class="turnin-submit-row">
+        <button type="button" class="btn primary" id="turninSubmitBtn">Turn in work</button>
+        <button type="button" class="btn" id="turninClearBtn">Clear form</button>
+      </div>
+      <p class="turnin-status" id="turninStatus" role="status" aria-live="polite"></p>
+      <span id="submitMeta" hidden></span>
+      <div class="turnin-history-head">Your Layer 2 turn-ins on this device</div>
+      <div class="turnin-history" id="turninHistory" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-foot">Pine Crest · 6th grade CS · codewithbrett.com</footer>
+
+  <script>
+  (function () {
+    var COLS = 4, ROWS = 6;
+    var H_SEGMENTS = [[0,0,0,6],[4,0,4,6],[0,3,4,3]];
+    var gridEl = document.getElementById('coordGrid');
+    var readout = document.getElementById('coordReadout');
+    var logBody = document.getElementById('segmentLogBody');
+    var pendingStart = null;
+    var segments = [];
+
+    function isOnH(x, y) {
+      for (var i = 0; i < H_SEGMENTS.length; i++) {
+        var s = H_SEGMENTS[i];
+        if (x === s[0] && y === s[1]) return true;
+        if (x === s[2] && y === s[3]) return true;
+        if (x === s[0] && y >= Math.min(s[1], s[3]) && y <= Math.max(s[1], s[3]) && x === s[0] && x === s[2]) return true;
+      }
+      if ((x === 0 || x === 4) && y >= 0 && y <= 6) return true;
+      if (y === 3 && x >= 0 && x <= 4) return true;
+      return false;
+    }
+
+    function buildGrid() {
+      gridEl.innerHTML = '';
+      gridEl.appendChild(document.createElement('div')).className = 'axis';
+      for (var x = 0; x < COLS; x++) {
+        var ax = document.createElement('div');
+        ax.className = 'axis';
+        ax.textContent = x;
+        gridEl.appendChild(ax);
+      }
+      for (var y = ROWS - 1; y >= 0; y--) {
+        var rowLabel = document.createElement('div');
+        rowLabel.className = 'axis';
+        rowLabel.textContent = y;
+        gridEl.appendChild(rowLabel);
+        for (var x = 0; x < COLS; x++) {
+          var cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'cell';
+          cell.setAttribute('data-x', x);
+          cell.setAttribute('data-y', y);
+          cell.setAttribute('aria-label', 'grid point ' + x + ', ' + y);
+          if (isOnH(x, y)) cell.classList.add('on-h-line');
+          cell.addEventListener('click', onCellClick);
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    function onCellClick(e) {
+      var cell = e.currentTarget;
+      var x = +cell.getAttribute('data-x');
+      var y = +cell.getAttribute('data-y');
+      readout.textContent = 'Point (' + x + ', ' + y + ')';
+      if (!pendingStart) {
+        pendingStart = { x: x, y: y, el: cell };
+        cell.classList.add('is-start');
+        return;
+      }
+      var sx = pendingStart.x, sy = pendingStart.y;
+      pendingStart.el.classList.remove('is-start');
+      cell.classList.add('is-end');
+      segments.push({ x1: sx, y1: sy, x2: x, y2: y });
+      pendingStart = null;
+      renderLog();
+      setTimeout(function () { cell.classList.remove('is-end'); }, 800);
+    }
+
+    function renderLog() {
+      if (!segments.length) {
+        logBody.innerHTML = '<tr><td colspan="4" style="color:var(--dim)">Segments you click will appear here.</td></tr>';
+        return;
+      }
+      logBody.innerHTML = segments.map(function (s, i) {
+        var code = 'draw_grid_line(' + s.x1 + ', ' + s.y1 + ', ' + s.x2 + ', ' + s.y2 + ', color="cyan")';
+        return '<tr><td>' + (i + 1) + '</td><td>(' + s.x1 + ', ' + s.y1 + ')</td><td>(' + s.x2 + ', ' + s.y2 + ')</td><td><code>' + code + '</code></td></tr>';
+      }).join('');
+    }
+
+    document.getElementById('gridResetBtn').addEventListener('click', function () {
+      pendingStart = null;
+      segments = [];
+      readout.textContent = 'Click a cell to see (x, y)';
+      buildGrid();
+      renderLog();
+    });
+
+    buildGrid();
+  })();
+  </script>
+  <script>window.ACTIVITY_TURNIN = { level: '2' }; window.ACTIVITY_SUBMIT = { formspreeId: '' };</script>
+  <script src="../activity-turnin.js"></script>
+</body>
+</html>

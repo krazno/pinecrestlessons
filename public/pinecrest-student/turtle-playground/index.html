@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Turtle Playground · Pine Crest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../activity-shared.css" />
+  <link rel="stylesheet" href="../turtle-playground.css" />
+</head>
+<body class="turtle-playground">
+  <header class="playground-top">
+    <a class="back" href="../">← Back to lesson</a>
+    <h1>Turtle Playground</h1>
+  </header>
+
+  <main class="playground-wrap">
+    <p class="playground-intro">Click a shape to <strong>see the Python code</strong> and watch a <strong>live preview</strong> on the grid. Move your mouse over the canvas to explore <code>goto(x, y)</code> coordinates.</p>
+
+    <div class="playground-stage">
+      <div class="playground-visual">
+        <div class="turtle-canvas-wrap" id="turtleCanvasWrap">
+          <canvas id="turtleGridCanvas" aria-hidden="true"></canvas>
+          <canvas id="turtleCanvas"></canvas>
+          <div class="turtle-crosshair" id="turtleCrosshair" aria-hidden="true"></div>
+          <div class="turtle-overlay">turtle playground · live</div>
+          <div class="turtle-grid-hint">(0, 0) = center · move mouse for x, y</div>
+          <div class="turtle-coords-hud" id="turtleCoordsHud" aria-live="polite">
+            <span class="coord-label">turtle coordinates</span>
+            <span id="turtleCoordsText">x: 0, y: 0</span>
+          </div>
+        </div>
+        <div class="turtle-controls" role="toolbar" aria-label="Drawing patterns">
+          <button type="button" class="chip" data-pattern="hex">hexagon</button>
+          <button type="button" class="chip" data-pattern="star">star</button>
+          <button type="button" class="chip" data-pattern="spiral">spiral</button>
+          <button type="button" class="chip" data-pattern="flower">flower</button>
+          <button type="button" class="chip" data-pattern="koch">snowflake</button>
+          <button type="button" class="chip" data-pattern="clear">↺ clear</button>
+        </div>
+      </div>
+
+      <div class="playground-code-panel">
+        <div class="playground-code-head">
+          <span>Python code</span>
+          <span class="pattern-name" id="playgroundPatternName">pick a shape</span>
+        </div>
+        <pre class="playground-code-body" id="playgroundCode"></pre>
+      </div>
+    </div>
+
+    <p class="playground-foot">Run the same ideas in Trinket or Replit · <a href="https://docs.python.org/3/library/turtle.html" target="_blank" rel="noopener">turtle docs</a></p>
+  </main>
+
+  <script src="../turtle-playground.js"></script>
+</body>
+</html>

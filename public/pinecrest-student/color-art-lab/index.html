@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layer 1 · Color Art Lab · Pine Crest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <a class="back" href="../">← Back to lesson</a>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/" class="is-current">Layer 1</a>
+      <a href="../initials-grid/">Layer 2</a>
+      <a href="../flag-challenge/">Layer 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">Layer 1 · Required for everyone</p>
+      <h1>Color Art Lab</h1>
+      <div class="activity-meta">
+        <span>Difficulty: low floor, creative start</span>
+        <span>Time: 8–10 minutes</span>
+      </div>
+      <p class="activity-required">Everyone completes at least Layer 1 today. Layers 2 and 3 are optional extensions.</p>
+    </header>
+
+    <div class="instruction-cards">
+      <section class="instruction-card instruction-card--goal">
+        <span class="instruction-step" aria-hidden="true">1</span>
+        <h2>Your goal</h2>
+        <p>Create a <strong>turtle drawing of your choice</strong> — something based on your <strong>passion or interest</strong> (a hobby, sport, animal, place, game, music, food, or anything you care about).</p>
+      </section>
+
+      <section class="instruction-card instruction-card--req">
+        <span class="instruction-step" aria-hidden="true">2</span>
+        <h2>Your requirements</h2>
+        <ol class="req-list">
+          <li>Use at least <strong>3 colors</strong> in your drawing.</li>
+          <li>Write at least <strong>1 function</strong> that uses <strong>1 conditional</strong> (<code>if</code> / <code>else</code>).</li>
+          <li>Use a <strong>loop</strong> <em>or</em> an <code>if</code> statement somewhere in your program.</li>
+          <li>Add at least <strong>1 comment</strong> in your code explaining your idea.</li>
+          <li>When you are done, turn in a <strong>screenshot</strong> and your <strong>code</strong> below.</li>
+        </ol>
+      </section>
+    </div>
+
+    <section class="activity-section teacher-example">
+      <h2>Teacher example</h2>
+      <p>Mr. Brett loves <strong>space</strong>, so this sample draws colorful planets. Pick your own topic and change the code to match <em>your</em> passion.</p>
+      <pre class="code-block">import turtle
+
+t = turtle.Turtle()
+t.speed(0)
+screen = turtle.Screen()
+screen.bgcolor("midnightblue")
+
+def draw_planet(x, y, size, color_name):
+    # One filled circle = one planet
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    t.color(color_name)
+    t.begin_fill()
+    t.circle(size)
+    t.end_fill()
+
+# Four planets — three colors in the list
+planet_colors = ["orangered", "gold", "deepskyblue"]
+
+for i in range(4):
+    if i % 2 == 0:
+        draw_planet(-140 + i * 75, -20, 28 + i * 6, planet_colors[i % 3])
+    else:
+        draw_planet(-140 + i * 75, 35, 20 + i * 4, planet_colors[(i + 1) % 3])
+
+turtle.done()</pre>
+      <p class="teacher-output-label">Teacher example · output</p>
+      <div class="teacher-output-frame" aria-label="Teacher example output">
+        <p class="placeholder">Teacher: add a screenshot of your example art here before class (replace this box with an <code>&lt;img&gt;</code> or paste image in your editor).</p>
+      </div>
+    </section>
+
+    <section class="activity-section turnin-panel" id="submitSection">
+      <h2>Turn in · Layer 1</h2>
+      <p style="color:var(--muted);margin-bottom:16px;">Enter your name, upload a <strong style="color:var(--text)">screenshot</strong> and your <strong style="color:var(--text)">code</strong> (.py file or paste below).</p>
+      <p class="turnin-level-fixed" id="turninLevelFixed"></p>
+      <select id="turninLevel" name="level" hidden aria-hidden="true"><option value="1" selected>Layer 1</option></select>
+      <div class="turnin-name-row">
+        <div class="turnin-field">
+          <label for="turninName">Your name</label>
+          <input type="text" id="turninName" name="student_name" placeholder="First and last name" autocomplete="name" required>
+        </div>
+      </div>
+      <div class="turnin-uploads">
+        <label class="turnin-upload-box" id="turninScreenshotBox" for="turninScreenshot">
+          <strong>Screenshot</strong>
+          <span>PNG, JPG, or photo of your screen</span>
+          <span class="file-name" id="turninScreenshotName"></span>
+        </label>
+        <input type="file" id="turninScreenshot" accept="image/*,.png,.jpg,.jpeg,.gif,.webp" hidden>
+        <label class="turnin-upload-box" id="turninCodeBox" for="turninCodeFile">
+          <strong>Python file</strong>
+          <span>.py or .txt code file</span>
+          <span class="file-name" id="turninCodeFileName"></span>
+        </label>
+        <input type="file" id="turninCodeFile" accept=".py,.txt,text/plain,text/x-python" hidden>
+      </div>
+      <div class="turnin-code-paste">
+        <label for="turninCodePaste">Or paste your code here</label>
+        <textarea id="turninCodePaste" name="code_text" placeholder="# paste your Python code here…"></textarea>
+      </div>
+      <div class="turnin-submit-row">
+        <button type="button" class="btn primary" id="turninSubmitBtn">Turn in work</button>
+        <button type="button" class="btn" id="turninClearBtn">Clear form</button>
+      </div>
+      <p class="turnin-status" id="turninStatus" role="status" aria-live="polite"></p>
+      <span id="submitMeta" hidden></span>
+      <div class="turnin-history-head">Your Layer 1 turn-ins on this device</div>
+      <div class="turnin-history" id="turninHistory" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-foot">Pine Crest · 6th grade CS · codewithbrett.com</footer>
+
+  <script>window.ACTIVITY_TURNIN = { level: '1' }; window.ACTIVITY_SUBMIT = { formspreeId: '' };</script>
+  <script src="../activity-turnin.js"></script>
+</body>
+</html>

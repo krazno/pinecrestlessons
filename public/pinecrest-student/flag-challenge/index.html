@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layer 3 · Flag Challenge · Pine Crest CS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Anton&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../activity-shared.css" />
+</head>
+<body>
+  <header class="activity-top">
+    <a class="back" href="../">← Back to lesson</a>
+    <nav class="layer-nav" aria-label="Activity layers">
+      <a href="../color-art-lab/">Layer 1</a>
+      <a href="../initials-grid/">Layer 2</a>
+      <a href="../flag-challenge/" class="is-current">Layer 3</a>
+    </nav>
+  </header>
+
+  <main class="activity-wrap">
+    <header class="activity-hero">
+      <p class="activity-badge">Layer 3 · Gifted extension</p>
+      <h1>Flag Challenge</h1>
+      <div class="activity-meta">
+        <span>Difficulty: high · extension</span>
+        <span>Time: 8–12 min if you finish early</span>
+      </div>
+      <p class="activity-goal"><strong>Main goal:</strong> Create a more complex symbolic design with multiple functions, repeated patterns, shapes, and optional fill. Design a custom flag with meaning.</p>
+    </header>
+
+    <section class="activity-section">
+      <h2>Your directions</h2>
+      <p>Your job is to create a <strong>custom flag</strong>. It can represent:</p>
+      <ol>
+        <li>You</li>
+        <li>A team</li>
+        <li>A game</li>
+        <li>An invented country</li>
+        <li>A robot or digital agent</li>
+        <li>A symbol or idea</li>
+      </ol>
+      <p><strong>Minimum requirements:</strong></p>
+      <ol>
+        <li>Use at least <strong>3 colors</strong>.</li>
+        <li>Use at least <strong>1 function</strong> (preferably with parameters).</li>
+        <li>Use at least <strong>1 loop</strong>.</li>
+        <li>Include a <strong>shape, symbol, or pattern</strong> (stripes, circles, stars, etc.).</li>
+        <li>Add <strong>comments</strong> explaining your design choices.</li>
+        <li>Optional: use an <code>if</code> statement for an advanced touch.</li>
+        <li><strong>Screenshot</strong> and submit your code below.</li>
+      </ol>
+    </section>
+
+    <section class="activity-section">
+      <h2>Required concepts</h2>
+      <table class="req-table">
+        <thead>
+          <tr><th>Concept</th><th>Requirement</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Function</td><td>At least one function, preferably with parameters</td></tr>
+          <tr><td>Loop</td><td>At least one loop</td></tr>
+          <tr><td>Conditional</td><td>Optional <code>if</code> for advanced students</td></tr>
+          <tr><td>Shapes</td><td>Stripes, circles, symbols, stars, or patterns</td></tr>
+          <tr><td>Color</td><td>At least 3 colors</td></tr>
+          <tr><td>Design</td><td>Flag with meaning — explain in comments</td></tr>
+          <tr><td>Commenting</td><td>Comments explaining design choices</td></tr>
+          <tr><td>Submission</td><td>Screenshot and code</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="activity-section teacher-example">
+      <h2>Teacher example · code</h2>
+      <p>Simple striped flag with a star — remix the colors and symbols for your own design.</p>
+      <pre class="code-block">import turtle
+
+t = turtle.Turtle()
+t.speed(0)
+screen = turtle.Screen()
+screen.bgcolor("navy")
+t.hideturtle()
+
+def stripe(y, height, color_name):
+    """Draw one horizontal stripe on the flag."""
+    t.penup()
+    t.goto(-200, y)
+    t.pendown()
+    t.color(color_name)
+    t.begin_fill()
+    for _ in range(2):
+        t.forward(400)
+        t.left(90)
+        t.forward(height)
+        t.left(90)
+    t.end_fill()
+
+# stripes in a loop
+colors = ["crimson", "white", "crimson"]
+for i, c in enumerate(colors):
+    stripe(80 - i * 50, 40, c)
+
+def star(size, color_name):
+    t.penup()
+    t.goto(-120, 20)
+    t.pendown()
+    t.color(color_name)
+    t.begin_fill()
+    for _ in range(5):
+        t.forward(size)
+        t.right(144)
+    t.end_fill()
+
+star(40, "gold")  # symbol on the flag
+
+turtle.done()</pre>
+      <p class="teacher-output-label">Teacher example · output</p>
+      <div class="teacher-output-frame" aria-label="Teacher example output">
+        <p class="placeholder">Teacher: add a screenshot of your example flag here before class.</p>
+      </div>
+    </section>
+
+    <section class="activity-section turnin-panel" id="submitSection">
+      <h2>Turn in · Layer 3</h2>
+      <p style="color:var(--muted);margin-bottom:16px;">Enter your name, upload a screenshot and your code (.py file or paste below).</p>
+      <p class="turnin-level-fixed" id="turninLevelFixed"></p>
+      <select id="turninLevel" name="level" hidden aria-hidden="true"><option value="3" selected>Layer 3</option></select>
+      <div class="turnin-name-row">
+        <div class="turnin-field">
+          <label for="turninName">Your name</label>
+          <input type="text" id="turninName" name="student_name" placeholder="First and last name" autocomplete="name" required>
+        </div>
+      </div>
+      <div class="turnin-uploads">
+        <label class="turnin-upload-box" id="turninScreenshotBox" for="turninScreenshot">
+          <strong>Screenshot</strong>
+          <span>PNG, JPG, or photo of your screen</span>
+          <span class="file-name" id="turninScreenshotName"></span>
+        </label>
+        <input type="file" id="turninScreenshot" accept="image/*,.png,.jpg,.jpeg,.gif,.webp" hidden>
+        <label class="turnin-upload-box" id="turninCodeBox" for="turninCodeFile">
+          <strong>Python file</strong>
+          <span>.py or .txt code file</span>
+          <span class="file-name" id="turninCodeFileName"></span>
+        </label>
+        <input type="file" id="turninCodeFile" accept=".py,.txt,text/plain,text/x-python" hidden>
+      </div>
+      <div class="turnin-code-paste">
+        <label for="turninCodePaste">Or paste your code here</label>
+        <textarea id="turninCodePaste" name="code_text" placeholder="# paste your Python code here…"></textarea>
+      </div>
+      <div class="turnin-submit-row">
+        <button type="button" class="btn primary" id="turninSubmitBtn">Turn in work</button>
+        <button type="button" class="btn" id="turninClearBtn">Clear form</button>
+      </div>
+      <p class="turnin-status" id="turninStatus" role="status" aria-live="polite"></p>
+      <span id="submitMeta" hidden></span>
+      <div class="turnin-history-head">Your Layer 3 turn-ins on this device</div>
+      <div class="turnin-history" id="turninHistory" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-foot">Pine Crest · 6th grade CS · codewithbrett.com</footer>
+
+  <script>window.ACTIVITY_TURNIN = { level: '3' }; window.ACTIVITY_SUBMIT = { formspreeId: '' };</script>
+  <script src="../activity-turnin.js"></script>
+</body>
+</html>

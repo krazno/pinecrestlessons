@@ -1,0 +1,28 @@
+---
+description: Enforce strict isolation between school projects in this repo
+alwaysApply: true
+---
+
+# School isolation
+
+This repo hosts **multiple unrelated schools** on one domain. They must never cross-reference.
+
+## Before editing
+
+1. Identify which school folder the user is working in (`app/ursuline-ai/`, `public/pinecrest-student/`, `public/pinecrest-teacher/`, etc.).
+2. Read that folder’s `SCOPE.md` and repo root `SCHOOL-ISOLATION.md`.
+3. If unclear which school, **ask the user** — do not guess.
+
+## Hard rules
+
+- Do **not** mention, link, or reuse assets from another school when working in a school folder.
+- Do **not** apply one school’s colors, logos, copy, or lesson patterns to another.
+- Ursuline Dedham only: `app/ursuline-ai/` — not other Ursuline campuses.
+- Pine Crest only: `public/pinecrest-student/`, `public/pinecrest-teacher/`, `public/pinecrest/`.
+- Root `index.html` stays blank (neutral single color). School landings live under their path only.
+
+## Routes
+
+- `/` — blank homepage
+- `/ursuline-ai/` — Ursuline Academy Dedham
+- `/pinecrest-student/`, `/pinecrest-teacher/` — Pine Crest
