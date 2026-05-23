@@ -417,18 +417,19 @@ function NavPill({
   label,
   active,
   variant = "sub",
+  accent = "emerald",
   className = "",
 }: {
   href: string;
   label: string;
   active: boolean;
   variant?: "pt1" | "pt2" | "sub";
+  accent?: "emerald" | "stone";
   className?: string;
 }) {
-  const sectionId = href.replace("#", "");
   const isPart = variant === "pt1" || variant === "pt2";
   const base =
-    "inline-flex min-h-[44px] items-center justify-center rounded-full text-[11px] font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] md:hover:scale-[1.04] md:hover:shadow-sm motion-reduce:md:hover:scale-100";
+    "inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-full text-[11px] font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] md:hover:scale-[1.04] md:hover:shadow-sm motion-reduce:md:hover:scale-100";
 
   let styles = "";
   if (isPart) {
@@ -439,6 +440,10 @@ function NavPill({
       : variant === "pt1"
         ? "bg-emerald-800 text-white hover:bg-emerald-900 focus-visible:outline-emerald-700"
         : "bg-stone-900 text-white hover:bg-stone-800 focus-visible:outline-stone-700";
+  } else if (accent === "stone") {
+    styles = active
+      ? "bg-stone-900 text-white shadow-sm ring-1 ring-stone-600/40 focus-visible:outline-stone-700"
+      : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-stone-700";
   } else {
     styles = active
       ? "bg-white text-emerald-800 shadow-sm ring-1 ring-emerald-200/80 focus-visible:outline-emerald-700"
@@ -453,6 +458,73 @@ function NavPill({
     >
       {label}
     </a>
+  );
+}
+
+function NavPartGroup({
+  partHref,
+  partLabel,
+  variant,
+  links,
+  activeSection,
+  className = "",
+}: {
+  partHref: string;
+  partLabel: string;
+  variant: "pt1" | "pt2";
+  links: readonly { href: string; label: string }[];
+  activeSection: string;
+  className?: string;
+}) {
+  const partId = partHref.replace("#", "");
+  const accent = variant === "pt1" ? "emerald" : "stone";
+  const shell =
+    variant === "pt1"
+      ? "bg-emerald-50/70 ring-emerald-200/60"
+      : "bg-stone-100/90 ring-stone-300/70";
+
+  return (
+    <div
+      role="group"
+      aria-label={partLabel}
+      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1 py-0.5 ring-1 ${shell} ${className}`}
+    >
+      <NavPill href={partHref} label={partLabel} variant={variant} active={activeSection === partId} />
+      {links.map((link) => {
+        const sectionId = link.href.replace("#", "");
+        return (
+          <NavPill
+            key={link.href}
+            href={link.href}
+            label={link.label}
+            accent={accent}
+            active={activeSection === sectionId}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function LessonNavGroups({ activeSection }: { activeSection: string }) {
+  return (
+    <>
+      <NavPartGroup
+        partHref="#pt1"
+        partLabel="Pt 1"
+        variant="pt1"
+        links={NAV_PT1}
+        activeSection={activeSection}
+      />
+      <div className="mx-0.5 h-5 w-px shrink-0 bg-stone-300/90" aria-hidden />
+      <NavPartGroup
+        partHref="#pt2"
+        partLabel="Pt 2"
+        variant="pt2"
+        links={NAV_PT2}
+        activeSection={activeSection}
+      />
+    </>
   );
 }
 
@@ -768,39 +840,11 @@ export default function UrsulineAILesson() {
               AI · Brain · Serviam
             </span>
           </a>
-          <div className="hidden items-center gap-1 lg:flex">
-            <NavPill href="#pt1" label="Pt 1" variant="pt1" active={activeSection === "pt1"} className="mr-0.5" />
-            {NAV_PT1.map((link) => (
-              <NavPill
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                active={activeSection === link.href.replace("#", "")}
-              />
-            ))}
-            <span className="mx-1.5 h-4 w-px bg-stone-300" aria-hidden />
-            <NavPill href="#pt2" label="Pt 2" variant="pt2" active={activeSection === "pt2"} className="mr-0.5" />
-            {NAV_PT2.map((link) => (
-              <NavPill
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                active={activeSection === link.href.replace("#", "")}
-              />
-            ))}
-          </div>
-          <div className="-mr-4 flex max-w-[min(100%,20rem)] items-center gap-1.5 overflow-x-auto pb-0.5 sm:max-w-none lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <NavPill href="#pt1" label="Pt 1" variant="pt1" active={activeSection === "pt1"} />
-            <NavPill href="#pt2" label="Pt 2" variant="pt2" active={activeSection === "pt2"} />
-            {[...NAV_PT1, ...NAV_PT2].map((link) => (
-              <NavPill
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                active={activeSection === link.href.replace("#", "")}
-                className="shrink-0 border border-stone-200 bg-white/90 backdrop-blur-sm"
-              />
-            ))}
+          <div
+            className="-mr-4 ml-auto flex max-w-[min(100%,22rem)] items-center gap-2 overflow-x-auto pb-0.5 sm:max-w-none sm:gap-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label="Lesson sections"
+          >
+            <LessonNavGroups activeSection={activeSection} />
           </div>
         </div>
       </nav>
