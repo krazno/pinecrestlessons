@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { DM_Sans, Instrument_Serif } from "next/font/google";
+import {
+  GoogleTagManagerBody,
+  GoogleTagManagerHead,
+} from "./components/GoogleTagManager";
 import "./globals.css";
 
 const sans = DM_Sans({
@@ -24,7 +28,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
-      <body className="min-h-screen bg-stone-50 font-sans antialiased">{children}</body>
+      <head>
+        <GoogleTagManagerHead />
+      </head>
+      <body className="min-h-screen bg-stone-50 font-sans antialiased">
+        <GoogleTagManagerBody />
+        {children}
+      </body>
     </html>
   );
 }
