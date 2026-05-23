@@ -269,7 +269,7 @@ export function TinyNeuronTrainer() {
     >
       <p className="mb-4 text-sm leading-relaxed text-stone-600">
         If you were deciding whether a source is trustworthy, which signals should get more weight?
-        Change the weights and run training. Training is feedback at scale, like revising a draft after
+        Change the weights and run training. Training is feedback at scale, like revising your work after
         feedback, but mathematical and repeated many times.
       </p>
 
