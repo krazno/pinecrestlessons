@@ -869,7 +869,7 @@ export default function UrsulineAILesson() {
   const activeSection = useScrollSpy(NAV_SCROLL_SECTIONS);
   const compareRef = useRef<HTMLElement>(null);
   const [compareRevealed, setCompareRevealed] = useState(reducedMotion);
-  const [hoveredPair, setHoveredPair] = useState<number | null>(null);
+  const [compareActiveIndex, setCompareActiveIndex] = useState(0);
   const [openCapability, setOpenCapability] = useState<string | null>(null);
 
   const [revealedHook, setRevealedHook] = useState(false);
@@ -1394,6 +1394,13 @@ export default function UrsulineAILesson() {
         className="border-t border-stone-200 bg-white"
       >
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
+          <p
+            className={`mb-6 text-center text-sm text-stone-500 transition-all duration-700 ease-out motion-reduce:transition-none ${
+              compareRevealed ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Click or tap a row to compare
+          </p>
           <div
             className={`grid gap-8 md:grid-cols-2 motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
               compareRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -1406,13 +1413,11 @@ export default function UrsulineAILesson() {
                   <li key={pair.human}>
                     <button
                       type="button"
-                      onMouseEnter={() => setHoveredPair(i)}
-                      onMouseLeave={() => setHoveredPair(null)}
-                      onFocus={() => setHoveredPair(i)}
-                      onBlur={() => setHoveredPair(null)}
-                      onClick={() => setHoveredPair((prev) => (prev === i ? null : i))}
+                      onMouseEnter={() => setCompareActiveIndex(i)}
+                      onFocus={() => setCompareActiveIndex(i)}
+                      onClick={() => setCompareActiveIndex((prev) => (prev === i ? 0 : i))}
                       className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
-                        hoveredPair === i
+                        compareActiveIndex === i
                           ? "bg-emerald-100/90 text-emerald-900 shadow-sm ring-1 ring-emerald-200/80"
                           : "text-stone-800 hover:bg-white/80"
                       }`}
@@ -1430,13 +1435,11 @@ export default function UrsulineAILesson() {
                   <li key={pair.ai}>
                     <button
                       type="button"
-                      onMouseEnter={() => setHoveredPair(i)}
-                      onMouseLeave={() => setHoveredPair(null)}
-                      onFocus={() => setHoveredPair(i)}
-                      onBlur={() => setHoveredPair(null)}
-                      onClick={() => setHoveredPair((prev) => (prev === i ? null : i))}
+                      onMouseEnter={() => setCompareActiveIndex(i)}
+                      onFocus={() => setCompareActiveIndex(i)}
+                      onClick={() => setCompareActiveIndex((prev) => (prev === i ? 0 : i))}
                       className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
-                        hoveredPair === i
+                        compareActiveIndex === i
                           ? "bg-amber-100/90 text-amber-950 shadow-sm ring-1 ring-amber-200/80"
                           : "text-stone-800 hover:bg-white/80"
                       }`}
@@ -1466,11 +1469,7 @@ export default function UrsulineAILesson() {
         intro={`When you prompt a model, it runs inference — math on patterns it already learned. Trace one ${IDEA_HUB_LABEL} prompt through tokens, vectors, and probability. Training (learning from examples) is a separate process — see Part 2 labs.`}
       >
         <InteractiveCard>
-          <p className="mb-2 text-xs uppercase tracking-widest text-emerald-800">Generation pathway · inference</p>
-          <p className="mb-4 text-sm leading-relaxed text-stone-600">
-            Inference is what happens at prompt time. Training happens earlier, on many examples, to set the weights —
-            not on every message you send.
-          </p>
+          <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Generation pathway · inference</p>
           <div className="mb-4">
             <p className="mb-2 text-xs text-stone-500">Choose a prompt or write your own</p>
             <div className="flex flex-wrap gap-2">
@@ -2123,11 +2122,7 @@ export default function UrsulineAILesson() {
         <section id="pt2-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
             <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 2 · Lab Sheet</p>
-            <h2 className="mb-4 font-serif text-2xl text-stone-900 sm:text-3xl">Inside AI Lab Notes</h2>
-            <p className="mb-8 max-w-xl text-sm leading-relaxed text-stone-600 sm:text-base">
-              Printable lab notes for vectors, weights, and training — the math behind the model, on
-              paper. Same lesson thread as Part 1: patterns and probability, not mystery.
-            </p>
+            <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:text-3xl">Inside AI Lab Notes</h2>
             <div className="max-w-xl">
               <StudentHandoutCard {...PT2_HANDOUT} />
             </div>
@@ -2218,13 +2213,10 @@ export default function UrsulineAILesson() {
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20 md:py-24">
           <div className="grid gap-8 md:grid-cols-12 md:gap-12">
             <div className="md:col-span-4">
-              <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Active learning</div>
-              <h2 className="mb-4 font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">
+              <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Optional extension</div>
+              <h2 className="font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">
                 Serviam Design Challenge
               </h2>
-              <p className="leading-relaxed text-stone-600">
-                Design for others. Use what you learned in Part 1 to imagine a tool that serves someone well.
-              </p>
             </div>
             <div className="md:col-span-8">
               <div
@@ -2247,7 +2239,7 @@ export default function UrsulineAILesson() {
                     value={serviamChallenge}
                     onChange={(e) => setServiamChallenge(e.target.value)}
                     rows={5}
-                    placeholder="Who would you design for? What would your tool do—and what would you check before sharing it?"
+                    placeholder="Who would you design for? What would your tool do, and what would you check before sharing it?"
                     className="w-full resize-y rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 sm:text-base"
                   />
                 </div>
