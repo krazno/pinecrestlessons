@@ -642,6 +642,44 @@ export default function UrsulineAILesson() {
           title="AI Literacy"
           subtitle="AI, the Brain, and Serviam · grades 7–12"
         />
+
+      <section id="pt1-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
+        <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
+          <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 1 · Slides</p>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h3 className="font-serif text-2xl text-stone-900 md:text-3xl">AI, the Brain, and Serviam</h3>
+              <p className="mt-2 max-w-xl text-sm text-stone-600">
+                Follow along with the slides, then work through each section below.
+              </p>
+            </div>
+            <a
+              href={PT1_GAMMA_DOCS}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-emerald-800 transition hover:border-emerald-700 hover:bg-emerald-50"
+            >
+              Open full slides
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+            <div className="aspect-video w-full">
+              <iframe
+                src={PT1_GAMMA_EMBED}
+                title="AI, the Brain, and Serviam, Pt 1 slides"
+                className="h-full w-full"
+                allow="fullscreen"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <p className="mt-4 text-sm text-stone-500">
+            Slides not showing? Use <span className="font-medium text-emerald-800">Open full slides</span> above.
+          </p>
+        </div>
+      </section>
+
       {/* Essential question */}
       <section className="border-t border-stone-200">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20 md:py-24">
@@ -694,38 +732,6 @@ export default function UrsulineAILesson() {
               </button>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section id="pt1-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
-        <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
-          <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 1 · Slides</p>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-            <h3 className="font-serif text-2xl text-stone-900 md:text-3xl">AI, the Brain, and Serviam</h3>
-            <a
-              href={PT1_GAMMA_DOCS}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-emerald-800 transition hover:border-emerald-700 hover:bg-emerald-50"
-            >
-              Open full slides
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-            </a>
-          </div>
-          <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
-            <div className="aspect-video w-full">
-              <iframe
-                src={PT1_GAMMA_EMBED}
-                title="AI, the Brain, and Serviam, Pt 1 slides"
-                className="h-full w-full"
-                allow="fullscreen"
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-stone-500">
-            Slides not showing? Use <span className="font-medium text-emerald-800">Open full slides</span> above.
-          </p>
         </div>
       </section>
 
