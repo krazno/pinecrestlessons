@@ -262,9 +262,15 @@ type PathwayNextToken = { word: string; pct: number };
 type PathwayPreset = {
   id: string;
   shortLabel: string;
-  stem: string;
+  /** Full Ursuline-voice sentence shown in the prompt and response panels */
+  fullSentence: string;
+  /** When set, the pathway can teach next-token choice before the closing phrase */
+  nextTokenStem?: string;
   nextTokens: readonly PathwayNextToken[];
 };
+
+const PREDICT_IDEA_SENTENCE_STEM = `The students entered the ${IDEA_HUB_LABEL} to design a`;
+const PREDICT_IDEA_DEFAULT_WORD = "robot";
 
 const PATHWAY_IDEA_HUB_NEXT: readonly PathwayNextToken[] = [
   { word: "robot", pct: 42 },
@@ -278,31 +284,33 @@ const PATHWAY_PRESETS: readonly PathwayPreset[] = [
   {
     id: "idea-hub",
     shortLabel: "I.D.E.A. Hub",
-    stem: `The students entered the ${IDEA_HUB_LABEL} to design a`,
+    fullSentence: `The students entered the ${IDEA_HUB_LABEL} to design a robot.`,
+    nextTokenStem: `The students entered the ${IDEA_HUB_LABEL} to design a`,
     nextTokens: PATHWAY_IDEA_HUB_NEXT,
   },
   {
     id: "serviam",
     shortLabel: "Serviam project",
-    stem: "Our Serviam project needs a tool that helps",
+    fullSentence:
+      "Our Serviam project needs a tool that helps new students find their way around campus.",
     nextTokens: [
-      { word: "classmates", pct: 38 },
-      { word: "teachers", pct: 26 },
-      { word: "communities", pct: 18 },
-      { word: "volunteers", pct: 12 },
-      { word: "neighbors", pct: 6 },
+      { word: "campus", pct: 38 },
+      { word: "students", pct: 26 },
+      { word: "tool", pct: 18 },
+      { word: "find", pct: 12 },
+      { word: "way", pct: 6 },
     ],
   },
   {
     id: "science-fair",
     shortLabel: "Science fair",
-    stem: "Before the science fair, we asked AI to explain",
+    fullSentence: "Before the science fair, we asked AI to explain photosynthesis.",
     nextTokens: [
       { word: "photosynthesis", pct: 36 },
-      { word: "variables", pct: 24 },
-      { word: "hypotheses", pct: 20 },
-      { word: "circuits", pct: 12 },
-      { word: "data", pct: 8 },
+      { word: "fair", pct: 24 },
+      { word: "explain", pct: 20 },
+      { word: "asked", pct: 12 },
+      { word: "AI", pct: 8 },
     ],
   },
 ];
@@ -384,7 +392,67 @@ function isValidPathwayCustom(text: string): boolean {
   return words >= PATHWAY_CUSTOM_MIN_WORDS && words <= PATHWAY_CUSTOM_MAX_WORDS;
 }
 
-/** Deterministic attention weights from token position and content (illustrative only). */
+function endsWithSentencePunctuation(text: string): boolean {
+  return /[.!?]$/.test(text.trim());
+}
+
+/** Custom prompts ending mid-phrase (design a / to explain / that helps) invite a next-token pick. */
+function isIncompletePathwayStem(text: string): boolean {
+  const words = tokenizePrompt(text);
+  const last = words[words.length - 1]?.toLowerCase() ?? "";
+  const tail = words.slice(-3).join(" ").toLowerCase();
+  return (
+    last === "a" ||
+    last === "for" ||
+    tail.includes("design a") ||
+    last === "explain" ||
+    tail.includes("to explain") ||
+    last === "helps" ||
+    tail.includes("that helps")
+  );
+}
+
+function isCompleteCustomPathway(text: string): boolean {
+  const cleaned = sanitizePathwayInput(text);
+  if (!cleaned) return false;
+  if (endsWithSentencePunctuation(cleaned)) return true;
+  return countWords(cleaned) >= 5 && !isIncompletePathwayStem(cleaned);
+}
+
+/** Text used for prompt display, tokens, and attention — one source for all panels */
+function getPathwayPromptText(
+  preset: PathwayPreset,
+  useCustom: boolean,
+  customText: string,
+  pick: string | null,
+): string {
+  if (useCustom) {
+    const cleaned = sanitizePathwayInput(customText);
+    if (!cleaned) return "";
+    if (isCompleteCustomPathway(cleaned)) return cleaned;
+    if (pick) return `${cleaned} ${pick}`.trim();
+    return cleaned;
+  }
+  if (preset.nextTokenStem) {
+    if (pick) return `${preset.nextTokenStem} ${pick}`.trim();
+    return preset.fullSentence.replace(/\s*[.!?]\s*$/, "").trim();
+  }
+  return preset.fullSentence;
+}
+
+function pathwayTeachesNextToken(
+  preset: PathwayPreset,
+  useCustom: boolean,
+  customText: string,
+): boolean {
+  if (useCustom) {
+    const cleaned = sanitizePathwayInput(customText);
+    return Boolean(cleaned) && !isCompleteCustomPathway(cleaned);
+  }
+  return Boolean(preset.nextTokenStem);
+}
+
+/** Deterministic attention weights from token position and content. */
 function computeAttentionWeights(tokens: string[], boostLastStem = false): { token: string; weight: number }[] {
   const n = tokens.length;
   if (n === 0) return [];
@@ -411,7 +479,13 @@ function getCustomPathwayNext(stem: string): readonly PathwayNextToken[] {
   const tail = words.slice(-3).join(" ").toLowerCase();
 
   if (last === "helps" || last === "help" || tail.includes("that helps")) {
-    return getPathwayPreset("serviam").nextTokens;
+    return [
+      { word: "new students find their way around campus", pct: 42 },
+      { word: "classmates", pct: 24 },
+      { word: "teachers", pct: 18 },
+      { word: "volunteers", pct: 10 },
+      { word: "neighbors", pct: 6 },
+    ];
   }
   if (last === "explain" || tail.includes("to explain")) {
     return getPathwayPreset("science-fair").nextTokens;
@@ -425,6 +499,57 @@ function getCustomPathwayNext(stem: string): readonly PathwayNextToken[] {
     return PATHWAY_IDEA_HUB_NEXT;
   }
   return PATHWAY_CUSTOM_NEXT;
+}
+
+function ensureSentenceEnd(text: string): string {
+  const t = text.trim();
+  if (!t) return t;
+  return /[.!?]$/.test(t) ? t : `${t}.`;
+}
+
+function PathwayPromptSentence({
+  promptText,
+  teachesNextToken,
+  nextTokenStem,
+  pick,
+  defaultWord,
+  showBlank,
+  emptyLabel = "Enter a prompt above",
+}: {
+  promptText: string;
+  teachesNextToken: boolean;
+  nextTokenStem: string | null;
+  pick: string | null;
+  defaultWord: string | null;
+  showBlank: boolean;
+  emptyLabel?: string;
+}) {
+  if (!promptText) {
+    return <p className="font-serif text-lg leading-relaxed text-stone-500 sm:text-xl">{emptyLabel}</p>;
+  }
+
+  if (!teachesNextToken || !nextTokenStem) {
+    return (
+      <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
+        {ensureSentenceEnd(promptText)}
+      </p>
+    );
+  }
+
+  const word = pick ?? (showBlank ? null : defaultWord);
+  return (
+    <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
+      {nextTokenStem}{" "}
+      {showBlank ? (
+        <span className="inline-block min-w-[6rem] border-b-2 border-dashed border-stone-400 px-1 text-center italic text-stone-400">
+          ________
+        </span>
+      ) : (
+        <span className={pick ? "text-emerald-800" : "text-stone-800"}>{word}</span>
+      )}
+      .
+    </p>
+  );
 }
 
 function ProbabilityBarRow({
@@ -957,22 +1082,38 @@ export default function UrsulineAILesson() {
   }, [pathStep]);
 
   const activePreset = getPathwayPreset(pathwayPresetId);
-  const pathwayStem = pathwayUseCustom ? sanitizePathwayInput(pathwayCustomText) : activePreset.stem;
+  const pathwayPromptText = getPathwayPromptText(
+    activePreset,
+    pathwayUseCustom,
+    pathwayCustomText,
+    pathwayPick,
+  );
+  const teachesNextToken = pathwayTeachesNextToken(activePreset, pathwayUseCustom, pathwayCustomText);
+  const pathwayNextTokenStem = pathwayUseCustom
+    ? teachesNextToken
+      ? sanitizePathwayInput(pathwayCustomText)
+      : null
+    : activePreset.nextTokenStem ?? null;
   const pathwayNextTokens = pathwayUseCustom
-    ? getCustomPathwayNext(pathwayStem)
+    ? getCustomPathwayNext(sanitizePathwayInput(pathwayCustomText))
     : activePreset.nextTokens;
   const pathwayModelTop = pathwayNextTokens[0].word;
-  const stemTokens = tokenizePrompt(pathwayStem);
-  const pickedTokens = pathwayPick ? tokenizePrompt(pathwayPick) : [];
-  const tokens = pathwayPick ? [...stemTokens, ...pickedTokens] : stemTokens;
-
+  const pathwayDefaultWord = activePreset.nextTokenStem ? pathwayNextTokens[0].word : null;
+  const tokens = tokenizePrompt(pathwayPromptText);
+  const stemTokens = pathwayNextTokenStem ? tokenizePrompt(pathwayNextTokenStem) : tokens;
+  const pickedTokens =
+    pathwayPick && pathwayNextTokenStem
+      ? tokens.slice(stemTokens.length)
+      : pathwayPick
+        ? tokenizePrompt(pathwayPick)
+        : [];
   const pathwayTokensVisible =
-    pathwayPick !== null
+    pathStep >= 7
       ? tokens.length
-      : pathStep >= 7
-        ? stemTokens.length
+      : pathwayPick !== null
+        ? tokens.length
         : pathStep >= 2
-          ? Math.min(stemTokens.length, Math.max(0, pathStep - 1))
+          ? Math.min(tokens.length, Math.max(0, pathStep - 1))
           : 0;
   const visibleTokens = tokens.slice(0, pathwayTokensVisible);
   const attentionTokens = computeAttentionWeights(
@@ -981,6 +1122,8 @@ export default function UrsulineAILesson() {
   );
   const showPathwayAttention = pathStep >= 5 || pathwayBarsLive || pathwayPick !== null;
   const showPathwayProbabilities = pathStep >= 6 || pathwayBarsLive || pathwayPick !== null;
+  const showPathwayNextBlank =
+    teachesNextToken && showPathwayProbabilities && !pathwayPick && Boolean(pathwayNextTokenStem);
   const customWordCount = countWords(pathwayCustomText);
   const customInputValid = isValidPathwayCustom(sanitizePathwayInput(pathwayCustomText));
 
@@ -1231,20 +1374,13 @@ export default function UrsulineAILesson() {
         id="predict"
         kicker="01 · Warm-up · Think aloud"
         title="Before AI predicts, your brain predicts."
-        intro={`Pick the word you think comes next in this ${IDEA_HUB_LABEL} sentence. Then see illustrative odds—not a live model.`}
+        intro={`Pick the word you think comes next in this ${IDEA_HUB_LABEL} sentence. Then see how likely each option is.`}
       >
         <InteractiveCard>
-          <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Example simulation — not a real model</p>
           <p className="mb-8 font-serif text-2xl leading-relaxed text-stone-900 md:text-3xl">
-            The students entered the {IDEA_HUB_LABEL} to design a{" "}
-            <span className="mx-2 inline-block align-middle">
-              <span
-                className={`inline-block min-w-[140px] border-b-2 border-dashed px-4 py-1 text-center italic ${
-                  pickedHook ? "border-emerald-700 text-emerald-800" : "border-stone-400 text-stone-400"
-                }`}
-              >
-                {pickedHook || "________"}
-              </span>
+            {PREDICT_IDEA_SENTENCE_STEM}{" "}
+            <span className={pickedHook ? "text-emerald-800" : "text-stone-500"}>
+              {pickedHook ?? PREDICT_IDEA_DEFAULT_WORD}
             </span>
             .
           </p>
@@ -1437,8 +1573,6 @@ export default function UrsulineAILesson() {
             Inference is what happens at prompt time. Training happens earlier, on many examples, to set the weights —
             not on every message you send.
           </p>
-          <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Example simulation — not a real model</p>
-
           <div className="mb-4">
             <p className="mb-2 text-xs text-stone-500">Choose a prompt or write your own</p>
             <div className="flex flex-wrap gap-2">
@@ -1486,7 +1620,7 @@ export default function UrsulineAILesson() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") runPathway();
                 }}
-                placeholder={`e.g. We used AI in the ${IDEA_HUB_LABEL} to brainstorm ideas for`}
+                placeholder={`e.g. Before the science fair, we asked AI to explain photosynthesis.`}
                 className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-700"
               />
               <p className="mt-1.5 text-xs text-stone-500">
@@ -1514,17 +1648,14 @@ export default function UrsulineAILesson() {
           )}
 
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
-              {pathwayStem || "Enter a prompt above"}{" "}
-              <span
-                className={`inline-block min-w-[6rem] border-b-2 border-dashed px-1 text-center ${
-                  pathwayPick ? "border-emerald-700 text-emerald-800" : "border-stone-400 text-stone-400 italic"
-                }`}
-              >
-                {pathwayPick || "________"}
-              </span>
-              .
-            </p>
+            <PathwayPromptSentence
+              promptText={pathwayPromptText}
+              teachesNextToken={teachesNextToken}
+              nextTokenStem={pathwayNextTokenStem}
+              pick={pathwayPick}
+              defaultWord={pathwayDefaultWord}
+              showBlank={showPathwayNextBlank}
+            />
             <div className="flex shrink-0 gap-2">
               <button
                 type="button"
@@ -1629,7 +1760,7 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayAttention ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · weights on tokens</div>
-              <p className="mb-3 text-xs text-stone-500">Example weights for words in this sentence (not a live model).</p>
+              <p className="mb-3 text-xs text-stone-500">Weights show which words the model focuses on.</p>
               {attentionTokens.length > 0 ? (
                 <div className="space-y-2">
                   {attentionTokens.map((row, i) => (
@@ -1654,8 +1785,12 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayProbabilities ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-                <div className="text-xs uppercase tracking-widest text-stone-500">Probability · next token</div>
-                <span className="text-xs text-stone-500">Try it — click or tap your pick</span>
+                <div className="text-xs uppercase tracking-widest text-stone-500">
+                  {teachesNextToken ? "Probability · next token" : "Probability · word weights"}
+                </div>
+                <span className="text-xs text-stone-500">
+                  {teachesNextToken ? "What word might come next? Pick one." : "Tap a word to explore its weight."}
+                </span>
               </div>
               <div className="mb-3 flex flex-wrap gap-2">
                 {pathwayNextTokens.map((p) => (
@@ -1704,7 +1839,9 @@ export default function UrsulineAILesson() {
                   )}
                 </p>
               )}
-              <p className="mt-2 text-xs text-stone-500">Illustrative odds only — not output from a live model.</p>
+              <p className="mt-2 text-xs text-stone-500">
+                These numbers illustrate how inference works—highest probability is not the same as the best answer.
+              </p>
             </div>
           </div>
 
@@ -1718,15 +1855,9 @@ export default function UrsulineAILesson() {
                   </span>
                 )}
               </div>
-              {(pathStep >= 6 || pathwayPick) && (
+              {(pathStep >= 6 || pathwayPick || pathStep >= 2) && pathwayPromptText && (
                 <p className="mb-3 font-serif text-base leading-snug text-stone-800">
-                  {pathwayStem}{" "}
-                  {pathwayPick ? (
-                    <span className="text-emerald-800">{pathwayPick}</span>
-                  ) : (
-                    <span className="italic text-stone-400">________</span>
-                  )}
-                  .
+                  {ensureSentenceEnd(pathwayPromptText)}
                 </p>
               )}
               <p className="text-sm leading-relaxed text-stone-700">
