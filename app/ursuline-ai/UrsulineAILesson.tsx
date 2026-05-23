@@ -54,7 +54,7 @@ const SCENARIOS: { text: string; answer: Signal }[] = [
   { text: "AI outlines ideas for a project I still have to develop.", answer: "yellow" },
   { text: "AI summarizes an article when my teacher says it is okay.", answer: "yellow" },
   { text: "AI writes my essay and I turn it in as my own.", answer: "red" },
-  { text: "AI gives private medical advice about someone I know.", answer: "red" },
+  { text: "I share private health details or ask AI for medical advice about someone I know.", answer: "red" },
 ];
 
 const SERVIAM = [
@@ -84,6 +84,18 @@ const AI_LEADERS = [
   { name: "Fei-Fei Li", focus: "computer vision and human-centered AI" },
   { name: "Timnit Gebru", focus: "AI ethics and responsible technology" },
 ] as const;
+
+const AI_PROBLEM_AREAS = [
+  { id: "fairness", label: "Fairness" },
+  { id: "health", label: "Health" },
+  { id: "climate", label: "Climate" },
+  { id: "education", label: "Education" },
+  { id: "creativity", label: "Creativity" },
+  { id: "accessibility", label: "Accessibility" },
+] as const;
+
+const AI_PROBLEM_AFFIRMATION =
+  "Leaders in AI start with a problem they care about.";
 
 const TEACHER_PLANS = [
   {
@@ -727,6 +739,7 @@ export default function UrsulineAILesson() {
   const [decisions, setDecisions] = useState<Signal[]>(Array(SCENARIOS.length).fill(null));
   const [reflection, setReflection] = useState({ power: "", limit: "", promise: "" });
   const [serviamChallenge, setServiamChallenge] = useState("");
+  const [aiProblemFocus, setAiProblemFocus] = useState<string | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -822,7 +835,7 @@ export default function UrsulineAILesson() {
   const pathwayTokensVisible =
     pathwayPick !== null
       ? tokens.length
-      : pathStep >= 6
+      : pathStep >= 7
         ? stemTokens.length
         : pathStep >= 2
           ? Math.min(stemTokens.length, Math.max(0, pathStep - 1))
@@ -1030,8 +1043,8 @@ export default function UrsulineAILesson() {
             AI is already shaping daily life.
           </h2>
           <p className="mb-8 max-w-xl text-stone-600">
-            AI is powerful because it can generate. Human judgment determines whether that output is
-            accurate, ethical, and useful.
+            Many AI systems are powerful because they can generate. Human judgment determines whether that
+            output is accurate, ethical, and useful.
           </p>
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 md:grid-cols-4">
             {["School", "Search", "Social", "Maps", "Writing", "Coding", "Photos", "Music"].map((w) => (
@@ -1119,7 +1132,7 @@ export default function UrsulineAILesson() {
         id="define"
         kicker="02 · Mini-lesson · Core concept"
         title="What is AI?"
-        intro="AI uses data and math to find patterns, make predictions, generate content, and support human decisions. It can be powerful, but it does not replace human judgment. Think of it as a fast pattern detective, not a person with wisdom, feelings, or conscience."
+        intro="Many AI systems use data and math to find patterns, make predictions, generate content, or support decisions. They can be powerful, but they do not replace human judgment. Think of them as fast pattern detectives, not people with wisdom, feelings, or conscience."
         className="bg-stone-50"
       >
         <InteractiveCard>
@@ -1760,8 +1773,8 @@ export default function UrsulineAILesson() {
       <section className="border-t border-stone-200 bg-white">
         <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-24">
           <p className="font-serif text-2xl leading-tight tracking-tight text-stone-900 md:text-4xl">
-            AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how
-            to use it.
+            Many AI systems are not magic. They are math trained on patterns. Human wisdom decides whether,
+            when, and how to use them.
           </p>
         </div>
       </section>
@@ -1877,16 +1890,72 @@ export default function UrsulineAILesson() {
         intro="AI is not just a tool students use. It is a field students can lead. Computer scientists, engineers, designers, ethicists, physicians, artists, and entrepreneurs are all shaping how intelligent tools are built and used."
         className="bg-stone-50"
       >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {AI_LEADERS.map((leader) => (
+        <div className="space-y-8">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {AI_LEADERS.map((leader) => (
+              <div
+                key={leader.name}
+                className={`rounded-2xl border border-stone-200 bg-white p-5 sm:p-6 ${CARD_LIFT} md:hover:border-emerald-200`}
+              >
+                <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
+                <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className={`rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 to-white p-5 sm:rounded-3xl sm:p-8 ${CARD_LIFT} md:hover:border-emerald-300`}
+          >
+            <p className="mb-1 text-xs uppercase tracking-widest text-emerald-800">Your turn</p>
+            <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
+              Which kind of AI problem would you want to help solve: fairness, health, climate,
+              education, creativity, or accessibility?
+            </p>
+            <p className="mt-3 text-sm text-stone-600">Tap one area that matters to you.</p>
             <div
-              key={leader.name}
-              className={`rounded-2xl border border-stone-200 bg-white p-5 sm:p-6 ${CARD_LIFT} md:hover:border-emerald-200`}
+              className="mt-6 flex flex-wrap gap-2"
+              role="group"
+              aria-label="AI problem areas you want to help solve"
             >
-              <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
-              <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
+              {AI_PROBLEM_AREAS.map((area) => {
+                const selected = aiProblemFocus === area.id;
+                return (
+                  <button
+                    key={area.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setAiProblemFocus(area.id)}
+                    className={`min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-[0.98] motion-reduce:active:scale-100 ${
+                      selected
+                        ? "border-emerald-800 bg-emerald-800 text-white shadow-sm"
+                        : "border-stone-300 bg-white text-stone-700 hover:border-emerald-700 hover:text-emerald-900"
+                    }`}
+                  >
+                    {area.label}
+                  </button>
+                );
+              })}
             </div>
-          ))}
+            {aiProblemFocus && (
+              <div
+                className="mt-6 rounded-xl border border-emerald-200 bg-white/90 px-4 py-4 sm:px-5 sm:py-5"
+                role="status"
+                aria-live="polite"
+              >
+                <p className="text-sm leading-relaxed text-emerald-900">
+                  <span className="font-medium">
+                    {AI_PROBLEM_AREAS.find((a) => a.id === aiProblemFocus)?.label}
+                  </span>
+                  {" — "}
+                  {AI_PROBLEM_AFFIRMATION}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-stone-600">
+                  You do not need a title yet. Naming the problem you care about is how future leaders
+                  in AI begin.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </LessonSection>
 
@@ -1913,7 +1982,7 @@ export default function UrsulineAILesson() {
                   Design an AI tool that serves someone.
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-stone-700 sm:text-base">
-                  Choose one group: a new student, an elderly neighbor, a student with a learning difference, a
+                  Choose one group: a new student, an older neighbor, a student with a learning difference, a
                   busy teacher, or a local nonprofit. What would your AI tool help them do? What could go wrong? How
                   would you keep it truthful, fair, and kind?
                 </p>

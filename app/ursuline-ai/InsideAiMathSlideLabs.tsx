@@ -30,6 +30,8 @@ const CLUSTER_COLORS: Record<string, { fill: string; stroke: string }> = {
   Other: { fill: "#f5f5f4", stroke: "#d6d3d1" },
 };
 
+const TRAINING_PATHWAY_STEPS = ["Predict", "Measure loss", "Adjust weights", "Repeat"] as const;
+
 function cosine(a: WordPoint, b: WordPoint) {
   const dot = a.x * b.x + a.y * b.y;
   const mag = Math.sqrt(a.x * a.x + a.y * a.y) * Math.sqrt(b.x * b.x + b.y * b.y);
@@ -65,6 +67,38 @@ function LabShell({
   );
 }
 
+function PathwayTrack({
+  variant,
+  title,
+  intro,
+  children,
+}: {
+  variant: "generation" | "training";
+  title: string;
+  intro: string;
+  children: ReactNode;
+}) {
+  const isGeneration = variant === "generation";
+  return (
+    <div
+      className={`rounded-3xl border p-4 sm:p-6 md:p-8 ${
+        isGeneration ? "border-emerald-200/80 bg-emerald-50/40" : "border-amber-200/80 bg-amber-50/30"
+      }`}
+    >
+      <p
+        className={`text-xs font-semibold uppercase tracking-widest ${
+          isGeneration ? "text-emerald-800" : "text-amber-900"
+        }`}
+      >
+        {isGeneration ? "Generation pathway · inference" : "Training pathway · learning weights"}
+      </p>
+      <h3 className="mt-2 font-serif text-xl text-stone-900 sm:text-2xl">{title}</h3>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-600">{intro}</p>
+      <div className="mt-6 space-y-6">{children}</div>
+    </div>
+  );
+}
+
 export function VectorSimilarityLab() {
   const [firstWord, setFirstWord] = useState(VECTOR_LAB_TOKEN_A);
   const [secondWord, setSecondWord] = useState(VECTOR_LAB_TOKEN_B);
@@ -87,9 +121,9 @@ export function VectorSimilarityLab() {
 
   return (
     <LabShell
-      kicker="05 · 06 · Tokens and similarity"
+      kicker="05 · 06 · Tokens → vectors (generation)"
       title="Tokens become vectors, then geometry finds patterns"
-      hint="Close vectors = related patterns. Similarity is calculated, not felt."
+      hint="Close vectors = related patterns. Similarity is calculated, not felt — this is inference math, not training."
     >
       <div className="mb-5 rounded-2xl border border-stone-200 bg-stone-50 p-4">
         <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Text to tokens</p>
@@ -104,7 +138,7 @@ export function VectorSimilarityLab() {
           ))}
         </div>
         <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Tokens become token IDs, then embeddings, which are vectors. Example: robot = [0.12, -0.44, 0.81]. Real models use
+          Tokens become token IDs, then embeddings (vectors). Example: robot = [0.12, -0.44, 0.81]. Real models use
           many more dimensions.
         </p>
       </div>
@@ -263,21 +297,21 @@ export function TinyNeuronTrainer() {
 
   return (
     <LabShell
-      kicker="07 · 08 · Weights and loss"
-      title="Weights transform inputs, then training learns from error"
-      hint="z = w1×x1 + w2×x2 + b. Predict, measure loss, adjust, repeat."
+      kicker="07 · 08 · Loss and weight updates (training)"
+      title="Training learns weights from error — not from your prompt"
+      hint="Predict → measure loss → adjust weights → repeat. This loop happens before inference, on many examples."
     >
       <p className="mb-4 text-sm leading-relaxed text-stone-600">
-        If you were deciding whether a source is trustworthy, which signals should get more weight?
-        Change the weights and run training. Training is feedback at scale, like revising your work after
-        feedback, but mathematical and repeated many times.
+        If you were deciding whether a source is trustworthy, which signals should get more weight? Change the weights
+        and run training steps. Training is feedback at scale — mathematical and repeated many times — not the same as
+        asking the model a question at prompt time.
       </p>
 
       <div className="mb-4 flex flex-wrap gap-2 text-xs uppercase tracking-widest text-stone-500">
-        {["Predict", "Measure loss", "Adjust", "Repeat"].map((step, i) => (
+        {TRAINING_PATHWAY_STEPS.map((step, i) => (
           <span key={step} className="flex items-center gap-2">
-            <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-900">{step}</span>
-            {i < 3 && <span className="text-stone-400">→</span>}
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-950">{step}</span>
+            {i < TRAINING_PATHWAY_STEPS.length - 1 && <span className="text-stone-400">→</span>}
           </span>
         ))}
       </div>
@@ -370,9 +404,22 @@ export function TinyNeuronTrainer() {
 
 export default function InsideAiMathSlideLabs() {
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <VectorSimilarityLab />
-      <TinyNeuronTrainer />
+    <div className="space-y-8 sm:space-y-10">
+      <PathwayTrack
+        variant="generation"
+        title="What happens when you prompt"
+        intro="Prompt → tokens → token IDs → vectors → attention → probability → response → human review. The vector lab below shows how token embeddings sit in space during inference."
+      >
+        <VectorSimilarityLab />
+      </PathwayTrack>
+
+      <PathwayTrack
+        variant="training"
+        title="How the model learns before you prompt"
+        intro="Predict → measure loss → adjust weights → repeat. Training updates weights on many labeled examples. Loss belongs here — not in the generation flow above."
+      >
+        <TinyNeuronTrainer />
+      </PathwayTrack>
     </div>
   );
 }
