@@ -99,13 +99,13 @@ const AI_PROBLEM_AFFIRMATION =
 
 const TEACHER_PLANS = [
   {
-    part: "Pt 1",
+    part: "Part 1",
     title: "AI, the Brain, and Serviam",
     description: "Timing, objectives, and facilitation notes for Part 1.",
     href: "/artifacts/team/ursuline_pt1_teacher_lesson_plan.docx",
   },
   {
-    part: "Pt 2",
+    part: "Part 2",
     title: "Inside AI",
     description: "Timing, objectives, math and CS activities, and extension notes for Part 2.",
     href: "/artifacts/team/ursuline_part2_teacher_lesson_plan.docx",
@@ -702,7 +702,7 @@ function PartBanner({
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-end md:justify-between md:py-12">
         <div>
           <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${dark ? "text-amber-300" : "text-emerald-800"}`}>
-            Pt {part}
+            Part {part}
           </p>
           <h2 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl md:text-4xl">{title}</h2>
         </div>
@@ -926,7 +926,7 @@ export default function UrsulineAILesson() {
                 />
                 <HeroJumpCard
                   href="#pt2"
-                  title="Go Deeper: Inside AI"
+                  title="Optional Extension: Inside AI"
                   titleClass="text-stone-800"
                   grades="Upper School / AP STEM extension"
                   description="A math, science, and code lab for vectors, similarity, weights, and training."
@@ -964,13 +964,13 @@ export default function UrsulineAILesson() {
       <div id="pt1" className="scroll-mt-28">
         <PartBanner
           part={1}
-          title="AI Literacy"
+          title="AI, the Brain, and Serviam"
           subtitle="AI, the Brain, and Serviam · grades 7–12"
         />
 
       <section id="pt1-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
         <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
-          <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 1 · Slides</p>
+          <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Part 1 · Slides</p>
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h3 className="font-serif text-2xl text-stone-900 md:text-3xl">AI, the Brain, and Serviam</h3>
@@ -992,7 +992,7 @@ export default function UrsulineAILesson() {
             <div className="aspect-video w-full">
               <iframe
                 src={PT1_GAMMA_EMBED}
-                title="AI, the Brain, and Serviam, Pt 1 slides"
+                title="AI, the Brain, and Serviam, Part 1 slides"
                 className="h-full w-full"
                 allow="fullscreen"
                 loading="lazy"
@@ -1779,10 +1779,10 @@ export default function UrsulineAILesson() {
         </div>
       </section>
 
-      {/* Pt 1 handout */}
+      {/* Part 1 handout */}
       <section id="pt1-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
-          <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Pt 1 · Handout</div>
+          <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 1 · Handout</div>
           <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Serviam Use Card</h2>
           <div className="max-w-xl">
             <StudentHandoutCard {...PT1_HANDOUT} />
@@ -1801,7 +1801,7 @@ export default function UrsulineAILesson() {
 
         <section className="border-t border-stone-200 bg-white">
           <div className="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16 md:py-20">
-            <p className="mb-4 text-xs uppercase tracking-widest text-stone-500">Pt 2 · Essential question</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-stone-500">Part 2 · Essential question</p>
             <p className="font-serif text-xl leading-tight text-stone-900 sm:text-2xl md:text-4xl">
               How does language become math, and math become a response?
             </p>
@@ -1810,7 +1810,7 @@ export default function UrsulineAILesson() {
 
         <section id="pt2-deck" className="scroll-mt-24 border-t border-stone-200 bg-stone-50 sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12 md:py-16">
-            <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 2 · Slides</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Part 2 · Slides</p>
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <h3 className="font-serif text-2xl text-stone-900 md:text-3xl">Inside AI</h3>
               {pt2DeckReady && (
@@ -1830,7 +1830,7 @@ export default function UrsulineAILesson() {
                 <div className="aspect-video w-full">
                   <iframe
                     src={PT2_GAMMA_EMBED}
-                    title="Inside AI, Pt 2 slides"
+                    title="Inside AI, Part 2 slides"
                     className="h-full w-full"
                     allow="fullscreen"
                     loading="lazy"
@@ -1863,7 +1863,7 @@ export default function UrsulineAILesson() {
 
         <section id="pt2-labs" className="scroll-mt-24 border-t border-stone-200 bg-stone-50 sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12 md:py-16">
-            <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 2 · Interactive labs</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Part 2 · Interactive labs</p>
             <h3 className="mb-3 font-serif text-2xl text-stone-900 md:text-3xl">Try the math behind the model</h3>
             <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
               These labs match the Inside AI lesson. Change the inputs and watch how similarity and training work.
@@ -1874,7 +1874,7 @@ export default function UrsulineAILesson() {
 
         <section id="pt2-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
-            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Pt 2 · Handout</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 2 · Handout</p>
             <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Inside AI Lab Notes</h2>
             <div className="max-w-xl">
               <StudentHandoutCard {...PT2_HANDOUT} />
@@ -2015,7 +2015,7 @@ export default function UrsulineAILesson() {
             For Leadership Review
           </p>
           <h2 id="leadership-review-heading" className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">
-            Teacher lesson plans — Pt 1 &amp; Pt 2
+            Teacher lesson plans — Part 1 &amp; Part 2
           </h2>
           <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
             Facilitation guides for leadership reviewers evaluating this submission. These teacher
