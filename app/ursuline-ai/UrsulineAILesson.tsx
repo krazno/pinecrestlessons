@@ -1638,54 +1638,6 @@ export default function UrsulineAILesson() {
             </div>
           )}
 
-          <motion.div className="mt-8 border-t border-stone-200 pt-8" aria-labelledby="audit-word-analysis-heading">
-            <p
-              id="audit-word-analysis-heading"
-              className="mb-1 font-serif text-lg leading-relaxed text-stone-900 sm:text-xl"
-            >
-              Which word is most misleading: understands, remembers, always, or best?
-            </p>
-            <p className="mb-4 text-sm text-stone-600">Click or tap one word. There is no single right answer.</p>
-            <div
-              className="flex flex-wrap gap-2"
-              role="radiogroup"
-              aria-labelledby="audit-word-analysis-heading"
-            >
-              {AUDIT_MISLEADING_WORDS.map((word) => {
-                const selected = auditMisleadingWord === word;
-                return (
-                  <button
-                    key={word}
-                    type="button"
-                    role="radio"
-                    aria-checked={selected}
-                    onClick={() => setAuditMisleadingWord(word)}
-                    className={`min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-[0.98] motion-reduce:active:scale-100 ${
-                      selected
-                        ? "border-emerald-800 bg-emerald-800 text-white shadow-sm"
-                        : "border-stone-300 bg-white text-stone-700 hover:border-emerald-700 hover:text-emerald-900"
-                    }`}
-                  >
-                    {word}
-                  </button>
-                );
-              })}
-            </div>
-            {auditMisleadingWord && (
-              <div
-                className="mt-5 rounded-xl border border-stone-200 bg-white px-4 py-4 sm:px-5 sm:py-5"
-                role="status"
-                aria-live="polite"
-              >
-                <p className="text-sm leading-relaxed text-stone-800">
-                  {AUDIT_WORD_FEEDBACK[auditMisleadingWord]}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-stone-500">
-                  Any of these can mislead. The strongest critique names why.
-                </p>
-              </motion.div>
-            )}
-          </motion.div>
         </InteractiveCard>
       </LessonSection>
 
@@ -1731,7 +1683,7 @@ export default function UrsulineAILesson() {
       <LessonSection
         id="practice"
         kicker="06 · Green, yellow, red"
-        title="Red, yellow, green AI choices."
+        title="Green, yellow, red AI choices."
         intro="The color is about how you use the tool, not the tool itself. Mark each scenario."
       >
         <InteractiveCard className="space-y-3 !p-6 md:!p-8">
