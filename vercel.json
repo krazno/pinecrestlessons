@@ -3,6 +3,53 @@
   "outputDirectory": "out",
   "cleanUrls": true,
   "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/ursuline-ai",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/ursuline-ai/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/ursuline-ai/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/ursuline-ai-assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/artifacts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "redirects": [
     { "source": "/pinecrest", "destination": "/pinecrest-teacher", "permanent": true },
     { "source": "/pinecrest/", "destination": "/pinecrest-teacher/", "permanent": true },
