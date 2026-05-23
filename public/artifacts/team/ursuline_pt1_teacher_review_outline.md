@@ -7,7 +7,7 @@ Purpose: Leader-facing companion for Part 1. It explains the rationale, research
 A 20-minute student-facing lesson on AI literacy, how language models work at a high level, and judicious use. The plan stays teachable while supporting deeper extension in Part 2.
 
 ## 2. The core thesis
-AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how to use it.
+AI is powerful because it can generate. Human judgment determines whether that output is accurate, ethical, and useful.
 
 ## 3. Ursuline fit
 The lesson connects AI literacy to Serviam, intellectual curiosity, respect, compassion, integrity, whole-person education, and young women as builders, critics, and leaders.

@@ -6,6 +6,10 @@ type WordPoint = { word: string; x: number; y: number; cluster: string };
 
 const DECK_TOKENS = ["Explain", "photosynthesis", "using", "basketball", "analogy"];
 
+/** Part 2 vector lab: matches deck question (code+algorithm vs code+cupcake). */
+const VECTOR_LAB_TOKEN_A = "code";
+const VECTOR_LAB_TOKEN_B = "algorithm";
+
 const wordPoints: WordPoint[] = [
   { word: "code", x: -0.55, y: 0.42, cluster: "CS" },
   { word: "function", x: -0.38, y: 0.55, cluster: "CS" },
@@ -52,9 +56,9 @@ function LabShell({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-3xl border border-stone-200 bg-white p-6 md:p-8">
+    <section className="rounded-2xl border border-stone-200 bg-white p-4 sm:rounded-3xl sm:p-6 md:p-8">
       <p className="text-xs uppercase tracking-widest text-amber-700">{kicker}</p>
-      <h3 className="mt-2 font-serif text-2xl text-stone-900 md:text-3xl">{title}</h3>
+      <h3 className="mt-2 font-serif text-xl text-stone-900 sm:text-2xl md:text-3xl">{title}</h3>
       <p className="mt-1 text-sm text-stone-500">{hint}</p>
       <div className="mt-6">{children}</div>
     </section>
@@ -62,8 +66,8 @@ function LabShell({
 }
 
 export function VectorSimilarityLab() {
-  const [firstWord, setFirstWord] = useState("code");
-  const [secondWord, setSecondWord] = useState("algorithm");
+  const [firstWord, setFirstWord] = useState(VECTOR_LAB_TOKEN_A);
+  const [secondWord, setSecondWord] = useState(VECTOR_LAB_TOKEN_B);
 
   const first = wordPoints.find((p) => p.word === firstWord) ?? wordPoints[0];
   const second = wordPoints.find((p) => p.word === secondWord) ?? wordPoints[1];
@@ -73,9 +77,9 @@ export function VectorSimilarityLab() {
     cos > 0.85 ? "Very close" : cos > 0.45 ? "Related" : cos > 0 ? "Weak" : "Far apart";
 
   const deckQuestion =
-    firstWord === "code" && secondWord === "cupcake"
+    firstWord === VECTOR_LAB_TOKEN_A && secondWord === "cupcake"
       ? "Code and cupcake sit far apart. The model calculates distance, it does not feel meaning."
-      : firstWord === "code" && secondWord === "algorithm"
+      : firstWord === VECTOR_LAB_TOKEN_A && secondWord === VECTOR_LAB_TOKEN_B
         ? "Code and algorithm belong in the same cluster, like the slide deck example."
         : first.cluster === second.cluster
           ? `Both words sit in the ${first.cluster} cluster on this teaching map.`
@@ -100,7 +104,7 @@ export function VectorSimilarityLab() {
           ))}
         </div>
         <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Tokens become numbers, then vectors. Example: robot = [0.12, -0.44, 0.81]. Real models use
+          Tokens become token IDs, then embeddings, which are vectors. Example: robot = [0.12, -0.44, 0.81]. Real models use
           many more dimensions.
         </p>
       </div>
@@ -112,28 +116,39 @@ export function VectorSimilarityLab() {
             <span className="font-medium">code and cupcake</span>?
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { label: "Token A", value: firstWord, set: setFirstWord },
-              { label: "Token B", value: secondWord, set: setSecondWord },
-            ].map((field) => (
-              <label key={field.label} className="text-sm text-stone-700">
-                {field.label}
-                <select
-                  value={field.value}
-                  onChange={(e) => field.set(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-700"
-                >
-                  {wordPoints.map((p) => (
-                    <option key={p.word} value={p.word}>
-                      {p.word}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
+            <label htmlFor="vector-lab-token-a" className="text-sm text-stone-700">
+              Token A
+              <select
+                id="vector-lab-token-a"
+                value={firstWord}
+                onChange={(e) => setFirstWord(e.target.value)}
+                className="mt-2 min-h-[44px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-emerald-700"
+              >
+                {wordPoints.map((p) => (
+                  <option key={p.word} value={p.word}>
+                    {p.word}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label htmlFor="vector-lab-token-b" className="text-sm text-stone-700">
+              Token B
+              <select
+                id="vector-lab-token-b"
+                value={secondWord}
+                onChange={(e) => setSecondWord(e.target.value)}
+                className="mt-2 min-h-[44px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-emerald-700"
+              >
+                {wordPoints.map((p) => (
+                  <option key={p.word} value={p.word}>
+                    {p.word}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <div className="mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white">
-            <svg viewBox="0 0 500 500" className="h-[320px] w-full" role="img" aria-label="Embedding map">
+            <svg viewBox="0 0 500 500" className="h-[240px] w-full max-w-full sm:h-[320px]" role="img" aria-label="Embedding map">
               <line x1="40" x2="460" y1="250" y2="250" stroke="#d6d3d1" strokeWidth="2" />
               <line x1="250" x2="250" y1="40" y2="460" stroke="#d6d3d1" strokeWidth="2" />
               <line x1="250" y1="250" x2={toSvgX(first.x)} y2={toSvgY(first.y)} stroke="#065f46" strokeWidth="3" />
@@ -289,7 +304,7 @@ export function TinyNeuronTrainer() {
         </div>
         <div className="space-y-4">
           <div className="rounded-2xl bg-emerald-900 p-4 text-white">
-            <p className="font-mono text-sm">
+            <p className="break-words font-mono text-xs sm:text-sm">
               z = ({w1.toFixed(2)} × {evidence.toFixed(2)}) + ({w2.toFixed(2)} × {crossCheck.toFixed(2)}) +{" "}
               {bias.toFixed(2)}
             </p>
@@ -307,19 +322,20 @@ export function TinyNeuronTrainer() {
                 <p className="font-semibold tabular-nums">{loss.toFixed(2)}</p>
               </div>
             </div>
+            <p className="mt-2 text-right text-xs text-emerald-200/70">Loss = ½ × error²</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => trainStep(1)}
-              className="rounded-full bg-emerald-800 px-4 py-2 text-sm text-white hover:bg-emerald-700"
+              className="inline-flex min-h-[44px] items-center rounded-full bg-emerald-800 px-4 py-2.5 text-sm text-white hover:bg-emerald-700"
             >
               1 step
             </button>
             <button
               type="button"
               onClick={() => trainStep(20)}
-              className="rounded-full bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-500"
+              className="inline-flex min-h-[44px] items-center rounded-full bg-amber-600 px-4 py-2.5 text-sm text-white hover:bg-amber-500"
             >
               20 steps
             </button>
@@ -331,7 +347,7 @@ export function TinyNeuronTrainer() {
                 setBias(0.1);
                 setLossHistory([]);
               }}
-              className="rounded-full border border-stone-300 px-4 py-2 text-sm text-stone-600"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-stone-300 px-4 py-2.5 text-sm text-stone-600"
             >
               Reset
             </button>
@@ -354,7 +370,7 @@ export function TinyNeuronTrainer() {
 
 export default function InsideAiMathSlideLabs() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       <VectorSimilarityLab />
       <TinyNeuronTrainer />
     </div>

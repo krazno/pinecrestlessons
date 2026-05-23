@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import InsideAiMathSlideLabs from "./InsideAiMathSlideLabs";
-import TeamLeadershipSection from "./TeamLeadershipSection";
 import {
   ArrowRight,
   Check,
@@ -20,20 +19,14 @@ import {
 type Signal = "green" | "yellow" | "red" | null;
 
 const NAV_PT1 = [
-  { href: "#predict", label: "Predict" },
-  { href: "#define", label: "Define" },
-  { href: "#pathway", label: "Pathway" },
-  { href: "#audit", label: "Audit" },
-  { href: "#serviam", label: "Decide" },
-  { href: "#practice", label: "Practice" },
-  { href: "#reflect", label: "Reflect" },
   { href: "#pt1-deck", label: "Slides" },
-  { href: "#materials", label: "Handout" },
+  { href: "#pt1-handout", label: "Handout" },
 ];
 
 const NAV_PT2 = [
   { href: "#pt2-deck", label: "Slides" },
   { href: "#pt2-labs", label: "Labs" },
+  { href: "#pt2-handout", label: "Handout" },
 ];
 
 const PT1_GAMMA_EMBED = "https://gamma.app/embed/bdlnsqv1f45r7to";
@@ -79,16 +72,30 @@ const SERVIAM = [
   { letter: "M", word: "Make", detail: "your work serve learning and others." },
 ];
 
-const MATERIALS = [
+const PT1_HANDOUT = {
+  title: "Serviam Use Card",
+  sub: "Your one-page guide for using AI with integrity.",
+  href: "/artifacts/ursuline_serviam_ai_student_handout.docx",
+};
+
+const PT2_HANDOUT = {
+  title: "Inside AI Lab Notes",
+  sub: "Vectors, weights, and training worksheet for class.",
+  href: "/artifacts/ursuline_part2_student_handout.docx",
+};
+
+const TEACHER_PLANS = [
   {
-    title: "Serviam Use Card",
-    sub: "Pt 1 · Your one-page guide for using AI with integrity.",
-    href: "/artifacts/ursuline_serviam_ai_student_handout.docx",
+    part: "Pt 1",
+    title: "AI, the Brain, and Serviam",
+    description: "Timing, objectives, and facilitation notes for Part 1.",
+    href: "/artifacts/team/ursuline_pt1_teacher_lesson_plan.docx",
   },
   {
-    title: "Inside AI Lab Notes",
-    sub: "Pt 2 · Vectors, weights, and training worksheet for class.",
-    href: "/artifacts/ursuline_part2_student_handout.docx",
+    part: "Pt 2",
+    title: "Inside AI",
+    description: "Timing, objectives, math and CS activities, and extension notes for Part 2.",
+    href: "/artifacts/team/ursuline_part2_teacher_lesson_plan.docx",
   },
 ];
 
@@ -131,18 +138,20 @@ function fakeIdFor(w: string) {
 
 function HeroJumpCard({
   href,
-  label,
-  labelClass,
+  title,
+  titleClass,
+  grades,
+  format,
   description,
-  meta,
   buttonLabel,
   buttonClass,
 }: {
   href: string;
-  label: string;
-  labelClass: string;
+  title: string;
+  titleClass: string;
+  grades: string;
+  format?: string;
   description: string;
-  meta: string;
   buttonLabel: string;
   buttonClass: string;
 }) {
@@ -151,11 +160,14 @@ function HeroJumpCard({
       href={href}
       className="group flex min-h-[168px] flex-col rounded-2xl border border-stone-200 bg-white/80 p-5 backdrop-blur-sm transition hover:border-stone-300 hover:bg-white hover:shadow-sm"
     >
-      <p className={`text-xs font-semibold uppercase tracking-widest ${labelClass}`}>{label}</p>
+      <p className={`font-serif text-lg leading-snug text-stone-900 ${titleClass}`}>{title}</p>
+      <p className="mt-1.5 text-xs font-medium text-stone-600">{grades}</p>
+      {format ? (
+        <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-stone-500">{format}</p>
+      ) : null}
       <p className="mt-2 text-sm leading-relaxed text-stone-700">{description}</p>
-      <p className="mt-1 text-xs text-stone-500">{meta}</p>
       <span
-        className={`mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors sm:w-fit ${buttonClass}`}
+        className={`mt-auto inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors sm:w-fit ${buttonClass}`}
       >
         {buttonLabel}
         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -180,12 +192,12 @@ function LessonSection({
   className?: string;
 }) {
   return (
-    <section id={id} className={`scroll-mt-28 border-t border-stone-200 ${className}`}>
-      <div className="mx-auto max-w-5xl px-6 py-20 md:py-24">
-        <div className="grid gap-12 md:grid-cols-12">
+    <section id={id} className={`scroll-mt-24 border-t border-stone-200 sm:scroll-mt-28 ${className}`}>
+      <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-4">
             <div className="mb-4 text-xs uppercase tracking-widest text-amber-700">{kicker}</div>
-            <h2 className="mb-4 font-serif text-4xl leading-tight text-stone-900">{title}</h2>
+            <h2 className="mb-4 font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">{title}</h2>
             <p className="leading-relaxed text-stone-600">{intro}</p>
           </div>
           <div className="md:col-span-8">{children}</div>
@@ -197,9 +209,35 @@ function LessonSection({
 
 function InteractiveCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-3xl border border-stone-200 bg-stone-50 p-8 md:p-10 ${className}`}>
+    <div className={`rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:rounded-3xl sm:p-8 md:p-10 ${className}`}>
       {children}
     </div>
+  );
+}
+
+function StudentHandoutCard({
+  title,
+  sub,
+  href,
+}: {
+  title: string;
+  sub: string;
+  href: string;
+}) {
+  return (
+    <a
+      href={href}
+      download
+      className="group block rounded-2xl border border-stone-200 bg-white p-5 transition hover:border-emerald-200 hover:bg-emerald-50/30 sm:p-8"
+    >
+      <FileText className="mb-4 h-5 w-5 text-emerald-800" strokeWidth={1.5} />
+      <div className="mb-1 font-serif text-xl">{title}</div>
+      <div className="mb-4 text-sm text-stone-500">{sub}</div>
+      <div className="inline-flex items-center gap-2 text-xs text-stone-700 transition group-hover:text-emerald-800">
+        <Download className="h-3 w-3" />
+        Download
+      </div>
+    </a>
   );
 }
 
@@ -219,14 +257,14 @@ function PartBanner({
     <div
       className={`border-b border-stone-200 ${dark ? "bg-stone-900 text-stone-50" : "bg-white text-stone-900"}`}
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-10 md:flex-row md:items-end md:justify-between md:py-12">
+      <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-end md:justify-between md:py-12">
         <div>
           <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${dark ? "text-amber-300" : "text-emerald-800"}`}>
             Pt {part}
           </p>
-          <h2 className="mt-2 font-serif text-3xl leading-tight md:text-4xl">{title}</h2>
+          <h2 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl md:text-4xl">{title}</h2>
         </div>
-        <p className={`max-w-md text-sm leading-relaxed ${dark ? "text-stone-400" : "text-stone-600"}`}>
+        <p className={`max-w-md text-pretty text-xs leading-relaxed sm:text-sm ${dark ? "text-stone-400" : "text-stone-600"}`}>
           {subtitle}
         </p>
       </div>
@@ -239,7 +277,9 @@ export default function UrsulineAILesson() {
   const [pickedHook, setPickedHook] = useState<string | null>(null);
   const [focusWord, setFocusWord] = useState<string | null>(null);
 
-  const [prompt, setPrompt] = useState("Explain photosynthesis to a 7th grader using a basketball analogy.");
+  const [prompt, setPrompt] = useState(
+    "We entered the I.D.E.A. Hub to design a robot for our serviam project.",
+  );
   const [pathStep, setPathStep] = useState(0);
   const [running, setRunning] = useState(false);
 
@@ -281,9 +321,10 @@ export default function UrsulineAILesson() {
 
   const probabilityNext = [
     { word: "robot", pct: 44 },
-    { word: "app", pct: 21 },
+    { word: "app", pct: 22 },
     { word: "prototype", pct: 18 },
-    { word: "toaster", pct: 1 },
+    { word: "circuit", pct: 10 },
+    { word: "essay", pct: 6 },
   ];
 
   const cycleMark = (i: number) => {
@@ -341,18 +382,18 @@ export default function UrsulineAILesson() {
               </a>
             ))}
           </div>
-          <div className="flex items-center gap-1 overflow-x-auto lg:hidden">
-            <a href="#pt1" className="shrink-0 rounded-full bg-emerald-800 px-2.5 py-1 text-[10px] text-white">
+          <div className="-mr-4 flex max-w-[min(100%,20rem)] items-center gap-1.5 overflow-x-auto pb-0.5 sm:max-w-none lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <a href="#pt1" className="inline-flex min-h-[44px] shrink-0 items-center rounded-full bg-emerald-800 px-3 text-[11px] font-medium text-white">
               Pt 1
             </a>
-            <a href="#pt2" className="shrink-0 rounded-full bg-stone-900 px-2.5 py-1 text-[10px] text-white">
+            <a href="#pt2" className="inline-flex min-h-[44px] shrink-0 items-center rounded-full bg-stone-900 px-3 text-[11px] font-medium text-white">
               Pt 2
             </a>
-            {NAV_PT1.slice(0, 3).map((link) => (
+            {[...NAV_PT1, ...NAV_PT2].map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="shrink-0 rounded-full border border-stone-200 bg-white px-2.5 py-1 text-[10px] text-stone-600"
+                className="inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-stone-200 bg-white px-3 text-[11px] text-stone-600"
               >
                 {link.label}
               </a>
@@ -367,14 +408,14 @@ export default function UrsulineAILesson() {
           <div className="absolute left-1/4 top-20 h-96 w-96 rounded-full bg-emerald-200/40 blur-3xl" />
           <div className="absolute right-1/4 top-40 h-80 w-80 rounded-full bg-amber-200/30 blur-3xl" />
         </div>
-        <div className="relative mx-auto max-w-5xl px-6 pb-28 pt-20 md:pt-24">
+        <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-20 md:pt-24">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white/60 px-3 py-1 text-xs text-stone-600">
             <Sparkles className="h-3 w-3 text-amber-600" aria-hidden />
             <span>Ursuline Academy · I.D.E.A. Hub</span>
           </div>
           <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
             <div>
-              <h1 className="mb-6 font-serif text-5xl leading-[0.95] tracking-tight text-stone-900 md:text-7xl lg:text-8xl">
+              <h1 className="mb-6 font-serif text-3xl leading-[0.95] tracking-tight text-stone-900 sm:text-5xl md:text-7xl lg:text-8xl">
                 AI, the Brain,
                 <br />
                 <span className="italic text-emerald-800">and Serviam.</span>
@@ -382,20 +423,21 @@ export default function UrsulineAILesson() {
               <div className="mb-10 grid gap-4 sm:grid-cols-2">
                 <HeroJumpCard
                   href="#pt1"
-                  label="Pt 1 · AI Literacy"
-                  labelClass="text-emerald-800"
-                  description="Human wisdom and intelligent tools."
-                  meta="20 min · grades 7–12"
-                  buttonLabel="Start Pt 1"
+                  title="Start Here: AI Literacy"
+                  titleClass="text-emerald-800"
+                  grades="Grades 7–12"
+                  format="20-minute core lesson"
+                  description="How AI works, why judgment matters, and how to use it with integrity."
+                  buttonLabel="Start here"
                   buttonClass="bg-emerald-800 text-white group-hover:bg-emerald-900"
                 />
                 <HeroJumpCard
                   href="#pt2"
-                  label="Pt 2 · Inside AI"
-                  labelClass="text-stone-800"
-                  description="See the math and science inside language models."
-                  meta="20 min · grades 10–11 · AP STEM"
-                  buttonLabel="Start Pt 2"
+                  title="Go Deeper: Inside AI"
+                  titleClass="text-stone-800"
+                  grades="Upper School / AP STEM extension"
+                  description="A math, science, and code lab for vectors, similarity, weights, and training."
+                  buttonLabel="Go deeper"
                   buttonClass="bg-stone-900 text-white group-hover:bg-stone-800"
                 />
               </div>
@@ -417,9 +459,9 @@ export default function UrsulineAILesson() {
               { icon: FileText, label: "Attribute" },
               { icon: Heart, label: "Serve" },
             ].map((h) => (
-              <div key={h.label} className="flex flex-col items-start gap-3 bg-stone-50 px-6 py-8">
+              <div key={h.label} className="flex flex-col items-start gap-2 bg-stone-50 px-4 py-6 sm:gap-3 sm:px-6 sm:py-8">
                 <h.icon className="h-5 w-5 text-emerald-800" strokeWidth={1.5} aria-hidden />
-                <span className="font-serif text-lg">{h.label}</span>
+                <span className="font-serif text-base sm:text-lg">{h.label}</span>
               </div>
             ))}
           </div>
@@ -434,9 +476,9 @@ export default function UrsulineAILesson() {
         />
       {/* Essential question */}
       <section className="border-t border-stone-200">
-        <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-24">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20 md:py-24">
           <div className="mb-6 text-xs uppercase tracking-widest text-stone-500">Essential question</div>
-          <p className="mb-10 font-serif text-3xl leading-tight tracking-tight text-stone-900 md:text-5xl">
+          <p className="mb-10 font-serif text-2xl leading-tight tracking-tight text-stone-900 sm:text-3xl md:text-5xl">
             How can we understand AI well enough to use it
             <span className="italic text-emerald-800"> wisely</span>,
             <span className="italic text-emerald-800"> truthfully</span>, and in
@@ -470,11 +512,15 @@ export default function UrsulineAILesson() {
             AI is already shaping daily life.
           </h2>
           <p className="mb-8 max-w-xl text-stone-600">
-            Judgment is the real skill. It is not just how to use AI, but when, why, and whether to.
+            AI is powerful because it can generate. Human judgment determines whether that output is
+            accurate, ethical, and useful.
           </p>
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 md:grid-cols-4">
             {["School", "Search", "Social", "Maps", "Writing", "Coding", "Photos", "Music"].map((w) => (
-              <div key={w} className="bg-white px-4 py-5 text-center font-serif text-base md:text-lg">
+              <div
+                key={w}
+                className="relative z-0 bg-white px-4 py-5 text-center font-serif text-base text-stone-800 transition-all duration-200 ease-out active:scale-[0.98] active:bg-emerald-100 active:text-emerald-900 md:text-lg md:hover:z-10 md:hover:scale-[1.02] md:hover:bg-emerald-50 md:hover:text-emerald-800 md:hover:shadow-[0_4px_12px_rgba(6,78,59,0.08),inset_0_0_0_1px_rgba(16,185,129,0.25)]"
+              >
                 {w}
               </div>
             ))}
@@ -583,7 +629,7 @@ export default function UrsulineAILesson() {
         id="define"
         kicker="02 · Mini-lesson · Core concept"
         title="What is AI?"
-        intro="AI uses data and math to recognize patterns, predict outputs, generate content, and support human decisions. Think of it as a fast pattern detective, not a human mind."
+        intro="AI uses data and math to find patterns, make predictions, generate content, and support human decisions. It can be powerful, but it does not replace human judgment. Think of it as a fast pattern detective, not a person with wisdom, feelings, or conscience."
         className="bg-stone-50"
       >
         <InteractiveCard>
@@ -638,7 +684,7 @@ export default function UrsulineAILesson() {
             </div>
           </div>
           <p className="mt-8 text-center font-serif text-xl text-stone-700 md:text-2xl">
-            AI estimates patterns. Humans bring meaning, judgment, and responsibility.
+            The model can produce language. The learner must still question, verify, explain, and decide.
           </p>
         </div>
       </section>
@@ -716,7 +762,10 @@ export default function UrsulineAILesson() {
                   <span className="text-sm text-stone-500">Enter a prompt above.</span>
                 )}
               </div>
-              <p className="mt-3 text-xs text-stone-500">AI processes tokens as numbers, not as human meaning.</p>
+              <p className="mt-3 text-xs text-stone-500">
+                AI processes tokens as numbers and patterns. It can represent relationships, but it does not
+                understand meaning the way a person does.
+              </p>
             </div>
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 3 ? "opacity-100" : "opacity-40"}`}>
@@ -752,7 +801,7 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 5 ? "opacity-100" : "opacity-40"}`}>
               <p className="mb-3 font-serif text-base text-stone-800">
-                In robotics class, the students programmed the _____.
+                The students entered the I.D.E.A. Hub to design a _____.
               </p>
               <div className="mb-2 text-xs uppercase tracking-widest text-stone-500">Probability · next token</div>
               <div className="space-y-2">
@@ -788,7 +837,7 @@ export default function UrsulineAILesson() {
                 <div>
                   <div className="mb-1 text-xs uppercase tracking-widest text-emerald-800">Human review</div>
                   <p className="text-sm leading-relaxed text-stone-700">
-                    Check the claim, the source, and the reasoning. Ask the same question again. If the answer changes, verify before you trust it.
+                    Check the claim, the source, and the reasoning. If the answer changes, that is a warning sign. If it stays the same, you still need evidence.
                   </p>
                 </div>
               </div>
@@ -855,6 +904,9 @@ export default function UrsulineAILesson() {
             <div className="md:col-span-4">
               <div className="mb-4 text-xs uppercase tracking-widest text-amber-300">05 · SERVIAM protocol</div>
               <h2 className="mb-4 font-serif text-4xl leading-tight">The SERVIAM AI protocol.</h2>
+              <p className="mb-4 text-emerald-100/80 leading-relaxed">
+                Serviam is not just a motto for service projects. It is also a way to make choices when powerful tools are in our hands.
+              </p>
               <p className="text-emerald-100/80">
                 Seven steps for every AI interaction. Serviam means &ldquo;I will serve.&rdquo;
               </p>
@@ -910,7 +962,7 @@ export default function UrsulineAILesson() {
                     type="button"
                     onClick={() => setDecision(i, color)}
                     aria-label={`Mark as ${color}`}
-                    className={`h-9 w-9 rounded-full border-2 transition-all ${
+                    className={`h-11 min-h-[44px] w-11 min-w-[44px] rounded-full border-2 transition-all ${
                       decisions[i] === color
                         ? color === "green"
                           ? "scale-110 border-emerald-600 bg-emerald-500"
@@ -985,36 +1037,19 @@ export default function UrsulineAILesson() {
       <section className="border-t border-stone-200 bg-white">
         <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-24">
           <p className="font-serif text-2xl leading-tight tracking-tight text-stone-900 md:text-4xl">
-            AI can generate words, images, code, and ideas. It cannot replace your
-            <span className="italic text-emerald-800"> voice</span>, your
-            <span className="italic text-emerald-800"> integrity</span>, your
-            <span className="italic text-emerald-800"> compassion</span>, or your responsibility to
-            <span className="italic text-emerald-800"> serve</span>.
+            AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how
+            to use it.
           </p>
         </div>
       </section>
 
-      {/* Materials */}
-      <section id="materials" className="scroll-mt-28 border-t border-stone-200 bg-white">
-        <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
-          <div className="mb-4 text-xs uppercase tracking-widest text-stone-500">Materials</div>
-          <h2 className="mb-10 font-serif text-3xl text-stone-900">Your handouts</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {MATERIALS.map((m) => (
-              <a
-                key={m.title}
-                href={m.href}
-                className="group block rounded-2xl border border-stone-200 bg-white p-8 transition hover:bg-stone-50"
-              >
-                <FileText className="mb-4 h-5 w-5 text-emerald-800" strokeWidth={1.5} />
-                <div className="mb-1 font-serif text-xl">{m.title}</div>
-                <div className="mb-4 text-sm text-stone-500">{m.sub}</div>
-                <div className="inline-flex items-center gap-2 text-xs text-stone-700 transition group-hover:text-emerald-800">
-                  <Download className="h-3 w-3" />
-                  Download
-                </div>
-              </a>
-            ))}
+      {/* Pt 1 handout */}
+      <section id="pt1-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
+          <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Pt 1 · Handout</div>
+          <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Serviam Use Card</h2>
+          <div className="max-w-xl">
+            <StudentHandoutCard {...PT1_HANDOUT} />
           </div>
         </div>
       </section>
@@ -1024,21 +1059,21 @@ export default function UrsulineAILesson() {
         <PartBanner
           part={2}
           title="Inside AI"
-          subtitle="The math and science behind intelligent tools · grades 10–11 · AP STEM"
+          subtitle="Extension · math, science, and code behind intelligent tools · Upper School · AP STEM"
           variant="dark"
         />
 
         <section className="border-t border-stone-200 bg-white">
-          <div className="mx-auto max-w-4xl px-6 py-16 text-center md:py-20">
+          <div className="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16 md:py-20">
             <p className="mb-4 text-xs uppercase tracking-widest text-stone-500">Pt 2 · Essential question</p>
-            <p className="font-serif text-2xl leading-tight text-stone-900 md:text-4xl">
+            <p className="font-serif text-xl leading-tight text-stone-900 sm:text-2xl md:text-4xl">
               How does language become math, and math become a response?
             </p>
           </div>
         </section>
 
-        <section id="pt2-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
-          <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
+        <section id="pt2-deck" className="scroll-mt-24 border-t border-stone-200 bg-stone-50 sm:scroll-mt-28">
+          <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12 md:py-16">
             <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 2 · Slides</p>
             <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <h3 className="font-serif text-2xl text-stone-900 md:text-3xl">Inside AI</h3>
@@ -1090,8 +1125,8 @@ export default function UrsulineAILesson() {
           </div>
         </section>
 
-        <section id="pt2-labs" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
-          <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
+        <section id="pt2-labs" className="scroll-mt-24 border-t border-stone-200 bg-stone-50 sm:scroll-mt-28">
+          <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12 md:py-16">
             <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Pt 2 · Interactive labs</p>
             <h3 className="mb-3 font-serif text-2xl text-stone-900 md:text-3xl">Try the math behind the model</h3>
             <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
@@ -1100,19 +1135,55 @@ export default function UrsulineAILesson() {
             <InsideAiMathSlideLabs />
           </div>
         </section>
+
+        <section id="pt2-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
+          <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
+            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Pt 2 · Handout</p>
+            <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Inside AI Lab Notes</h2>
+            <div className="max-w-xl">
+              <StudentHandoutCard {...PT2_HANDOUT} />
+            </div>
+          </div>
+        </section>
       </section>
 
-      <TeamLeadershipSection />
+      <section id="faculty" className="scroll-mt-24 border-t border-stone-300 bg-stone-100 sm:scroll-mt-28">
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-stone-600">Faculty only</p>
+          <h2 className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">Teacher lesson plans</h2>
+          <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
+            For teachers delivering this lesson. Not part of the student experience.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {TEACHER_PLANS.map((plan) => (
+              <a
+                key={plan.href}
+                href={plan.href}
+                download
+                className="group flex flex-col rounded-2xl border border-stone-300 bg-white p-5 transition hover:border-stone-400 hover:shadow-sm sm:p-6"
+              >
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <FileText className="h-5 w-5 shrink-0 text-stone-600" strokeWidth={1.5} aria-hidden />
+                  <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-stone-500">
+                    {plan.part}
+                  </span>
+                </div>
+                <div className="mb-1 font-serif text-lg text-stone-900">{plan.title}</div>
+                <p className="mb-4 flex-1 text-sm leading-relaxed text-stone-600">{plan.description}</p>
+                <span className="inline-flex min-h-[44px] items-center gap-2 text-xs font-medium text-stone-700 transition group-hover:text-stone-900">
+                  <Download className="h-3.5 w-3.5" aria-hidden />
+                  Download lesson plan
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <footer className="border-t border-stone-200 bg-stone-50">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-10 text-xs text-stone-500 md:flex-row">
-          <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
-            <span>Ursuline Academy · Dedham</span>
-            <a href="#team-leadership" className="text-stone-600 underline-offset-2 hover:text-stone-800 hover:underline">
-              Team & leadership materials
-            </a>
-          </div>
-          <div className="font-serif italic">Serviam.</div>
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-2 px-4 py-8 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-6 sm:py-10">
+          <span>Ursuline Academy · Dedham</span>
+          <span className="font-serif italic">Serviam.</span>
         </div>
       </footer>
     </div>

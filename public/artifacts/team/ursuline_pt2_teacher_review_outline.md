@@ -7,7 +7,7 @@ Purpose: Leader-facing companion for Part 2. It explains why the supplemental le
 Part 1 covers introduction to AI, internal workings at a high level, and judicious use. Part 2 scales that lesson for grades 10 and 11 into a concise math, science, and CS extension.
 
 ## 2. Core thesis
-AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how to use it.
+The model can produce language. The learner must still question, verify, explain, and decide.
 
 ## 3. How it extends Part 1
 Part 1 uses the pathway prompt, tokens, numbers, attention, probability, response, and human review. Part 2 expands the middle with functions, vectors, weights, loss, softmax, attention, and a short generation loop.

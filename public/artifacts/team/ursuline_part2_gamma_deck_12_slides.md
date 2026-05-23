@@ -3,7 +3,7 @@
 
 Audience: grades 10 and 11, with AP CSP and AP CSA extension language in speaker notes. Delivery target: 15 to 20 minutes. This is Part 2 of the AI, the Brain, and Serviam lesson package.
 
-Core thesis: AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how to use it.
+Core thesis: The model can produce language. The learner must still question, verify, explain, and decide.
 
 Design rule: keep visible slides low-text and diagram-first. Put technical depth, source notes, and citations in speaker notes.
 
@@ -11,7 +11,7 @@ Design rule: keep visible slides low-text and diagram-first. Put technical depth
 
 ### On-slide text
 - Language -> Math -> Model -> Response -> Human Review
-- AI is not magic. It is math trained on patterns.
+- AI is powerful because it can generate. Human judgment still decides.
 
 ### Visual direction
 Elegant left-to-right pathway with five stations. Use a final human review checkpoint in green or gold. Optional girls-only STEM image on one side.

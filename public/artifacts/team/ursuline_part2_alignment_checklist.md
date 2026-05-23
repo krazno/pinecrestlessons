@@ -5,7 +5,7 @@
 - 15 to 20 minute timing.
 - Grade 10/11 target with AP extension notes.
 - Clear extension of Part 1, not a replacement.
-- Core thesis matches Part 1: AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how to use it.
+- Core thesis matches Part 1: AI is powerful because it can generate. Human judgment determines whether that output is accurate, ethical, and useful.
 - Technical arc: function, data, tokens, vectors, similarity, weights, loss, probability, attention, generation loop, evaluation.
 - Mission closure through Serviam: Does this serve?
 - Student handout included.
