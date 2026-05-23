@@ -2043,7 +2043,7 @@ export default function UrsulineAILesson() {
         <PartBanner
           part={2}
           title="Inside AI"
-          subtitle="Extension · math, science, and code behind intelligent tools · Upper School · AP STEM"
+          subtitle="Extension · Upper School · AP STEM"
           variant="dark"
         />
 
