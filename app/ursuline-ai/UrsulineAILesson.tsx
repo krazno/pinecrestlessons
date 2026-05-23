@@ -48,6 +48,21 @@ const CLAIMS = [
 
 const AUDIT_ANSWERS: Signal[] = ["yellow", "yellow", "red"];
 
+const AUDIT_MISLEADING_WORDS = ["understands", "remembers", "always", "best"] as const;
+
+type AuditMisleadingWord = (typeof AUDIT_MISLEADING_WORDS)[number];
+
+const AUDIT_WORD_FEEDBACK: Record<AuditMisleadingWord, string> = {
+  understands:
+    "Good eye — understands suggests comprehension and meaning, not pattern-matching on tokens.",
+  remembers:
+    "Good eye — remembers suggests stored personal memory, not weights learned from training data.",
+  always:
+    "Good eye — always suggests certainty; models estimate probability and can be wrong.",
+  best:
+    "Good eye — best suggests judgment and truth; models pick likely outputs, not guaranteed correct ones.",
+};
+
 const SCENARIOS: { text: string; answer: Signal }[] = [
   { text: "AI quizzes me before a test.", answer: "green" },
   { text: "AI helps debug code I already understand.", answer: "green" },
@@ -740,6 +755,7 @@ export default function UrsulineAILesson() {
   const [pathwayCustomHint, setPathwayCustomHint] = useState<string | null>(null);
 
   const [auditMarks, setAuditMarks] = useState<Signal[]>([null, null, null]);
+  const [auditMisleadingWord, setAuditMisleadingWord] = useState<AuditMisleadingWord | null>(null);
   const [decisions, setDecisions] = useState<Signal[]>(Array(SCENARIOS.length).fill(null));
   const [reflection, setReflection] = useState({ power: "", limit: "", promise: "" });
   const [serviamChallenge, setServiamChallenge] = useState("");
@@ -974,6 +990,35 @@ export default function UrsulineAILesson() {
           title="AI, the Brain, and Serviam"
           subtitle="AI, the Brain, and Serviam · grades 7–12"
         />
+
+      <section
+        aria-label="Part 1 handout quick reference"
+        className="border-b border-stone-200 bg-gradient-to-br from-emerald-50/80 to-stone-50"
+      >
+        <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-4">
+              <FileText className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" strokeWidth={1.5} aria-hidden />
+              <div>
+                <p className="text-xs uppercase tracking-widest text-emerald-800">Quick reference</p>
+                <p className="mt-1 font-serif text-lg text-stone-900 sm:text-xl">{PT1_HANDOUT.title}</p>
+                <p className="mt-1 max-w-xl text-sm leading-relaxed text-stone-600">
+                  Your quick reference — download the Part 1 handout to follow along and take notes as you work
+                  through this lesson.
+                </p>
+              </div>
+            </div>
+            <a
+              href={PT1_HANDOUT.href}
+              download
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-800 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-900 sm:self-center"
+            >
+              <Download className="h-4 w-4" aria-hidden />
+              Download handout
+            </a>
+          </div>
+        </div>
+      </section>
 
       <section id="pt1-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
         <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
@@ -1637,6 +1682,55 @@ export default function UrsulineAILesson() {
               </div>
             </div>
           )}
+
+          <div className="mt-8 border-t border-stone-200 pt-8" aria-labelledby="audit-word-analysis-heading">
+            <p
+              id="audit-word-analysis-heading"
+              className="mb-1 font-serif text-lg leading-relaxed text-stone-900 sm:text-xl"
+            >
+              Which word is most misleading: understands, remembers, always, or best?
+            </p>
+            <p className="mb-4 text-sm text-stone-600">Click or tap one word. There is no single right answer.</p>
+            <div
+              className="flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-labelledby="audit-word-analysis-heading"
+            >
+              {AUDIT_MISLEADING_WORDS.map((word) => {
+                const selected = auditMisleadingWord === word;
+                return (
+                  <button
+                    key={word}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setAuditMisleadingWord(word)}
+                    className={`min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-[0.98] motion-reduce:active:scale-100 ${
+                      selected
+                        ? "border-emerald-800 bg-emerald-800 text-white shadow-sm"
+                        : "border-stone-300 bg-white text-stone-700 hover:border-emerald-700 hover:text-emerald-900"
+                    }`}
+                  >
+                    {word}
+                  </button>
+                );
+              })}
+            </div>
+            {auditMisleadingWord && (
+              <div
+                className="mt-5 rounded-xl border border-stone-200 bg-white px-4 py-4 sm:px-5 sm:py-5"
+                role="status"
+                aria-live="polite"
+              >
+                <p className="text-sm leading-relaxed text-stone-800">
+                  {AUDIT_WORD_FEEDBACK[auditMisleadingWord]}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-stone-500">
+                  Any of these can mislead. The strongest critique names why.
+                </p>
+              </div>
+            )}
+          </div>
 
         </InteractiveCard>
       </LessonSection>
