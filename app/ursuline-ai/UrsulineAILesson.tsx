@@ -17,16 +17,21 @@ import {
 
 type Signal = "green" | "yellow" | "red" | null;
 
-const NAV_PT1 = [
-  { href: "#pt1-deck", label: "Slides" },
-  { href: "#pt1-handout", label: "Handout" },
+type NavLink = { href: string; label: string; shortLabel: string };
+
+const NAV_PT1: NavLink[] = [
+  { href: "#pt1-deck", label: "Part 1 Slides", shortLabel: "Slides" },
+  { href: "#pt1-handout", label: "Part 1 Handout", shortLabel: "Handout" },
 ];
 
-const NAV_PT2 = [
-  { href: "#pt2-deck", label: "Slides" },
-  { href: "#pt2-labs", label: "Labs" },
-  { href: "#pt2-handout", label: "Handout" },
+const NAV_PT2: NavLink[] = [
+  { href: "#pt2-deck", label: "Part 2 Slides", shortLabel: "Slides" },
+  { href: "#pt2-labs", label: "Part 2 Labs", shortLabel: "Labs" },
+  { href: "#pt2-handout", label: "Part 2 Lab Sheet", shortLabel: "Lab Sheet" },
 ];
+
+const NAV_PT1_PART = { label: "Part 1: AI Literacy", shortLabel: "Part 1" };
+const NAV_PT2_PART = { label: "Part 2: Inside AI", shortLabel: "Part 2" };
 
 const PT1_GAMMA_EMBED = "https://gamma.app/embed/bdlnsqv1f45r7to";
 const PT1_GAMMA_DOCS = "https://gamma.app/docs/AI-the-Brain-and-Serviam-bdlnsqv1f45r7to";
@@ -98,12 +103,15 @@ const TEACHER_PLANS = [
 const PATHWAY_STEPS = [
   "Prompt",
   "Tokens",
-  "Numbers",
+  "Token IDs",
+  "Vectors",
   "Attention",
   "Probability",
   "Response",
   "Human review",
-];
+] as const;
+
+const PATHWAY_FINAL_STEP = PATHWAY_STEPS.length;
 
 const NAV_SCROLL_SECTIONS = [
   "pt1",
@@ -260,6 +268,14 @@ function fakeIdFor(w: string) {
   return h;
 }
 
+function fakeVectorFor(w: string) {
+  const id = fakeIdFor(w);
+  const a = ((id % 100) / 100 - 0.5).toFixed(2);
+  const b = (((id * 7) % 100) / 100 - 0.5).toFixed(2);
+  const c = (((id * 13) % 100) / 100 - 0.5).toFixed(2);
+  return `[${a}, ${b}, ${c}, …]`;
+}
+
 function countWords(text: string): number {
   return text.split(/\s+/).filter(Boolean).length;
 }
@@ -412,9 +428,19 @@ function useScrollSpy(sectionIds: readonly string[]) {
   return active;
 }
 
+function NavResponsiveLabel({ shortLabel, label }: { shortLabel: string; label: string }) {
+  return (
+    <>
+      <span className="sm:hidden">{shortLabel}</span>
+      <span className="hidden sm:inline">{label}</span>
+    </>
+  );
+}
+
 function NavPill({
   href,
   label,
+  shortLabel,
   active,
   variant = "sub",
   accent = "emerald",
@@ -422,6 +448,7 @@ function NavPill({
 }: {
   href: string;
   label: string;
+  shortLabel?: string;
   active: boolean;
   variant?: "pt1" | "pt2" | "sub";
   accent?: "emerald" | "stone";
@@ -456,7 +483,7 @@ function NavPill({
       aria-current={active ? "location" : undefined}
       className={`${base} ${styles} ${isPart ? "px-2.5 py-1.5 xl:px-3 xl:text-xs" : "px-2.5 py-1.5 xl:px-3 xl:text-xs"} ${className}`}
     >
-      {label}
+      {shortLabel ? <NavResponsiveLabel shortLabel={shortLabel} label={label} /> : label}
     </a>
   );
 }
@@ -464,6 +491,7 @@ function NavPill({
 function NavPartGroup({
   partHref,
   partLabel,
+  partShortLabel,
   variant,
   links,
   activeSection,
@@ -471,8 +499,9 @@ function NavPartGroup({
 }: {
   partHref: string;
   partLabel: string;
+  partShortLabel: string;
   variant: "pt1" | "pt2";
-  links: readonly { href: string; label: string }[];
+  links: readonly NavLink[];
   activeSection: string;
   className?: string;
 }) {
@@ -489,7 +518,13 @@ function NavPartGroup({
       aria-label={partLabel}
       className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1 py-0.5 ring-1 ${shell} ${className}`}
     >
-      <NavPill href={partHref} label={partLabel} variant={variant} active={activeSection === partId} />
+      <NavPill
+        href={partHref}
+        label={partLabel}
+        shortLabel={partShortLabel}
+        variant={variant}
+        active={activeSection === partId}
+      />
       {links.map((link) => {
         const sectionId = link.href.replace("#", "");
         return (
@@ -497,6 +532,7 @@ function NavPartGroup({
             key={link.href}
             href={link.href}
             label={link.label}
+            shortLabel={link.shortLabel}
             accent={accent}
             active={activeSection === sectionId}
           />
@@ -511,7 +547,8 @@ function LessonNavGroups({ activeSection }: { activeSection: string }) {
     <>
       <NavPartGroup
         partHref="#pt1"
-        partLabel="Pt 1"
+        partLabel={NAV_PT1_PART.label}
+        partShortLabel={NAV_PT1_PART.shortLabel}
         variant="pt1"
         links={NAV_PT1}
         activeSection={activeSection}
@@ -519,7 +556,8 @@ function LessonNavGroups({ activeSection }: { activeSection: string }) {
       <div className="mx-0.5 h-5 w-px shrink-0 bg-stone-300/90" aria-hidden />
       <NavPartGroup
         partHref="#pt2"
-        partLabel="Pt 2"
+        partLabel={NAV_PT2_PART.label}
+        partShortLabel={NAV_PT2_PART.shortLabel}
         variant="pt2"
         links={NAV_PT2}
         activeSection={activeSection}
@@ -692,7 +730,7 @@ export default function UrsulineAILesson() {
 
   useEffect(() => {
     if (!running) return;
-    if (pathStep >= 7) {
+    if (pathStep >= PATHWAY_FINAL_STEP) {
       setRunning(false);
       return;
     }
@@ -768,7 +806,7 @@ export default function UrsulineAILesson() {
   };
 
   useEffect(() => {
-    if (pathStep >= 5) setPathwayBarsLive(true);
+    if (pathStep >= 6) setPathwayBarsLive(true);
   }, [pathStep]);
 
   const activePreset = getPathwayPreset(pathwayPresetId);
@@ -794,15 +832,15 @@ export default function UrsulineAILesson() {
     visibleTokens,
     Boolean(pathwayPick) && pickedTokens.length > 0,
   );
-  const showPathwayAttention = pathStep >= 4 || pathwayBarsLive || pathwayPick !== null;
-  const showPathwayProbabilities = pathStep >= 5 || pathwayBarsLive || pathwayPick !== null;
+  const showPathwayAttention = pathStep >= 5 || pathwayBarsLive || pathwayPick !== null;
+  const showPathwayProbabilities = pathStep >= 6 || pathwayBarsLive || pathwayPick !== null;
   const customWordCount = countWords(pathwayCustomText);
   const customInputValid = isValidPathwayCustom(sanitizePathwayInput(pathwayCustomText));
 
   const pickPathwayToken = (word: string) => {
     setPathwayPick(word);
     setPathwayBarsLive(true);
-    if (pathStep < 5) setPathStep(5);
+    if (pathStep < 6) setPathStep(6);
   };
 
   const cycleMark = (i: number) => {
@@ -866,10 +904,9 @@ export default function UrsulineAILesson() {
               <div className="mb-4 grid gap-4 sm:grid-cols-2">
                 <HeroJumpCard
                   href="#pt1"
-                  title="Start Here: AI Literacy"
+                  title="Part 1: AI, the Brain, and Serviam"
                   titleClass="text-emerald-800"
-                  grades="Grades 7–12"
-                  format="20-minute core lesson"
+                  grades="A 20-minute student lesson for grades 7–12"
                   description="How AI works, why judgment matters, and how to use it with integrity."
                   buttonLabel="Start here"
                   buttonClass="bg-emerald-800 text-white group-hover:bg-emerald-900"
@@ -1211,11 +1248,16 @@ export default function UrsulineAILesson() {
       {/* Pathway */}
       <LessonSection
         id="pathway"
-        kicker="03 · How it works · Overview"
-        title="From prompt to response."
-        intro={`Every step is math. The last step is yours. Trace one ${IDEA_HUB_LABEL} prompt from tokens to human review.`}
+        kicker="03 · How it works · Generation pathway"
+        title="From prompt to response (inference)."
+        intro={`When you prompt a model, it runs inference — math on patterns it already learned. Trace one ${IDEA_HUB_LABEL} prompt through tokens, vectors, and probability. Training (learning from examples) is a separate process — see Part 2 labs.`}
       >
         <InteractiveCard>
+          <p className="mb-2 text-xs uppercase tracking-widest text-emerald-800">Generation pathway · inference</p>
+          <p className="mb-4 text-sm leading-relaxed text-stone-600">
+            Inference is what happens at prompt time. Training happens earlier, on many examples, to set the weights —
+            not on every message you send.
+          </p>
           <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Example simulation — not a real model</p>
 
           <div className="mb-4">
@@ -1312,7 +1354,7 @@ export default function UrsulineAILesson() {
                 className="inline-flex items-center gap-2 rounded-full bg-emerald-800 px-4 py-2 text-sm text-white transition hover:bg-emerald-700 disabled:opacity-50"
               >
                 <Play className="h-4 w-4" />
-                {running ? "Running…" : pathStep >= 7 ? "Run again" : "Run pathway"}
+                {running ? "Running…" : pathStep >= PATHWAY_FINAL_STEP ? "Run again" : "Run pathway"}
               </button>
               <button
                 type="button"
@@ -1377,22 +1419,37 @@ export default function UrsulineAILesson() {
             </div>
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 3 ? "opacity-100" : "opacity-40"}`}>
-              <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Numbers · vectors</div>
+              <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Token IDs</div>
               {visibleTokens.length > 0 ? (
                 <div className="flex flex-wrap gap-2 font-mono text-xs">
                   {visibleTokens.map((t, i) => (
-                    <span key={`${t}-${i}`} className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-900">
-                      {t.slice(0, 8)} · {fakeIdFor(t)}
+                    <span key={`id-${t}-${i}`} className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-900">
+                      {t.slice(0, 12)} → {fakeIdFor(t)}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-stone-500">Token IDs appear as the pathway runs.</p>
+                <p className="text-sm text-stone-500">Each token maps to a number the model can compute with.</p>
+              )}
+            </div>
+
+            <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 4 ? "opacity-100" : "opacity-40"}`}>
+              <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Vectors · embeddings</div>
+              {visibleTokens.length > 0 ? (
+                <div className="flex flex-wrap gap-2 font-mono text-xs">
+                  {visibleTokens.map((t, i) => (
+                    <span key={`vec-${t}-${i}`} className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-emerald-900">
+                      {t.slice(0, 10)} {fakeVectorFor(t)}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-stone-500">Embeddings turn token IDs into vectors — coordinates in a high-dimensional space.</p>
               )}
             </div>
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayAttention ? "opacity-100" : "opacity-40"}`}>
-              <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · highlighter</div>
+              <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · weights on tokens</div>
               <p className="mb-3 text-xs text-stone-500">Example weights for words in this sentence (not a live model).</p>
               {attentionTokens.length > 0 ? (
                 <div className="space-y-2">
