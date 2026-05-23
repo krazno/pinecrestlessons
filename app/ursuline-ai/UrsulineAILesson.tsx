@@ -69,7 +69,10 @@ const SCENARIOS: { text: string; answer: Signal }[] = [
   { text: "AI outlines ideas for a project I still have to develop.", answer: "yellow" },
   { text: "AI summarizes an article when my teacher says it is okay.", answer: "yellow" },
   { text: "AI writes my essay and I turn it in as my own.", answer: "red" },
-  { text: "I share private health details or ask AI for medical advice about someone I know.", answer: "red" },
+  {
+    text: "I paste private health information or ask AI for medical or legal advice about someone.",
+    answer: "red",
+  },
 ];
 
 const SERVIAM = [
@@ -167,7 +170,10 @@ const AI_CAPABILITIES = [
   { label: "Generate", tip: "Creates text, images, or code from a prompt." },
   { label: "Search", tip: "Finds relevant info across huge datasets fast." },
   { label: "Code", tip: "Helps write, fix, or explain programming steps." },
-  { label: "Act", tip: "Triggers actions—bookings, controls, or workflows." },
+  {
+    label: "Act with permission",
+    tip: "Some AI systems can trigger actions in approved apps, devices, or workflows.",
+  },
 ] as const;
 
 const LEARNER_COMPARE_PAIRS = [
@@ -1609,8 +1615,7 @@ export default function UrsulineAILesson() {
                 )}
               </div>
               <p className="mt-3 text-xs text-stone-500">
-                AI processes tokens as numbers and patterns. It can represent relationships, but it does not
-                understand meaning the way a person does.
+                A language model processes token IDs and vectors, not words with human meaning.
               </p>
             </div>
 
@@ -1646,7 +1651,9 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayAttention ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · weights on tokens</div>
-              <p className="mb-3 text-xs text-stone-500">Weights show which words the model focuses on.</p>
+              <p className="mb-3 text-xs text-stone-500">
+                Attention helps the model calculate which token relationships matter in context.
+              </p>
               {attentionTokens.length > 0 ? (
                 <div className="space-y-2">
                   {attentionTokens.map((row, i) => (
@@ -2221,9 +2228,9 @@ export default function UrsulineAILesson() {
                   Design an AI tool that serves someone.
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-stone-700 sm:text-base">
-                  Choose one group: a new student, an older neighbor, a student with a learning difference, a
-                  busy teacher, or a local nonprofit. What would your AI tool help them do? What could go wrong? How
-                  would you keep it truthful, fair, and kind?
+                  Choose one group: a new student, an older neighbor, a student who needs extra support in class, a
+                  busy teacher, or a local nonprofit. What would your AI tool help them do? What risks would you plan
+                  for? How would you keep it truthful, fair, and kind?
                 </p>
                 <div className="mt-8">
                   <label htmlFor="serviam-challenge-notes" className="mb-2 block text-xs uppercase tracking-widest text-emerald-800">
