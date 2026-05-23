@@ -67,6 +67,10 @@ const SERVIAM = [
   { letter: "M", word: "Make", detail: "your work serve learning and others." },
 ];
 
+/** Canonical lesson thesis — hero, closing, and Part 1 handout only. */
+const CORE_THESIS =
+  "AI is not magic. It is math trained on patterns. Human wisdom decides whether, when, and how to use it.";
+
 const PT1_HANDOUT = {
   title: "Serviam Use Card",
   sub: "Your one-page guide for using AI with integrity.",
@@ -914,6 +918,9 @@ export default function UrsulineAILesson() {
                 <br />
                 <span className="italic text-emerald-800">and Serviam.</span>
               </h1>
+              <p className="mb-6 max-w-2xl font-serif text-lg leading-snug text-stone-700 sm:text-xl">
+                {CORE_THESIS}
+              </p>
               <div className="mb-4 grid gap-4 sm:grid-cols-2">
                 <HeroJumpCard
                   href="#pt1"
@@ -1132,7 +1139,7 @@ export default function UrsulineAILesson() {
         id="define"
         kicker="02 · Mini-lesson · Core concept"
         title="What is AI?"
-        intro="Many AI systems use data and math to find patterns, make predictions, generate content, or support decisions. They can be powerful, but they do not replace human judgment. Think of them as fast pattern detectives, not people with wisdom, feelings, or conscience."
+        intro="Many AI systems use data and math to find patterns, make predictions, generate content, or support decisions. They can be powerful, but they do not replace your judgment, voice, or conscience. Think of them as fast pattern detectives, not people with wisdom or feelings."
         className="bg-stone-50"
       >
         <InteractiveCard>
@@ -1630,6 +1637,55 @@ export default function UrsulineAILesson() {
               </div>
             </div>
           )}
+
+          <motion.div className="mt-8 border-t border-stone-200 pt-8" aria-labelledby="audit-word-analysis-heading">
+            <p
+              id="audit-word-analysis-heading"
+              className="mb-1 font-serif text-lg leading-relaxed text-stone-900 sm:text-xl"
+            >
+              Which word is most misleading: understands, remembers, always, or best?
+            </p>
+            <p className="mb-4 text-sm text-stone-600">Click or tap one word. There is no single right answer.</p>
+            <div
+              className="flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-labelledby="audit-word-analysis-heading"
+            >
+              {AUDIT_MISLEADING_WORDS.map((word) => {
+                const selected = auditMisleadingWord === word;
+                return (
+                  <button
+                    key={word}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setAuditMisleadingWord(word)}
+                    className={`min-h-[44px] rounded-full border px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-[0.98] motion-reduce:active:scale-100 ${
+                      selected
+                        ? "border-emerald-800 bg-emerald-800 text-white shadow-sm"
+                        : "border-stone-300 bg-white text-stone-700 hover:border-emerald-700 hover:text-emerald-900"
+                    }`}
+                  >
+                    {word}
+                  </button>
+                );
+              })}
+            </div>
+            {auditMisleadingWord && (
+              <div
+                className="mt-5 rounded-xl border border-stone-200 bg-white px-4 py-4 sm:px-5 sm:py-5"
+                role="status"
+                aria-live="polite"
+              >
+                <p className="text-sm leading-relaxed text-stone-800">
+                  {AUDIT_WORD_FEEDBACK[auditMisleadingWord]}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-stone-500">
+                  Any of these can mislead. The strongest critique names why.
+                </p>
+              </motion.div>
+            )}
+          </motion.div>
         </InteractiveCard>
       </LessonSection>
 
@@ -1675,7 +1731,7 @@ export default function UrsulineAILesson() {
       <LessonSection
         id="practice"
         kicker="06 · Green, yellow, red"
-        title="Green, yellow, red AI choices."
+        title="Red, yellow, green AI choices."
         intro="The color is about how you use the tool, not the tool itself. Mark each scenario."
       >
         <InteractiveCard className="space-y-3 !p-6 md:!p-8">
@@ -1773,8 +1829,7 @@ export default function UrsulineAILesson() {
       <section className="border-t border-stone-200 bg-white">
         <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-24">
           <p className="font-serif text-2xl leading-tight tracking-tight text-stone-900 md:text-4xl">
-            Many AI systems are not magic. They are math trained on patterns. Human wisdom decides whether,
-            when, and how to use them.
+            {CORE_THESIS}
           </p>
         </div>
       </section>
@@ -1783,7 +1838,10 @@ export default function UrsulineAILesson() {
       <section id="pt1-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
           <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 1 · Handout</div>
-          <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Serviam Use Card</h2>
+          <h2 className="mb-4 font-serif text-2xl text-stone-900 sm:text-3xl">Serviam Use Card</h2>
+          <p className="mb-8 max-w-xl font-serif text-base leading-relaxed text-stone-700 sm:text-lg">
+            {CORE_THESIS}
+          </p>
           <div className="max-w-xl">
             <StudentHandoutCard {...PT1_HANDOUT} />
           </div>
@@ -1875,7 +1933,11 @@ export default function UrsulineAILesson() {
         <section id="pt2-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
             <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 2 · Lab Sheet</p>
-            <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Inside AI Lab Notes</h2>
+            <h2 className="mb-4 font-serif text-2xl text-stone-900 sm:text-3xl">Inside AI Lab Notes</h2>
+            <p className="mb-8 max-w-xl text-sm leading-relaxed text-stone-600 sm:text-base">
+              Printable lab notes for vectors, weights, and training — the math behind the model, on
+              paper. Same lesson thread as Part 1: patterns and probability, not mystery.
+            </p>
             <div className="max-w-xl">
               <StudentHandoutCard {...PT2_HANDOUT} />
             </div>
