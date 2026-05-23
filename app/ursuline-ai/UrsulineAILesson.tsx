@@ -189,7 +189,7 @@ const TILE_INTERACTIVE =
 const CARD_LIFT =
   "transition-all duration-200 ease-out motion-reduce:transition-none focus-within:border-emerald-300 focus-within:shadow-md md:hover:-translate-y-0.5 md:hover:border-emerald-200 md:hover:shadow-[0_10px_24px_rgba(6,78,59,0.1)]";
 
-const URSULINE_LOGO_SRC = "/assets/ua-crest.png";
+const URSULINE_SHIELD_SRC = "/assets/ursuline-shield.png";
 
 const IDEA_HUB_LABEL = "I.D.E.A. Hub";
 const IDEA_ACRONYM_TOKEN = "I.D.E.A.";
@@ -1045,16 +1045,22 @@ export default function UrsulineAILesson() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:gap-4 sm:py-3 md:px-6 md:py-4">
           <a
             href="#top"
-            className="group flex shrink-0 items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:gap-2.5"
+            className="group flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:gap-3"
             aria-label="Ursuline Academy — back to top of lesson"
           >
-            <Image
-              src={URSULINE_LOGO_SRC}
-              alt="Ursuline Academy"
-              width={40}
-              height={40}
-              className="h-7 w-7 object-contain transition group-hover:opacity-90 sm:h-8 sm:w-8 md:h-10 md:w-10"
-              priority
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-emerald-900 shadow-sm ring-1 ring-emerald-900/10 transition group-hover:bg-emerald-950 sm:h-9 sm:w-9 md:h-10 md:w-10">
+              <Image
+                src={URSULINE_SHIELD_SRC}
+                alt="Ursuline Academy"
+                width={32}
+                height={40}
+                className="h-[1.375rem] w-auto object-contain sm:h-6 md:h-7"
+                priority
+              />
+            </span>
+            <span
+              className="hidden h-5 w-px shrink-0 bg-stone-300/80 sm:block"
+              aria-hidden
             />
             <span className="hidden font-serif text-sm tracking-tight text-stone-800 sm:inline md:text-[15px]">
               AI · Brain · Serviam
