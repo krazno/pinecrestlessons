@@ -252,7 +252,7 @@ function markLabel(m: Signal) {
   if (m === "green") return "Accurate";
   if (m === "yellow") return "Vague";
   if (m === "red") return "Misleading";
-  return "Tap to mark";
+  return "Click or tap to mark";
 }
 
 function dotBg(m: Signal) {
@@ -1476,7 +1476,7 @@ export default function UrsulineAILesson() {
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayProbabilities ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
                 <div className="text-xs uppercase tracking-widest text-stone-500">Probability · next token</div>
-                <span className="text-xs text-stone-500">Try it — tap your pick</span>
+                <span className="text-xs text-stone-500">Try it — click or tap your pick</span>
               </div>
               <div className="mb-3 flex flex-wrap gap-2">
                 {pathwayNextTokens.map((p) => (
@@ -1574,7 +1574,7 @@ export default function UrsulineAILesson() {
         id="audit"
         kicker="04 · Audit an AI answer"
         title="Fluency does not always mean truth."
-        intro="A confident answer still needs evidence. Tap each claim to mark it as accurate, vague, or misleading."
+        intro="A confident answer still needs evidence. Click or tap each claim to mark it as accurate, vague, or misleading."
         className="bg-stone-50"
       >
         <InteractiveCard>
