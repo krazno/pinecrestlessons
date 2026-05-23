@@ -6,7 +6,6 @@ import InsideAiMathSlideLabs from "./InsideAiMathSlideLabs";
 import {
   ArrowRight,
   Check,
-  ChevronDown,
   Download,
   Eye,
   FileText,
@@ -131,65 +130,6 @@ const TEACHER_PLANS = [
     href: "/artifacts/team/ursuline_part2_teacher_lesson_plan.docx",
   },
 ];
-
-const POSSIBLE_AI_PATHWAYS = [
-  {
-    id: "fairness-ethics",
-    title: "AI + fairness and ethics",
-    summary: "Study bias, accountability, and who gets heard when systems make decisions.",
-    detail:
-      "Policy researchers, ethicists, and engineers ask whether tools treat people fairly — in hiring, health, school, and public life. You might explore law, philosophy, data science, or community advocacy.",
-  },
-  {
-    id: "health-medicine",
-    title: "AI + health and medicine",
-    summary: "Help doctors spot patterns, support patients, and keep human care at the center.",
-    detail:
-      "Medical imaging, drug discovery, and patient scheduling all use intelligent tools — with strict safety checks. Biology, nursing, public health, and computer science can all lead here.",
-  },
-  {
-    id: "creative-arts",
-    title: "AI + creative arts",
-    summary: "Design stories, music, film, and experiences — with your voice in charge.",
-    detail:
-      "Artists and designers use AI as a collaborator, not a replacement. Film, writing, game design, and visual arts meet code when you decide what to make and what to keep human.",
-  },
-  {
-    id: "climate",
-    title: "AI + climate and environment",
-    summary: "Track weather, protect ecosystems, and design smarter responses to a changing planet.",
-    detail:
-      "Scientists and engineers use models to predict storms, map forests, and reduce waste. Environmental science, engineering, geography, and data analysis all connect to this work.",
-  },
-  {
-    id: "education",
-    title: "AI + education",
-    summary: "Build tutoring tools, learning games, and supports that help every student thrive.",
-    detail:
-      "Teachers and designers ask how technology can explain ideas, give feedback, and stay honest about limits. Psychology, education, linguistics, and software design are natural fits.",
-  },
-  {
-    id: "computer-science",
-    title: "AI + computer science and engineering",
-    summary: "Write the code, train the models, and build systems people can trust.",
-    detail:
-      "Engineers turn math into working tools — from apps on your phone to robots in a lab. AP Computer Science, math, physics, and the I.D.E.A. Hub are strong starting points.",
-  },
-  {
-    id: "research",
-    title: "AI + research and discovery",
-    summary: "Ask hard questions, test ideas, and publish what you learn with integrity.",
-    detail:
-      "Researchers in every field use AI to analyze data, simulate experiments, and find patterns — then verify results carefully. Science fair projects, independent study, and university labs all welcome curious leaders.",
-  },
-  {
-    id: "accessibility",
-    title: "AI + accessibility and inclusion",
-    summary: "Design tools that help more people read, move, communicate, and participate fully.",
-    detail:
-      "Captioning, translation, assistive devices, and adaptive interfaces show how technology can serve others. Human-centered design, linguistics, engineering, and Serviam-minded service projects fit here.",
-  },
-] as const;
 
 const PATHWAY_STEPS = [
   "Prompt",
@@ -887,59 +827,6 @@ function StudentHandoutCard({
   );
 }
 
-function PathwayAccordionItem({
-  id,
-  title,
-  summary,
-  detail,
-  open,
-  onToggle,
-}: {
-  id: string;
-  title: string;
-  summary: string;
-  detail: string;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  const panelId = `${id}-panel`;
-  const buttonId = `${id}-button`;
-
-  return (
-    <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white transition-colors duration-200 motion-reduce:transition-none focus-within:border-emerald-300 md:hover:border-emerald-200">
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex w-full items-start gap-3 px-4 py-4 text-left transition-colors motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:px-5 sm:py-5 md:hover:bg-emerald-50/40"
-      >
-        <div className="min-w-0 flex-1">
-          <div className="font-serif text-lg leading-snug text-stone-900 sm:text-xl">{title}</div>
-          <p className="mt-1.5 text-sm leading-relaxed text-stone-600">{summary}</p>
-        </div>
-        <ChevronDown
-          className={`mt-1 h-5 w-5 shrink-0 text-emerald-800 transition-transform duration-200 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
-          aria-hidden
-        />
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className={`grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-      >
-        <div className="overflow-hidden">
-          <p className="border-t border-stone-100 px-4 pb-4 pt-3 text-sm leading-relaxed text-stone-700 sm:px-5 sm:pb-5 sm:pt-4">
-            {detail}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function PartBanner({
   part,
   title,
@@ -998,7 +885,6 @@ export default function UrsulineAILesson() {
   const [reflection, setReflection] = useState({ power: "", limit: "", promise: "" });
   const [serviamChallenge, setServiamChallenge] = useState("");
   const [aiProblemFocus, setAiProblemFocus] = useState<string | null>(null);
-  const [openPathwayId, setOpenPathwayId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -2214,8 +2100,8 @@ export default function UrsulineAILesson() {
           <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12 md:py-16">
             <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Part 2 · Interactive labs</p>
             <h3 className="mb-3 font-serif text-2xl text-stone-900 md:text-3xl">Try the math behind the model</h3>
-            <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
-              These labs match the Inside AI lesson. Change the inputs and watch how similarity and training work.
+            <p className="mb-6 max-w-2xl text-sm leading-relaxed text-stone-600">
+              Change the inputs and watch how similarity and training work.
             </p>
             <InsideAiMathSlideLabs />
           </div>
@@ -2396,39 +2282,6 @@ export default function UrsulineAILesson() {
                   Download lesson plan
                 </span>
               </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="possible-pathways"
-        aria-labelledby="possible-pathways-heading"
-        className="scroll-mt-24 border-t border-stone-200 bg-gradient-to-br from-emerald-50/50 to-stone-50 sm:scroll-mt-28"
-      >
-        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
-          <p className="mb-3 text-xs uppercase tracking-widest text-emerald-800">One way to think about what&apos;s next</p>
-          <h2 id="possible-pathways-heading" className="mb-3 font-serif text-2xl text-stone-900 sm:text-3xl">
-            Possible pathways
-          </h2>
-          <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
-            AI connects to many fields. Below is one way to map possible directions — a suggestion from this
-            lesson package, not the only path and not official school requirements. Explore what sparks your
-            curiosity.
-          </p>
-          <div className="space-y-3">
-            {POSSIBLE_AI_PATHWAYS.map((pathway) => (
-              <PathwayAccordionItem
-                key={pathway.id}
-                id={pathway.id}
-                title={pathway.title}
-                summary={pathway.summary}
-                detail={pathway.detail}
-                open={openPathwayId === pathway.id}
-                onToggle={() =>
-                  setOpenPathwayId((current) => (current === pathway.id ? null : pathway.id))
-                }
-              />
             ))}
           </div>
         </div>

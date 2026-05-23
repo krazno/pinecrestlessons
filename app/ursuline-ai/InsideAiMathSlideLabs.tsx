@@ -46,55 +46,45 @@ function toSvgY(y: number) {
   return 250 - y * 190;
 }
 
-function LabShell({
-  kicker,
+function LabCard({
   title,
   hint,
   children,
 }: {
-  kicker: string;
   title: string;
   hint: string;
   children: ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-stone-200 bg-white p-4 sm:rounded-3xl sm:p-6 md:p-8">
-      <p className="text-xs uppercase tracking-widest text-amber-700">{kicker}</p>
-      <h3 className="mt-2 font-serif text-xl text-stone-900 sm:text-2xl md:text-3xl">{title}</h3>
-      <p className="mt-1 text-sm text-stone-500">{hint}</p>
+      <h3 className="font-serif text-xl text-stone-900 sm:text-2xl">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-stone-600">{hint}</p>
       <div className="mt-6">{children}</div>
     </section>
   );
 }
 
-function PathwayTrack({
+function PathwaySection({
   variant,
-  title,
-  intro,
   children,
 }: {
   variant: "generation" | "training";
-  title: string;
-  intro: string;
   children: ReactNode;
 }) {
   const isGeneration = variant === "generation";
   return (
-    <div
-      className={`rounded-3xl border p-4 sm:p-6 md:p-8 ${
-        isGeneration ? "border-emerald-200/80 bg-emerald-50/40" : "border-amber-200/80 bg-amber-50/30"
-      }`}
-    >
-      <p
-        className={`text-xs font-semibold uppercase tracking-widest ${
-          isGeneration ? "text-emerald-800" : "text-amber-900"
-        }`}
-      >
-        {isGeneration ? "Generation pathway · inference" : "Training pathway · learning weights"}
-      </p>
-      <h3 className="mt-2 font-serif text-xl text-stone-900 sm:text-2xl">{title}</h3>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-600">{intro}</p>
-      <div className="mt-6 space-y-6">{children}</div>
+    <div className="space-y-5 sm:space-y-6">
+      <div className="flex items-center gap-3">
+        <p
+          className={`shrink-0 text-xs font-semibold uppercase tracking-widest ${
+            isGeneration ? "text-emerald-800" : "text-amber-900"
+          }`}
+        >
+          {isGeneration ? "Generation pathway" : "Training pathway"}
+        </p>
+        <div className={`h-px flex-1 ${isGeneration ? "bg-emerald-200/70" : "bg-amber-200/70"}`} />
+      </div>
+      {children}
     </div>
   );
 }
@@ -120,32 +110,31 @@ export function VectorSimilarityLab() {
           : "Different clusters usually mean weaker similarity in this 2D map.";
 
   return (
-    <LabShell
-      kicker="05 · 06 · Tokens → vectors (generation)"
-      title="Tokens become vectors, then geometry finds patterns"
-      hint="Close vectors = related patterns. Similarity is calculated, not felt — this is inference math, not training."
+    <LabCard
+      title="Tokens → vectors"
+      hint="Close vectors = related patterns. Similarity is calculated, not felt."
     >
-      <div className="mb-5 rounded-2xl border border-stone-200 bg-stone-50 p-4">
-        <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Text to tokens</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-6">
+        <p className="text-sm font-medium text-stone-800">Sample prompt tokens</p>
+        <div className="mt-2 flex flex-wrap gap-2">
           {DECK_TOKENS.map((token) => (
             <span
               key={token}
-              className="rounded-md border border-emerald-200 bg-white px-2.5 py-1 text-sm text-emerald-900"
+              className="rounded-md border border-emerald-200/80 bg-emerald-50/50 px-2.5 py-1 text-sm text-emerald-900"
             >
               {token}
             </span>
           ))}
         </div>
         <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Tokens become token IDs, then embeddings (vectors). Example: robot = [0.12, -0.44, 0.81]. Real models use
+          Each token becomes an ID, then an embedding vector. Example: robot = [0.12, -0.44, 0.81]. Real models use
           many more dimensions.
         </p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-2xl bg-stone-50 p-4">
-          <p className="mb-3 text-sm text-stone-700">
+        <div className="space-y-4">
+          <p className="text-sm text-stone-700">
             Which pair belongs closer together: <span className="font-medium">code and algorithm</span> or{" "}
             <span className="font-medium">code and cupcake</span>?
           </p>
@@ -181,35 +170,33 @@ export function VectorSimilarityLab() {
               </select>
             </label>
           </div>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white">
-            <svg viewBox="0 0 500 500" className="h-[240px] w-full max-w-full sm:h-[320px]" role="img" aria-label="Embedding map">
-              <line x1="40" x2="460" y1="250" y2="250" stroke="#d6d3d1" strokeWidth="2" />
-              <line x1="250" x2="250" y1="40" y2="460" stroke="#d6d3d1" strokeWidth="2" />
-              <line x1="250" y1="250" x2={toSvgX(first.x)} y2={toSvgY(first.y)} stroke="#065f46" strokeWidth="3" />
-              <line x1="250" y1="250" x2={toSvgX(second.x)} y2={toSvgY(second.y)} stroke="#b45309" strokeWidth="3" />
-              {wordPoints.map((p) => {
-                const on = p.word === first.word || p.word === second.word;
-                const colors = CLUSTER_COLORS[p.cluster];
-                return (
-                  <g key={p.word}>
-                    <circle
-                      cx={toSvgX(p.x)}
-                      cy={toSvgY(p.y)}
-                      r={on ? 8 : 5}
-                      fill={on ? "#065f46" : colors.fill}
-                      stroke={on ? "#b45309" : colors.stroke}
-                    />
-                    <text x={toSvgX(p.x) + 8} y={toSvgY(p.y) + 4} fontSize={on ? 14 : 11} fill="#1c1917">
-                      {p.word}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
-          <p className="mt-2 text-xs text-stone-500">
-            Clusters: CS (code, function, algorithm), robotics (robot, sensor, circuit), mission (service,
-            fairness, dignity).
+          <svg viewBox="0 0 500 500" className="h-[240px] w-full max-w-full sm:h-[320px]" role="img" aria-label="Embedding map">
+            <line x1="40" x2="460" y1="250" y2="250" stroke="#d6d3d1" strokeWidth="2" />
+            <line x1="250" x2="250" y1="40" y2="460" stroke="#d6d3d1" strokeWidth="2" />
+            <line x1="250" y1="250" x2={toSvgX(first.x)} y2={toSvgY(first.y)} stroke="#065f46" strokeWidth="3" />
+            <line x1="250" y1="250" x2={toSvgX(second.x)} y2={toSvgY(second.y)} stroke="#b45309" strokeWidth="3" />
+            {wordPoints.map((p) => {
+              const on = p.word === first.word || p.word === second.word;
+              const colors = CLUSTER_COLORS[p.cluster];
+              return (
+                <g key={p.word}>
+                  <circle
+                    cx={toSvgX(p.x)}
+                    cy={toSvgY(p.y)}
+                    r={on ? 8 : 5}
+                    fill={on ? "#065f46" : colors.fill}
+                    stroke={on ? "#b45309" : colors.stroke}
+                  />
+                  <text x={toSvgX(p.x) + 8} y={toSvgY(p.y) + 4} fontSize={on ? 14 : 11} fill="#1c1917">
+                    {p.word}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+          <p className="text-xs text-stone-500">
+            Clusters: CS (code, function, algorithm), robotics (robot, sensor, circuit), mission (service, fairness,
+            dignity).
           </p>
         </div>
         <div className="space-y-3 rounded-2xl bg-emerald-900 p-5 text-white">
@@ -227,7 +214,7 @@ export function VectorSimilarityLab() {
           </p>
         </div>
       </div>
-    </LabShell>
+    </LabCard>
   );
 }
 
@@ -296,18 +283,11 @@ export function TinyNeuronTrainer() {
   ];
 
   return (
-    <LabShell
-      kicker="07 · 08 · Loss and weight updates (training)"
-      title="Training learns weights from error — not from your prompt"
-      hint="Predict → measure loss → adjust weights → repeat. This loop happens before inference, on many examples."
+    <LabCard
+      title="Loss and weight updates"
+      hint="If you were deciding whether a source is trustworthy, which signals should get more weight? Change the weights and run training steps."
     >
-      <p className="mb-4 text-sm leading-relaxed text-stone-600">
-        If you were deciding whether a source is trustworthy, which signals should get more weight? Change the weights
-        and run training steps. Training is feedback at scale — mathematical and repeated many times — not the same as
-        asking the model a question at prompt time.
-      </p>
-
-      <div className="mb-4 flex flex-wrap gap-2 text-xs uppercase tracking-widest text-stone-500">
+      <div className="mb-5 flex flex-wrap gap-2 text-xs uppercase tracking-widest text-stone-500">
         {TRAINING_PATHWAY_STEPS.map((step, i) => (
           <span key={step} className="flex items-center gap-2">
             <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-950">{step}</span>
@@ -317,9 +297,9 @@ export function TinyNeuronTrainer() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <div className="grid gap-3 rounded-2xl bg-stone-50 p-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           {sliders.map((s) => (
-            <label key={s.short} className="rounded-xl bg-white p-3 text-sm text-stone-700">
+            <label key={s.short} className="text-sm text-stone-700">
               <span className="flex justify-between">
                 <span>{s.label}</span>
                 <span className="font-mono text-emerald-800">{s.value.toFixed(2)}</span>
@@ -343,15 +323,15 @@ export function TinyNeuronTrainer() {
               {bias.toFixed(2)}
             </p>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
-              <div className="rounded-lg bg-white/10 p-2">
+              <div>
                 <p className="text-xs text-emerald-200/70">Predict</p>
                 <p className="font-semibold tabular-nums">{prediction.toFixed(2)}</p>
               </div>
-              <div className="rounded-lg bg-white/10 p-2">
+              <div>
                 <p className="text-xs text-emerald-200/70">Error</p>
                 <p className="font-semibold tabular-nums">{error.toFixed(2)}</p>
               </div>
-              <div className="rounded-lg bg-white/10 p-2">
+              <div>
                 <p className="text-xs text-emerald-200/70">Loss</p>
                 <p className="font-semibold tabular-nums">{loss.toFixed(2)}</p>
               </div>
@@ -386,7 +366,7 @@ export function TinyNeuronTrainer() {
               Reset
             </button>
           </div>
-          <svg viewBox="0 0 300 150" className="h-32 w-full rounded-2xl bg-stone-50" aria-label="Loss curve">
+          <svg viewBox="0 0 300 150" className="h-32 w-full" aria-label="Loss curve">
             <line x1="20" x2="280" y1="130" y2="130" stroke="#d6d3d1" strokeWidth="2" />
             {curvePoints ? (
               <polyline points={curvePoints} fill="none" stroke="#065f46" strokeWidth="3" />
@@ -398,28 +378,20 @@ export function TinyNeuronTrainer() {
           </svg>
         </div>
       </div>
-    </LabShell>
+    </LabCard>
   );
 }
 
 export default function InsideAiMathSlideLabs() {
   return (
-    <div className="space-y-8 sm:space-y-10">
-      <PathwayTrack
-        variant="generation"
-        title="What happens when you prompt"
-        intro="Prompt → tokens → token IDs → vectors → attention → probability → response → human review. The vector lab below shows how token embeddings sit in space during inference."
-      >
+    <div className="space-y-10 sm:space-y-12">
+      <PathwaySection variant="generation">
         <VectorSimilarityLab />
-      </PathwayTrack>
+      </PathwaySection>
 
-      <PathwayTrack
-        variant="training"
-        title="How the model learns before you prompt"
-        intro="Predict → measure loss → adjust weights → repeat. Training updates weights on many labeled examples. Loss belongs here — not in the generation flow above."
-      >
+      <PathwaySection variant="training">
         <TinyNeuronTrainer />
-      </PathwayTrack>
+      </PathwaySection>
     </div>
   );
 }
