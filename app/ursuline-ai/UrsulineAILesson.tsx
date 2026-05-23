@@ -1675,7 +1675,7 @@ export default function UrsulineAILesson() {
       <LessonSection
         id="practice"
         kicker="06 · Green, yellow, red"
-        title="Red, yellow, green AI choices."
+        title="Green, yellow, red AI choices."
         intro="The color is about how you use the tool, not the tool itself. Mark each scenario."
       >
         <InteractiveCard className="space-y-3 !p-6 md:!p-8">
@@ -1874,7 +1874,7 @@ export default function UrsulineAILesson() {
 
         <section id="pt2-handout" className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28">
           <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
-            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 2 · Handout</p>
+            <p className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Part 2 · Lab Sheet</p>
             <h2 className="mb-8 font-serif text-2xl text-stone-900 sm:mb-10 sm:text-3xl">Inside AI Lab Notes</h2>
             <div className="max-w-xl">
               <StudentHandoutCard {...PT2_HANDOUT} />
