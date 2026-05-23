@@ -35,15 +35,6 @@ const PT2_GAMMA_DOCS =
   "https://gamma.app/docs/Inside-AI-The-Math-Science-and-Code-Behind-Intelligent-Tools-vm7pqgz6iuexocx";
 const pt2DeckReady = !PT2_GAMMA_EMBED.includes("REPLACE");
 
-const HOOK_CHOICES = [
-  { word: "robot", pct: 34 },
-  { word: "app", pct: 22 },
-  { word: "tutoring tool", pct: 18 },
-  { word: "garden plan", pct: 14 },
-  { word: "study guide", pct: 9 },
-  { word: "prototype", pct: 3 },
-] as const;
-
 const CLAIMS = [
   "AI works like a human brain.",
   "It understands words and remembers facts.",
@@ -304,6 +295,29 @@ function computeAttentionWeights(tokens: string[], boostLastStem = false): { tok
 
 function getPathwayPreset(id: string): PathwayPreset {
   return PATHWAY_PRESETS.find((p) => p.id === id) ?? PATHWAY_PRESETS[0];
+}
+
+/** Match custom prompt endings to preset next-token sets so panels stay coherent. */
+function getCustomPathwayNext(stem: string): readonly PathwayNextToken[] {
+  const words = tokenizePrompt(stem);
+  const last = words[words.length - 1]?.toLowerCase() ?? "";
+  const tail = words.slice(-3).join(" ").toLowerCase();
+
+  if (last === "helps" || last === "help" || tail.includes("that helps")) {
+    return getPathwayPreset("serviam").nextTokens;
+  }
+  if (last === "explain" || tail.includes("to explain")) {
+    return getPathwayPreset("science-fair").nextTokens;
+  }
+  if (
+    last === "a" ||
+    last === "for" ||
+    tail.includes("design a") ||
+    normalizeIdeaHub(stem).includes(IDEA_HUB_LABEL)
+  ) {
+    return PATHWAY_IDEA_HUB_NEXT;
+  }
+  return PATHWAY_CUSTOM_NEXT;
 }
 
 function ProbabilityBarRow({
@@ -687,16 +701,13 @@ export default function UrsulineAILesson() {
 
   const activePreset = getPathwayPreset(pathwayPresetId);
   const pathwayStem = pathwayUseCustom ? sanitizePathwayInput(pathwayCustomText) : activePreset.stem;
-  const pathwayNextTokens = pathwayUseCustom ? PATHWAY_CUSTOM_NEXT : activePreset.nextTokens;
+  const pathwayNextTokens = pathwayUseCustom
+    ? getCustomPathwayNext(pathwayStem)
+    : activePreset.nextTokens;
   const pathwayModelTop = pathwayNextTokens[0].word;
   const stemTokens = tokenizePrompt(pathwayStem);
   const pickedTokens = pathwayPick ? tokenizePrompt(pathwayPick) : [];
   const tokens = pathwayPick ? [...stemTokens, ...pickedTokens] : stemTokens;
-
-  const attentionTokens = computeAttentionWeights(
-    pathwayPick ? tokens : stemTokens,
-    Boolean(pathwayPick),
-  );
 
   const pathwayTokensVisible =
     pathwayPick !== null
@@ -707,6 +718,10 @@ export default function UrsulineAILesson() {
           ? Math.min(stemTokens.length, Math.max(0, pathStep - 1))
           : 0;
   const visibleTokens = tokens.slice(0, pathwayTokensVisible);
+  const attentionTokens = computeAttentionWeights(
+    visibleTokens,
+    Boolean(pathwayPick) && pickedTokens.length > 0,
+  );
   const showPathwayAttention = pathStep >= 4 || pathwayBarsLive || pathwayPick !== null;
   const showPathwayProbabilities = pathStep >= 5 || pathwayBarsLive || pathwayPick !== null;
   const customWordCount = countWords(pathwayCustomText);
@@ -956,9 +971,10 @@ export default function UrsulineAILesson() {
         id="predict"
         kicker="01 · Warm-up · Think aloud"
         title="Before AI predicts, your brain predicts."
-        intro="Pick the word you think comes next. Then see how likely each option is."
+        intro={`Pick the word you think comes next in this ${IDEA_HUB_LABEL} sentence. Then see illustrative odds—not a live model.`}
       >
         <InteractiveCard>
+          <p className="mb-2 text-xs uppercase tracking-widest text-stone-500">Example simulation — not a real model</p>
           <p className="mb-8 font-serif text-2xl leading-relaxed text-stone-900 md:text-3xl">
             The students entered the {IDEA_HUB_LABEL} to design a{" "}
             <span className="mx-2 inline-block align-middle">
@@ -974,7 +990,7 @@ export default function UrsulineAILesson() {
           </p>
           <div className="mb-4 text-xs uppercase tracking-widest text-stone-500">What word came to mind?</div>
           <div className="mb-8 flex flex-wrap gap-2">
-            {HOOK_CHOICES.map((c) => (
+            {PATHWAY_IDEA_HUB_NEXT.map((c) => (
               <button
                 key={c.word}
                 type="button"
@@ -995,7 +1011,7 @@ export default function UrsulineAILesson() {
           {revealedHook && (
             <div className="space-y-3">
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">How likely is each word?</div>
-              {HOOK_CHOICES.map((c) => (
+              {PATHWAY_IDEA_HUB_NEXT.map((c) => (
                 <div key={c.word} className="flex items-center gap-4">
                   <div className="w-24 text-sm text-stone-700">{c.word}</div>
                   <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-200">
@@ -1100,6 +1116,7 @@ export default function UrsulineAILesson() {
                       onMouseLeave={() => setHoveredPair(null)}
                       onFocus={() => setHoveredPair(i)}
                       onBlur={() => setHoveredPair(null)}
+                      onClick={() => setHoveredPair((prev) => (prev === i ? null : i))}
                       className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
                         hoveredPair === i
                           ? "bg-emerald-100/90 text-emerald-900 shadow-sm ring-1 ring-emerald-200/80"
@@ -1123,6 +1140,7 @@ export default function UrsulineAILesson() {
                       onMouseLeave={() => setHoveredPair(null)}
                       onFocus={() => setHoveredPair(i)}
                       onBlur={() => setHoveredPair(null)}
+                      onClick={() => setHoveredPair((prev) => (prev === i ? null : i))}
                       className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
                         hoveredPair === i
                           ? "bg-amber-100/90 text-amber-950 shadow-sm ring-1 ring-amber-200/80"
@@ -1257,8 +1275,10 @@ export default function UrsulineAILesson() {
                 onClick={resetPathway}
                 className="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm text-stone-600 transition hover:border-stone-900"
                 aria-label="Reset pathway"
+                title="Reset pathway"
               >
                 <RotateCcw className="h-4 w-4" />
+                <span className="sr-only">Reset</span>
               </button>
             </div>
           </div>
@@ -1314,34 +1334,42 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 3 ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Numbers · vectors</div>
-              <div className="flex flex-wrap gap-2 font-mono text-xs">
-                {visibleTokens.map((t, i) => (
-                  <span key={`${t}-${i}`} className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-900">
-                    {t.slice(0, 8)} · {fakeIdFor(t)}
-                  </span>
-                ))}
-              </div>
+              {visibleTokens.length > 0 ? (
+                <div className="flex flex-wrap gap-2 font-mono text-xs">
+                  {visibleTokens.map((t, i) => (
+                    <span key={`${t}-${i}`} className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-900">
+                      {t.slice(0, 8)} · {fakeIdFor(t)}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-stone-500">Token IDs appear as the pathway runs.</p>
+              )}
             </div>
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayAttention ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · highlighter</div>
               <p className="mb-3 text-xs text-stone-500">Example weights for words in this sentence (not a live model).</p>
-              <div className="space-y-2">
-                {attentionTokens.map((row, i) => (
-                  <div key={`${row.token}-${i}`} className="flex items-center gap-3">
-                    <div className="w-24 truncate text-sm text-stone-700">{row.token}</div>
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-200">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 transition-all duration-700 motion-reduce:transition-none"
-                        style={{ width: showPathwayAttention ? `${row.weight}%` : "0%" }}
-                      />
+              {attentionTokens.length > 0 ? (
+                <div className="space-y-2">
+                  {attentionTokens.map((row, i) => (
+                    <div key={`${row.token}-${i}`} className="flex items-center gap-3">
+                      <div className="w-24 truncate text-sm text-stone-700">{row.token}</div>
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-200">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 transition-all duration-700 motion-reduce:transition-none"
+                          style={{ width: showPathwayAttention ? `${row.weight}%` : "0%" }}
+                        />
+                      </div>
+                      <div className="w-10 text-right text-xs tabular-nums text-stone-500">
+                        {showPathwayAttention ? row.weight : 0}%
+                      </div>
                     </div>
-                    <div className="w-10 text-right text-xs tabular-nums text-stone-500">
-                      {showPathwayAttention ? row.weight : 0}%
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-stone-500">Run the pathway to see attention on this prompt&apos;s tokens.</p>
+              )}
             </div>
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayProbabilities ? "opacity-100" : "opacity-40"}`}>
@@ -1437,9 +1465,6 @@ export default function UrsulineAILesson() {
               </div>
             </div>
           </div>
-          <p className="mt-6 text-center text-sm text-stone-600">
-            Fluency is not truth. Your Serviam judgment is the step AI cannot do for you.
-          </p>
         </InteractiveCard>
       </LessonSection>
 
@@ -1810,12 +1835,16 @@ export default function UrsulineAILesson() {
         </div>
       </section>
 
-      <section id="faculty" className="scroll-mt-24 border-t border-stone-300 bg-stone-100 sm:scroll-mt-28">
+      <section
+        id="faculty"
+        aria-labelledby="leadership-review-heading"
+        className="scroll-mt-24 border-t border-stone-300 bg-stone-100 sm:scroll-mt-28"
+      >
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-stone-600">
             For Leadership Review
           </p>
-          <h2 className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">
+          <h2 id="leadership-review-heading" className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">
             Teacher lesson plans — Pt 1 &amp; Pt 2
           </h2>
           <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
