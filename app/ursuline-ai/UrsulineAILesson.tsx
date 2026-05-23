@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import InsideAiMathSlideLabs from "./InsideAiMathSlideLabs";
 import {
   ArrowRight,
@@ -115,6 +115,47 @@ const PATHWAY_STEPS = [
   "Human review",
 ];
 
+const NAV_SCROLL_SECTIONS = [
+  "pt1",
+  "pt1-deck",
+  "pt1-handout",
+  "pt2",
+  "pt2-deck",
+  "pt2-labs",
+  "pt2-handout",
+] as const;
+
+const DEFINE_ABILITIES = [
+  { label: "Recognize", detail: "Patterns in data" },
+  { label: "Predict", detail: "Likely outputs" },
+  { label: "Generate", detail: "New content and ideas" },
+  { label: "Support", detail: "Human decision-making" },
+] as const;
+
+const AI_CAPABILITIES = [
+  { label: "Classify", tip: "Sorts content into categories—like spam vs. inbox." },
+  { label: "Recommend", tip: "Suggests what you might want next from patterns." },
+  { label: "Generate", tip: "Creates text, images, or code from a prompt." },
+  { label: "Search", tip: "Finds relevant info across huge datasets fast." },
+  { label: "Code", tip: "Helps write, fix, or explain programming steps." },
+  { label: "Act", tip: "Triggers actions—bookings, controls, or workflows." },
+] as const;
+
+const LEARNER_COMPARE_PAIRS = [
+  { human: "Memory: carries the past", ai: "Tokens: processes word pieces" },
+  { human: "Emotion: feels the stakes", ai: "Probability: estimates likely outputs" },
+  { human: "Purpose: acts with intention", ai: "Pattern: matches training data" },
+  { human: "Moral judgment: weighs right and wrong", ai: "No judgment: no stakes, no conscience" },
+] as const;
+
+const TILE_INTERACTIVE =
+  "transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-[0.98] active:bg-emerald-100 active:text-emerald-900 md:hover:z-10 md:hover:scale-[1.03] md:hover:bg-emerald-50 md:hover:text-emerald-800 md:hover:shadow-[0_8px_20px_rgba(6,78,59,0.12),inset_0_0_0_1px_rgba(16,185,129,0.2)]";
+
+const CARD_LIFT =
+  "transition-all duration-200 ease-out motion-reduce:transition-none focus-within:border-emerald-300 focus-within:shadow-md md:hover:-translate-y-0.5 md:hover:border-emerald-200 md:hover:shadow-[0_10px_24px_rgba(6,78,59,0.1)]";
+
+const URSULINE_LOGO_SRC = "/assets/ua-crest.png";
+
 const IDEA_HUB_LABEL = "I.D.E.A. Hub";
 const IDEA_ACRONYM_TOKEN = "I.D.E.A.";
 const IDEA_ACRONYM_PLACEHOLDER = "\uE000";
@@ -163,6 +204,86 @@ function fakeIdFor(w: string) {
   let h = 0;
   for (let i = 0; i < w.length; i++) h = (h * 31 + w.charCodeAt(i)) % 9973;
   return h;
+}
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return reduced;
+}
+
+function useScrollSpy(sectionIds: readonly string[]) {
+  const [active, setActive] = useState(sectionIds[0] ?? "");
+  useEffect(() => {
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (!elements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0]?.target.id;
+        if (top) setActive(top);
+      },
+      { rootMargin: "-12% 0px -58% 0px", threshold: [0, 0.12, 0.3, 0.5] },
+    );
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [sectionIds]);
+  return active;
+}
+
+function NavPill({
+  href,
+  label,
+  active,
+  variant = "sub",
+  className = "",
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  variant?: "pt1" | "pt2" | "sub";
+  className?: string;
+}) {
+  const sectionId = href.replace("#", "");
+  const isPart = variant === "pt1" || variant === "pt2";
+  const base =
+    "inline-flex min-h-[44px] items-center justify-center rounded-full text-[11px] font-medium transition-all duration-200 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] md:hover:scale-[1.04] md:hover:shadow-sm motion-reduce:md:hover:scale-100";
+
+  let styles = "";
+  if (isPart) {
+    styles = active
+      ? variant === "pt1"
+        ? "bg-emerald-900 text-white shadow-md ring-2 ring-emerald-600/40 focus-visible:outline-emerald-300"
+        : "bg-stone-950 text-white shadow-md ring-2 ring-stone-600/50 focus-visible:outline-amber-300"
+      : variant === "pt1"
+        ? "bg-emerald-800 text-white hover:bg-emerald-900 focus-visible:outline-emerald-700"
+        : "bg-stone-900 text-white hover:bg-stone-800 focus-visible:outline-stone-700";
+  } else {
+    styles = active
+      ? "bg-white text-emerald-800 shadow-sm ring-1 ring-emerald-200/80 focus-visible:outline-emerald-700"
+      : "text-stone-600 hover:bg-white hover:text-emerald-800 focus-visible:outline-emerald-700";
+  }
+
+  return (
+    <a
+      href={href}
+      aria-current={active ? "location" : undefined}
+      className={`${base} ${styles} ${isPart ? "px-2.5 py-1.5 xl:px-3 xl:text-xs" : "px-2.5 py-1.5 xl:px-3 xl:text-xs"} ${className}`}
+    >
+      {label}
+    </a>
+  );
 }
 
 function HeroJumpCard({
@@ -302,6 +423,13 @@ function PartBanner({
 }
 
 export default function UrsulineAILesson() {
+  const reducedMotion = usePrefersReducedMotion();
+  const activeSection = useScrollSpy(NAV_SCROLL_SECTIONS);
+  const compareRef = useRef<HTMLElement>(null);
+  const [compareRevealed, setCompareRevealed] = useState(reducedMotion);
+  const [hoveredPair, setHoveredPair] = useState<number | null>(null);
+  const [openCapability, setOpenCapability] = useState<string | null>(null);
+
   const [revealedHook, setRevealedHook] = useState(false);
   const [pickedHook, setPickedHook] = useState<string | null>(null);
   const [focusWord, setFocusWord] = useState<string | null>(null);
@@ -326,6 +454,23 @@ export default function UrsulineAILesson() {
     const t = setTimeout(() => setPathStep((s) => s + 1), 850);
     return () => clearTimeout(t);
   }, [running, pathStep]);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setCompareRevealed(true);
+      return;
+    }
+    const el = compareRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) setCompareRevealed(true);
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
 
   const runPathway = () => {
     setPathStep(0);
@@ -368,61 +513,58 @@ export default function UrsulineAILesson() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900">
+    <div id="top" className="min-h-screen bg-stone-50 text-stone-900 scroll-mt-0">
       <nav className="sticky top-0 z-50 border-b border-stone-200/70 bg-stone-50/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
-          <div className="flex shrink-0 items-center gap-2.5">
-            <div className="h-2 w-2 rounded-full bg-emerald-700" aria-hidden />
-            <span className="font-serif text-sm tracking-tight">AI · Brain · Serviam</span>
-          </div>
-          <div className="hidden items-center gap-0.5 lg:flex">
-            <a
-              href="#pt1"
-              className="mr-1 rounded-full bg-emerald-800 px-2.5 py-1.5 text-[11px] font-medium text-white xl:px-3 xl:text-xs"
-            >
-              Pt 1
-            </a>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:gap-4 sm:py-3 md:px-6 md:py-4">
+          <a
+            href="#top"
+            className="group flex shrink-0 items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 sm:gap-2.5"
+            aria-label="Ursuline Academy — back to top of lesson"
+          >
+            <Image
+              src={URSULINE_LOGO_SRC}
+              alt="Ursuline Academy"
+              width={40}
+              height={40}
+              className="h-7 w-7 object-contain transition group-hover:opacity-90 sm:h-8 sm:w-8 md:h-10 md:w-10"
+              priority
+            />
+            <span className="hidden font-serif text-sm tracking-tight text-stone-800 sm:inline md:text-[15px]">
+              AI · Brain · Serviam
+            </span>
+          </a>
+          <div className="hidden items-center gap-1 lg:flex">
+            <NavPill href="#pt1" label="Pt 1" variant="pt1" active={activeSection === "pt1"} className="mr-0.5" />
             {NAV_PT1.map((link) => (
-              <a
+              <NavPill
                 key={link.href}
                 href={link.href}
-                className="rounded-full px-2.5 py-1.5 text-[11px] text-stone-600 transition hover:bg-white hover:text-emerald-800 xl:px-3 xl:text-xs"
-              >
-                {link.label}
-              </a>
+                label={link.label}
+                active={activeSection === link.href.replace("#", "")}
+              />
             ))}
-            <span className="mx-2 h-4 w-px bg-stone-300" aria-hidden />
-            <a
-              href="#pt2"
-              className="mr-1 rounded-full bg-stone-900 px-2.5 py-1.5 text-[11px] font-medium text-white xl:px-3 xl:text-xs"
-            >
-              Pt 2
-            </a>
+            <span className="mx-1.5 h-4 w-px bg-stone-300" aria-hidden />
+            <NavPill href="#pt2" label="Pt 2" variant="pt2" active={activeSection === "pt2"} className="mr-0.5" />
             {NAV_PT2.map((link) => (
-              <a
+              <NavPill
                 key={link.href}
                 href={link.href}
-                className="rounded-full px-2 py-1.5 text-[11px] text-stone-600 transition hover:bg-white hover:text-emerald-800 xl:px-2.5 xl:text-xs"
-              >
-                {link.label}
-              </a>
+                label={link.label}
+                active={activeSection === link.href.replace("#", "")}
+              />
             ))}
           </div>
           <div className="-mr-4 flex max-w-[min(100%,20rem)] items-center gap-1.5 overflow-x-auto pb-0.5 sm:max-w-none lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <a href="#pt1" className="inline-flex min-h-[44px] shrink-0 items-center rounded-full bg-emerald-800 px-3 text-[11px] font-medium text-white">
-              Pt 1
-            </a>
-            <a href="#pt2" className="inline-flex min-h-[44px] shrink-0 items-center rounded-full bg-stone-900 px-3 text-[11px] font-medium text-white">
-              Pt 2
-            </a>
+            <NavPill href="#pt1" label="Pt 1" variant="pt1" active={activeSection === "pt1"} />
+            <NavPill href="#pt2" label="Pt 2" variant="pt2" active={activeSection === "pt2"} />
             {[...NAV_PT1, ...NAV_PT2].map((link) => (
-              <a
+              <NavPill
                 key={link.href}
                 href={link.href}
-                className="inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-stone-200 bg-white px-3 text-[11px] text-stone-600"
-              >
-                {link.label}
-              </a>
+                label={link.label}
+                active={activeSection === link.href.replace("#", "")}
+                className="shrink-0 border border-stone-200 bg-white/90 backdrop-blur-sm"
+              />
             ))}
           </div>
         </div>
@@ -547,12 +689,13 @@ export default function UrsulineAILesson() {
           </p>
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 md:grid-cols-4">
             {["School", "Search", "Social", "Maps", "Writing", "Coding", "Photos", "Music"].map((w) => (
-              <div
+              <button
                 key={w}
-                className="relative z-0 bg-white px-4 py-5 text-center font-serif text-base text-stone-800 transition-all duration-200 ease-out active:scale-[0.98] active:bg-emerald-100 active:text-emerald-900 md:text-lg md:hover:z-10 md:hover:scale-[1.02] md:hover:bg-emerald-50 md:hover:text-emerald-800 md:hover:shadow-[0_4px_12px_rgba(6,78,59,0.08),inset_0_0_0_1px_rgba(16,185,129,0.25)]"
+                type="button"
+                className={`relative z-0 min-h-[52px] w-full bg-white px-4 py-5 text-center font-serif text-base text-stone-800 ${TILE_INTERACTIVE} md:text-lg`}
               >
                 {w}
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -664,25 +807,49 @@ export default function UrsulineAILesson() {
       >
         <InteractiveCard>
           <div className="mb-8 grid gap-3 sm:grid-cols-2">
-            {[
-              { label: "Recognize", detail: "Patterns in data" },
-              { label: "Predict", detail: "Likely outputs" },
-              { label: "Generate", detail: "New content and ideas" },
-              { label: "Support", detail: "Human decision-making" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl border border-stone-200 bg-white p-5">
-                <div className="font-serif text-xl text-stone-900">{item.label}</div>
+            {DEFINE_ABILITIES.map((item) => (
+              <div
+                key={item.label}
+                className={`rounded-2xl border border-stone-200 bg-white p-5 ${CARD_LIFT}`}
+              >
+                <div className="font-serif text-xl text-stone-900 transition-colors md:group-hover:text-emerald-800">
+                  {item.label}
+                </div>
                 <p className="mt-1 text-sm text-stone-600">{item.detail}</p>
               </div>
             ))}
           </div>
           <p className="mb-4 text-xs uppercase tracking-widest text-stone-500">AI is bigger than chatbots</p>
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 md:grid-cols-3">
-            {["Classify", "Recommend", "Generate", "Search", "Code", "Act"].map((w) => (
-              <div key={w} className="bg-white px-4 py-5 text-center font-serif text-lg">
-                {w}
-              </div>
-            ))}
+            {AI_CAPABILITIES.map((cap) => {
+              const tipOpen = openCapability === cap.label;
+              return (
+                <button
+                  key={cap.label}
+                  type="button"
+                  aria-expanded={tipOpen}
+                  onClick={() => setOpenCapability((prev) => (prev === cap.label ? null : cap.label))}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                      setOpenCapability((prev) => (prev === cap.label ? null : prev));
+                    }
+                  }}
+                  className={`group relative min-h-[56px] bg-white px-3 py-5 text-center font-serif text-lg text-stone-800 ${TILE_INTERACTIVE}`}
+                >
+                  <span className="relative z-10">{cap.label}</span>
+                  <span
+                    className={`pointer-events-none absolute inset-x-2 bottom-full z-20 mb-2 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-2 text-left text-xs font-sans leading-snug text-emerald-900 shadow-md transition-all duration-200 motion-reduce:transition-none ${
+                      tipOpen
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-1 opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
+                    }`}
+                    role="tooltip"
+                  >
+                    {cap.tip}
+                  </span>
+                </button>
+              );
+            })}
           </div>
           <p className="mt-6 text-sm text-stone-500">
             You interact with AI dozens of times a day, often without knowing it.
@@ -691,29 +858,69 @@ export default function UrsulineAILesson() {
       </LessonSection>
 
       {/* Human vs machine */}
-      <section className="border-t border-stone-200 bg-white">
+      <section
+        id="compare-learners"
+        ref={compareRef}
+        className="border-t border-stone-200 bg-white"
+      >
         <div className="mx-auto max-w-5xl px-6 py-16 md:py-20">
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-3xl border border-stone-200 bg-stone-50 p-8">
+          <div
+            className={`grid gap-8 md:grid-cols-2 motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
+              compareRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            } transition-all duration-700 ease-out motion-reduce:transition-none`}
+          >
+            <div className={`rounded-3xl border border-stone-200 bg-stone-50 p-6 sm:p-8 ${CARD_LIFT}`}>
               <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Human learner</p>
-              <ul className="space-y-3 font-serif text-lg text-stone-800">
-                <li>Memory: carries the past</li>
-                <li>Emotion: feels the stakes</li>
-                <li>Purpose: acts with intention</li>
-                <li>Moral judgment: weighs right and wrong</li>
+              <ul className="space-y-2">
+                {LEARNER_COMPARE_PAIRS.map((pair, i) => (
+                  <li key={pair.human}>
+                    <button
+                      type="button"
+                      onMouseEnter={() => setHoveredPair(i)}
+                      onMouseLeave={() => setHoveredPair(null)}
+                      onFocus={() => setHoveredPair(i)}
+                      onBlur={() => setHoveredPair(null)}
+                      className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
+                        hoveredPair === i
+                          ? "bg-emerald-100/90 text-emerald-900 shadow-sm ring-1 ring-emerald-200/80"
+                          : "text-stone-800 hover:bg-white/80"
+                      }`}
+                    >
+                      {pair.human}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div className="rounded-3xl border border-stone-200 bg-stone-50 p-8">
+            <div className={`rounded-3xl border border-stone-200 bg-stone-50 p-6 sm:p-8 ${CARD_LIFT}`}>
               <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">AI model</p>
-              <ul className="space-y-3 font-serif text-lg text-stone-800">
-                <li>Tokens: processes word pieces</li>
-                <li>Probability: estimates likely outputs</li>
-                <li>Pattern: matches training data</li>
-                <li>No judgment: no stakes, no conscience</li>
+              <ul className="space-y-2">
+                {LEARNER_COMPARE_PAIRS.map((pair, i) => (
+                  <li key={pair.ai}>
+                    <button
+                      type="button"
+                      onMouseEnter={() => setHoveredPair(i)}
+                      onMouseLeave={() => setHoveredPair(null)}
+                      onFocus={() => setHoveredPair(i)}
+                      onBlur={() => setHoveredPair(null)}
+                      className={`w-full rounded-xl px-3 py-3 text-left font-serif text-lg transition-all duration-200 ease-out motion-reduce:transition-none ${
+                        hoveredPair === i
+                          ? "bg-amber-100/90 text-amber-950 shadow-sm ring-1 ring-amber-200/80"
+                          : "text-stone-800 hover:bg-white/80"
+                      }`}
+                    >
+                      {pair.ai}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
-          <p className="mt-8 text-center font-serif text-xl text-stone-700 md:text-2xl">
+          <p
+            className={`mt-8 text-center font-serif text-xl text-stone-700 transition-all duration-700 ease-out motion-reduce:transition-none md:text-2xl ${
+              compareRevealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             The model can produce language. The learner must still question, verify, explain, and decide.
           </p>
         </div>
@@ -1096,7 +1303,7 @@ export default function UrsulineAILesson() {
           {AI_LEADERS.map((leader) => (
             <div
               key={leader.name}
-              className="rounded-2xl border border-stone-200 bg-white p-5 transition hover:border-emerald-200 hover:shadow-sm sm:p-6"
+              className={`rounded-2xl border border-stone-200 bg-white p-5 sm:p-6 ${CARD_LIFT} md:hover:border-emerald-200`}
             >
               <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
               <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
@@ -1121,7 +1328,9 @@ export default function UrsulineAILesson() {
               </p>
             </div>
             <div className="md:col-span-8">
-              <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white p-5 sm:rounded-3xl sm:p-8 md:p-10">
+              <div
+                className={`rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white p-5 sm:rounded-3xl sm:p-8 md:p-10 ${CARD_LIFT} md:hover:border-emerald-300 md:hover:from-emerald-50`}
+              >
                 <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
                   Design an AI tool that serves someone.
                 </p>
