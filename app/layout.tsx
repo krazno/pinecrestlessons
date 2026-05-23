@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Instrument_Serif } from "next/font/google";
+import { GoogleAnalyticsHead } from "./components/GoogleAnalytics";
 import {
   GoogleTagManagerBody,
   GoogleTagManagerHead,
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <head>
         <GoogleTagManagerHead />
+        <GoogleAnalyticsHead />
       </head>
       <body className="min-h-screen bg-stone-50 font-sans antialiased">
         <GoogleTagManagerBody />

@@ -8,6 +8,16 @@ import sys
 from pathlib import Path
 
 GTM_ID = "GTM-MCVF7CQJ"
+GA_MEASUREMENT_ID = "G-YWTLFCFMLB"
+
+GA_HEAD_SNIPPET = f"""<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{GA_MEASUREMENT_ID}');
+</script>"""
 
 HEAD_SNIPPET = f"""<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
@@ -23,6 +33,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
 
 GTM_MARKER = GTM_ID
+GA_MARKER = GA_MEASUREMENT_ID
+
+
+def inject_ga(html: str) -> str:
+    if GA_MARKER in html:
+        return html
+
+    head_match = re.search(r"(<head[^>]*>)", html, re.IGNORECASE)
+    if not head_match:
+        raise ValueError("No <head> tag found")
+
+    return html[: head_match.end()] + "\n" + GA_HEAD_SNIPPET + html[head_match.end() :]
 
 
 def inject_gtm(html: str) -> str:
@@ -50,9 +72,10 @@ def main() -> int:
 
     for path in targets:
         original = path.read_text(encoding="utf-8")
-        if GTM_MARKER in original:
+        updated_html = inject_gtm(inject_ga(original))
+        if updated_html == original:
             continue
-        path.write_text(inject_gtm(original), encoding="utf-8")
+        path.write_text(updated_html, encoding="utf-8")
         updated += 1
         print(f"updated {path.relative_to(root)}")
 
