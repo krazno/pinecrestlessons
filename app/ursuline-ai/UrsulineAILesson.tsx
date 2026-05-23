@@ -609,10 +609,6 @@ export default function UrsulineAILesson() {
                   buttonClass="bg-stone-900 text-white group-hover:bg-stone-800"
                 />
               </div>
-              <p className="mb-10 max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
-                Students can begin with Part 1, then move into Part 2 if they are ready to explore
-                the math, science, and code behind AI.
-              </p>
             </div>
             <Image
               src="/ursuline-ai-assets/01-ai-brain-circuit.png"
