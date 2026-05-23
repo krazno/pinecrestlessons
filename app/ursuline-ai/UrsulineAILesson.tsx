@@ -420,7 +420,7 @@ export default function UrsulineAILesson() {
                 <br />
                 <span className="italic text-emerald-800">and Serviam.</span>
               </h1>
-              <div className="mb-10 grid gap-4 sm:grid-cols-2">
+              <div className="mb-4 grid gap-4 sm:grid-cols-2">
                 <HeroJumpCard
                   href="#pt1"
                   title="Start Here: AI Literacy"
@@ -441,6 +441,10 @@ export default function UrsulineAILesson() {
                   buttonClass="bg-stone-900 text-white group-hover:bg-stone-800"
                 />
               </div>
+              <p className="mb-10 max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
+                Students can begin with Part 1, then move into Part 2 if they are ready to explore
+                the math, science, and code behind AI.
+              </p>
             </div>
             <Image
               src="/ursuline-ai-assets/01-ai-brain-circuit.png"
@@ -1149,10 +1153,16 @@ export default function UrsulineAILesson() {
 
       <section id="faculty" className="scroll-mt-24 border-t border-stone-300 bg-stone-100 sm:scroll-mt-28">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-16 md:py-20">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-stone-600">Faculty only</p>
-          <h2 className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">Teacher lesson plans</h2>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-stone-600">
+            For Leadership Review
+          </p>
+          <h2 className="mb-2 font-serif text-2xl text-stone-900 sm:text-3xl">
+            Teacher lesson plans — Pt 1 &amp; Pt 2
+          </h2>
           <p className="mb-8 max-w-2xl text-sm leading-relaxed text-stone-600">
-            For teachers delivering this lesson. Not part of the student experience.
+            Facilitation guides for leadership reviewers evaluating this submission. These teacher
+            plans sit alongside the student materials above and are not part of the student
+            experience.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {TEACHER_PLANS.map((plan) => (
