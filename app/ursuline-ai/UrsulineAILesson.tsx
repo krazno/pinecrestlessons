@@ -84,6 +84,12 @@ const PT2_HANDOUT = {
   href: "/artifacts/ursuline_part2_student_handout.docx",
 };
 
+const AI_LEADERS = [
+  { name: "Joy Buolamwini", focus: "AI fairness and algorithmic bias" },
+  { name: "Fei-Fei Li", focus: "computer vision and human-centered AI" },
+  { name: "Timnit Gebru", focus: "AI ethics and responsible technology" },
+] as const;
+
 const TEACHER_PLANS = [
   {
     part: "Pt 1",
@@ -108,6 +114,29 @@ const PATHWAY_STEPS = [
   "Response",
   "Human review",
 ];
+
+const IDEA_HUB_LABEL = "I.D.E.A. Hub";
+const IDEA_ACRONYM_TOKEN = "I.D.E.A.";
+const IDEA_ACRONYM_PLACEHOLDER = "\uE000";
+
+/** Normalize student-visible I.D.E.A. Hub typos (e.g. I.D.E.A.Hub, IDEA Hub). */
+function normalizeIdeaHub(text: string): string {
+  return text
+    .replace(/\bI\.D\.E\.A\.?\s*Hub\b/gi, IDEA_HUB_LABEL)
+    .replace(/\bIDEA\s+Hub\b/gi, IDEA_HUB_LABEL);
+}
+
+/** Keep I.D.E.A. as one token so chips do not read as I.D.E.A.Hub. */
+function tokenizePrompt(text: string): string[] {
+  const normalized = normalizeIdeaHub(text);
+  const protectedText = normalized.replace(/\bI\.D\.E\.A\./g, IDEA_ACRONYM_PLACEHOLDER);
+  return protectedText
+    .replace(/([.,!?])/g, " $1")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => (t === IDEA_ACRONYM_PLACEHOLDER ? IDEA_ACRONYM_TOKEN : t))
+    .slice(0, 12);
+}
 
 function markBg(m: Signal) {
   if (m === "green") return "bg-emerald-600 text-white border-emerald-700";
@@ -278,7 +307,7 @@ export default function UrsulineAILesson() {
   const [focusWord, setFocusWord] = useState<string | null>(null);
 
   const [prompt, setPrompt] = useState(
-    "We entered the I.D.E.A. Hub to design a robot for our serviam project.",
+    `We entered the ${IDEA_HUB_LABEL} to design a robot for our serviam project.`,
   );
   const [pathStep, setPathStep] = useState(0);
   const [running, setRunning] = useState(false);
@@ -286,6 +315,7 @@ export default function UrsulineAILesson() {
   const [auditMarks, setAuditMarks] = useState<Signal[]>([null, null, null]);
   const [decisions, setDecisions] = useState<Signal[]>(Array(SCENARIOS.length).fill(null));
   const [reflection, setReflection] = useState({ power: "", limit: "", promise: "" });
+  const [serviamChallenge, setServiamChallenge] = useState("");
 
   useEffect(() => {
     if (!running) return;
@@ -308,11 +338,7 @@ export default function UrsulineAILesson() {
     setPathStep(0);
   };
 
-  const tokens = prompt
-    .replace(/([.,!?])/g, " $1")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 12);
+  const tokens = tokenizePrompt(prompt);
 
   const attentionWeights = tokens.map((t, i) => {
     const isContent = t.length > 3 && !/^(the|and|a|to|of|in|is|it|on|using|a)$/i.test(t);
@@ -411,7 +437,7 @@ export default function UrsulineAILesson() {
         <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-20 md:pt-24">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white/60 px-3 py-1 text-xs text-stone-600">
             <Sparkles className="h-3 w-3 text-amber-600" aria-hidden />
-            <span>Ursuline Academy · I.D.E.A. Hub</span>
+            <span>Ursuline Academy · {IDEA_HUB_LABEL}</span>
           </div>
           <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
             <div>
@@ -573,7 +599,7 @@ export default function UrsulineAILesson() {
       >
         <InteractiveCard>
           <p className="mb-8 font-serif text-2xl leading-relaxed text-stone-900 md:text-3xl">
-            The students walked into the I.D.E.A. Hub to build a{" "}
+            The students walked into the {IDEA_HUB_LABEL} to build a{" "}
             <span className="mx-2 inline-block align-middle">
               <span
                 className={`inline-block min-w-[140px] border-b-2 border-dashed px-4 py-1 text-center italic ${
@@ -805,7 +831,7 @@ export default function UrsulineAILesson() {
 
             <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 5 ? "opacity-100" : "opacity-40"}`}>
               <p className="mb-3 font-serif text-base text-stone-800">
-                The students entered the I.D.E.A. Hub to design a _____.
+                The students entered the {IDEA_HUB_LABEL} to design a _____.
               </p>
               <div className="mb-2 text-xs uppercase tracking-widest text-stone-500">Probability · next token</div>
               <div className="space-y-2">
@@ -1058,6 +1084,70 @@ export default function UrsulineAILesson() {
         </div>
       </section>
       </div>
+
+      <LessonSection
+        id="women-leading-ai"
+        kicker="Women leading AI"
+        title="Women are already shaping AI"
+        intro="AI is not just a tool students use. It is a field students can lead. Computer scientists, engineers, designers, ethicists, physicians, artists, and entrepreneurs are all shaping how intelligent tools are built and used."
+        className="bg-stone-50"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {AI_LEADERS.map((leader) => (
+            <div
+              key={leader.name}
+              className="rounded-2xl border border-stone-200 bg-white p-5 transition hover:border-emerald-200 hover:shadow-sm sm:p-6"
+            >
+              <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
+            </div>
+          ))}
+        </div>
+      </LessonSection>
+
+      <section
+        id="serviam-design-challenge"
+        className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28"
+      >
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+          <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+            <div className="md:col-span-4">
+              <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Active learning</div>
+              <h2 className="mb-4 font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">
+                Serviam Design Challenge
+              </h2>
+              <p className="leading-relaxed text-stone-600">
+                Design for others. Use what you learned in Part 1 to imagine a tool that serves someone well.
+              </p>
+            </div>
+            <div className="md:col-span-8">
+              <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white p-5 sm:rounded-3xl sm:p-8 md:p-10">
+                <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
+                  Design an AI tool that serves someone.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-stone-700 sm:text-base">
+                  Choose one group: a new student, an elderly neighbor, a student with a learning difference, a
+                  busy teacher, or a local nonprofit. What would your AI tool help them do? What could go wrong? How
+                  would you keep it truthful, fair, and kind?
+                </p>
+                <div className="mt-8">
+                  <label htmlFor="serviam-challenge-notes" className="mb-2 block text-xs uppercase tracking-widest text-emerald-800">
+                    Your idea (optional)
+                  </label>
+                  <textarea
+                    id="serviam-challenge-notes"
+                    value={serviamChallenge}
+                    onChange={(e) => setServiamChallenge(e.target.value)}
+                    rows={5}
+                    placeholder="Who would you design for? What would your tool do—and what would you check before sharing it?"
+                    className="w-full resize-y rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 sm:text-base"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section id="pt2" className="scroll-mt-28 border-t border-stone-300">
         <PartBanner
