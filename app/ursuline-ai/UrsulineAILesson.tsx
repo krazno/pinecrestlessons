@@ -1294,72 +1294,6 @@ export default function UrsulineAILesson() {
       </section>
       </div>
 
-      <LessonSection
-        id="women-leading-ai"
-        kicker="Women leading AI"
-        title="Women are already shaping AI"
-        intro="AI is not just a tool students use. It is a field students can lead. Computer scientists, engineers, designers, ethicists, physicians, artists, and entrepreneurs are all shaping how intelligent tools are built and used."
-        className="bg-stone-50"
-      >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {AI_LEADERS.map((leader) => (
-            <div
-              key={leader.name}
-              className={`rounded-2xl border border-stone-200 bg-white p-5 sm:p-6 ${CARD_LIFT} md:hover:border-emerald-200`}
-            >
-              <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
-              <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
-            </div>
-          ))}
-        </div>
-      </LessonSection>
-
-      <section
-        id="serviam-design-challenge"
-        className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28"
-      >
-        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20 md:py-24">
-          <div className="grid gap-8 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-4">
-              <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Active learning</div>
-              <h2 className="mb-4 font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">
-                Serviam Design Challenge
-              </h2>
-              <p className="leading-relaxed text-stone-600">
-                Design for others. Use what you learned in Part 1 to imagine a tool that serves someone well.
-              </p>
-            </div>
-            <div className="md:col-span-8">
-              <div
-                className={`rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white p-5 sm:rounded-3xl sm:p-8 md:p-10 ${CARD_LIFT} md:hover:border-emerald-300 md:hover:from-emerald-50`}
-              >
-                <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
-                  Design an AI tool that serves someone.
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-stone-700 sm:text-base">
-                  Choose one group: a new student, an elderly neighbor, a student with a learning difference, a
-                  busy teacher, or a local nonprofit. What would your AI tool help them do? What could go wrong? How
-                  would you keep it truthful, fair, and kind?
-                </p>
-                <div className="mt-8">
-                  <label htmlFor="serviam-challenge-notes" className="mb-2 block text-xs uppercase tracking-widest text-emerald-800">
-                    Your idea (optional)
-                  </label>
-                  <textarea
-                    id="serviam-challenge-notes"
-                    value={serviamChallenge}
-                    onChange={(e) => setServiamChallenge(e.target.value)}
-                    rows={5}
-                    placeholder="Who would you design for? What would your tool do—and what would you check before sharing it?"
-                    className="w-full resize-y rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 sm:text-base"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="pt2" className="scroll-mt-28 border-t border-stone-300">
         <PartBanner
           part={2}
@@ -1450,6 +1384,72 @@ export default function UrsulineAILesson() {
             </div>
           </div>
         </section>
+      </section>
+
+      <LessonSection
+        id="women-leading-ai"
+        kicker="Women leading AI"
+        title="Women are already shaping AI"
+        intro="AI is not just a tool students use. It is a field students can lead. Computer scientists, engineers, designers, ethicists, physicians, artists, and entrepreneurs are all shaping how intelligent tools are built and used."
+        className="bg-stone-50"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {AI_LEADERS.map((leader) => (
+            <div
+              key={leader.name}
+              className={`rounded-2xl border border-stone-200 bg-white p-5 sm:p-6 ${CARD_LIFT} md:hover:border-emerald-200`}
+            >
+              <div className="font-serif text-lg text-stone-900 sm:text-xl">{leader.name}</div>
+              <p className="mt-2 text-sm leading-relaxed text-stone-600">{leader.focus}</p>
+            </div>
+          ))}
+        </div>
+      </LessonSection>
+
+      <section
+        id="serviam-design-challenge"
+        className="scroll-mt-24 border-t border-stone-200 bg-white sm:scroll-mt-28"
+      >
+        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+          <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+            <div className="md:col-span-4">
+              <div className="mb-4 text-xs uppercase tracking-widest text-emerald-800">Active learning</div>
+              <h2 className="mb-4 font-serif text-3xl leading-tight text-stone-900 sm:text-4xl">
+                Serviam Design Challenge
+              </h2>
+              <p className="leading-relaxed text-stone-600">
+                Design for others. Use what you learned in Part 1 to imagine a tool that serves someone well.
+              </p>
+            </div>
+            <div className="md:col-span-8">
+              <div
+                className={`rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white p-5 sm:rounded-3xl sm:p-8 md:p-10 ${CARD_LIFT} md:hover:border-emerald-300 md:hover:from-emerald-50`}
+              >
+                <p className="font-serif text-lg leading-relaxed text-stone-900 sm:text-xl">
+                  Design an AI tool that serves someone.
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-stone-700 sm:text-base">
+                  Choose one group: a new student, an elderly neighbor, a student with a learning difference, a
+                  busy teacher, or a local nonprofit. What would your AI tool help them do? What could go wrong? How
+                  would you keep it truthful, fair, and kind?
+                </p>
+                <div className="mt-8">
+                  <label htmlFor="serviam-challenge-notes" className="mb-2 block text-xs uppercase tracking-widest text-emerald-800">
+                    Your idea (optional)
+                  </label>
+                  <textarea
+                    id="serviam-challenge-notes"
+                    value={serviamChallenge}
+                    onChange={(e) => setServiamChallenge(e.target.value)}
+                    rows={5}
+                    placeholder="Who would you design for? What would your tool do—and what would you check before sharing it?"
+                    className="w-full resize-y rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 sm:text-base"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="faculty" className="scroll-mt-24 border-t border-stone-300 bg-stone-100 sm:scroll-mt-28">
