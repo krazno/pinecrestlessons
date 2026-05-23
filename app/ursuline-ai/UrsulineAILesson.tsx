@@ -991,35 +991,6 @@ export default function UrsulineAILesson() {
           subtitle="AI, the Brain, and Serviam · grades 7–12"
         />
 
-      <section
-        aria-label="Part 1 handout quick reference"
-        className="border-b border-stone-200 bg-gradient-to-br from-emerald-50/80 to-stone-50"
-      >
-        <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-4">
-              <FileText className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" strokeWidth={1.5} aria-hidden />
-              <div>
-                <p className="text-xs uppercase tracking-widest text-emerald-800">Quick reference</p>
-                <p className="mt-1 font-serif text-lg text-stone-900 sm:text-xl">{PT1_HANDOUT.title}</p>
-                <p className="mt-1 max-w-xl text-sm leading-relaxed text-stone-600">
-                  Your quick reference — download the Part 1 handout to follow along and take notes as you work
-                  through this lesson.
-                </p>
-              </div>
-            </div>
-            <a
-              href={PT1_HANDOUT.href}
-              download
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-800 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-900 sm:self-center"
-            >
-              <Download className="h-4 w-4" aria-hidden />
-              Download handout
-            </a>
-          </div>
-        </div>
-      </section>
-
       <section id="pt1-deck" className="scroll-mt-28 border-t border-stone-200 bg-stone-50">
         <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
           <p className="mb-4 text-xs uppercase tracking-widest text-amber-700">Part 1 · Slides</p>
