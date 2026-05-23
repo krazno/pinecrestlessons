@@ -514,9 +514,6 @@ export default function UrsulineAILesson() {
   const [pickedHook, setPickedHook] = useState<string | null>(null);
   const [focusWord, setFocusWord] = useState<string | null>(null);
 
-  const [prompt, setPrompt] = useState(
-    `The students entered the ${IDEA_HUB_LABEL} to design a robot for our Serviam project.`,
-  );
   const [pathStep, setPathStep] = useState(0);
   const [running, setRunning] = useState(false);
   const [pathwayPick, setPathwayPick] = useState<string | null>(null);
@@ -571,16 +568,14 @@ export default function UrsulineAILesson() {
     if (pathStep >= 5) setPathwayBarsLive(true);
   }, [pathStep]);
 
-  const tokens = tokenizePrompt(prompt);
-
-  const attentionWeights = tokens.map((t, i) => {
-    const fixed = PATHWAY_ATTENTION_TOKENS.find((r) => r.token === t);
-    if (fixed) return pathwayPick && t === "design" ? Math.min(98, fixed.weight + 4) : fixed.weight;
-    const isContent = t.length > 3 && !/^(the|and|a|to|of|in|is|it|on|using)$/i.test(t);
-    return Math.min(95, 30 + t.length * 4 + (isContent ? 25 : 0) + (i % 3) * 4);
-  });
-
   const pathwayNextWord = pathwayPick ?? PATHWAY_MODEL_TOP;
+  const pathwayDemoPrompt = `${PATHWAY_DEMO_STEM} ${pathwayNextWord} for our Serviam project.`;
+  const tokens = tokenizePrompt(pathwayDemoPrompt);
+
+  const attentionTokens = PATHWAY_ATTENTION_TOKENS.map((row) =>
+    row.token === "design" && pathwayPick ? { ...row, weight: Math.min(98, row.weight + 4) } : row,
+  );
+
   const pathwayTokensVisible =
     pathwayPick !== null
       ? tokens.length
@@ -589,9 +584,8 @@ export default function UrsulineAILesson() {
         : pathStep >= 2
           ? Math.min(tokens.length, Math.max(0, pathStep - 1))
           : 0;
-  const pathwayTokensAssembled =
-    pathStep >= 6 ? tokens.length + 1 : pathStep >= 2 ? Math.min(tokens.length, Math.max(0, pathStep - 1)) : 0;
-  const showPathwayProbabilities = pathStep >= 5 || pathwayBarsLive;
+  const showPathwayAttention = pathStep >= 4 || pathwayBarsLive || pathwayPick !== null;
+  const showPathwayProbabilities = pathStep >= 5 || pathwayBarsLive || pathwayPick !== null;
 
   const pickPathwayToken = (word: string) => {
     setPathwayPick(word);
@@ -1133,38 +1127,28 @@ export default function UrsulineAILesson() {
               </div>
             </div>
 
-            <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 4 ? "opacity-100" : "opacity-40"}`}>
+            <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayAttention ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-3 text-xs uppercase tracking-widest text-stone-500">Attention · highlighter</div>
+              <p className="mb-3 text-xs text-stone-500">Example weights for words in this sentence (not a live model).</p>
               <div className="space-y-2">
-                {tokens.slice(0, 5).map((t, i) => (
-                  <div key={`${t}-att-${i}`} className="flex items-center gap-3">
-                    <div className="w-20 truncate text-sm text-stone-700">{t}</div>
-                    <div className="h-1 flex-1 overflow-hidden rounded-full bg-stone-200">
+                {attentionTokens.map((row) => (
+                  <div key={row.token} className="flex items-center gap-3">
+                    <div className="w-24 truncate text-sm text-stone-700">{row.token}</div>
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-stone-200">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 transition-all duration-1000"
-                        style={{ width: pathStep >= 4 ? `${attentionWeights[i]}%` : "0%" }}
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-400 transition-all duration-700 motion-reduce:transition-none"
+                        style={{ width: showPathwayAttention ? `${row.weight}%` : "0%" }}
                       />
                     </div>
                     <div className="w-10 text-right text-xs tabular-nums text-stone-500">
-                      {pathStep >= 4 ? attentionWeights[i] : 0}%
+                      {showPathwayAttention ? row.weight : 0}%
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${pathStep >= 5 ? "opacity-100" : "opacity-40"}`}>
-              <p className="mb-3 font-serif text-base leading-snug text-stone-800">
-                The students entered the {IDEA_HUB_LABEL} to design a{" "}
-                <span
-                  className={`inline-block min-w-[7rem] border-b-2 border-dashed px-1 align-baseline italic ${
-                    pathwayPick ? "border-emerald-700 text-emerald-800" : "border-stone-400 text-stone-500"
-                  }`}
-                >
-                  {pathwayPick ?? "_____"}
-                </span>
-                .
-              </p>
+            <div className={`rounded-2xl border border-stone-200 bg-white p-5 transition ${showPathwayProbabilities ? "opacity-100" : "opacity-40"}`}>
               <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
                 <div className="text-xs uppercase tracking-widest text-stone-500">Probability · next token</div>
                 <span className="text-xs text-stone-500">Try it — tap your pick</span>
@@ -1220,19 +1204,19 @@ export default function UrsulineAILesson() {
             </div>
           </div>
 
-          <div className={`mt-4 grid gap-4 md:grid-cols-2 ${pathStep >= 6 ? "opacity-100" : "opacity-40"}`}>
+          <div className={`mt-4 grid gap-4 md:grid-cols-2 ${pathStep >= 6 || pathwayPick ? "opacity-100" : "opacity-40"}`}>
             <div className="rounded-2xl border border-stone-200 bg-white p-5">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                 <div className="text-xs uppercase tracking-widest text-stone-500">Response</div>
-                {pathwayTokensAssembled > 0 && (
+                {pathwayTokensVisible > 0 && (
                   <span className="rounded-full bg-stone-100 px-2.5 py-0.5 font-mono text-xs tabular-nums text-stone-600">
-                    {pathwayTokensAssembled} token{pathwayTokensAssembled === 1 ? "" : "s"} assembled
+                    {pathwayTokensVisible} token{pathwayTokensVisible === 1 ? "" : "s"} assembled
                   </span>
                 )}
               </div>
-              {pathStep >= 6 && (
+              {(pathStep >= 6 || pathwayPick) && (
                 <p className="mb-3 font-serif text-base leading-snug text-stone-800">
-                  The students entered the {IDEA_HUB_LABEL} to design a {pathwayNextWord} for our Serviam project.
+                  {PATHWAY_DEMO_STEM} <span className="text-emerald-800">{pathwayNextWord}</span> for our Serviam project.
                 </p>
               )}
               <p className="text-sm leading-relaxed text-stone-700">
