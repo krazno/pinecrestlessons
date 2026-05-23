@@ -13,7 +13,6 @@ import {
   Play,
   RotateCcw,
   Search,
-  Sparkles,
 } from "lucide-react";
 
 type Signal = "green" | "yellow" | "red" | null;
@@ -798,10 +797,6 @@ export default function UrsulineAILesson() {
           <div className="absolute right-1/4 top-40 h-80 w-80 rounded-full bg-amber-200/30 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-20 md:pt-24">
-          <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white/60 px-3 py-1 text-xs text-stone-600">
-            <Sparkles className="h-3 w-3 text-amber-600" aria-hidden />
-            <span>Ursuline Academy · {IDEA_HUB_LABEL}</span>
-          </div>
           <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
             <div>
               <h1 className="mb-6 font-serif text-3xl leading-[0.95] tracking-tight text-stone-900 sm:text-5xl md:text-7xl lg:text-8xl">
